@@ -1,0 +1,34 @@
+
+;; Architecture extensions
+#include weak "..\debugger\ARM\ARMv6-M-SYST.ddf"
+#include weak "..\debugger\ARM\ARMv6-M-UNPRIV.ddf"
+
+;; Memory information ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; Used to define address zones within the ARM address space (Memory). 
+;;
+;;   Name      may be almost anything
+;;   AdrSpace  must be Memory
+;;   StartAdr  start of memory block
+;;   EndAdr    end of memory block
+;;   AccType   type of access, read-only (R), read-write (RW) or SFR (W)
+
+[Memory]
+;;         Name             AdrSpace    StartAdr    EndAdr      AccType   Width
+Memory =  RAM-Bitband      Memory      0x22000000  0x23FFFFFF  W  
+Memory =  PeriphAIPS       Memory      0x40000000  0x4007FFFF  W  
+Memory =  PeriphPorts      Memory      0x400FF000  0x400FFFFF  W  
+Memory =  Periph-Bitband   Memory      0x44000000  0x5FFFFFFF  W  
+Memory =  SystemSFR        Memory      0xE0000000  0xE00FFFFF  W  
+Memory =  ROM_table        Memory      0xF0002000  0xF0002FFF  W  
+Memory =  PeriphMCM        Memory      0xF0003000  0xF0003FFF  W  
+Memory =  PerphFGPIO       Memory      0xF8000000  0xFFFFFFFF  W  
+Memory =  Flash            Memory      0x00000000  0x0001FFFF  R  
+Memory =  RAM0             Memory      0x1FFFF000  0x1FFFFFFF  RW 
+Memory =  RAM1             Memory      0x20000000  0x20002FFF  RW 
+
+TrustedRanges = true
+UseSfrFilter = true
+
+[SfrInclude]
+File = SKEAZ1284.svd.xml

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<flash_device>
+  <exe>$PROJ_DIR$\..\Libraries\Device\IAR-ARM\flashloader\FlashKE04Z128.out</exe>
+  <page>8</page>
+  <block>256 0x200</block>
+  <flash_base>0x00000000</flash_base>
+  <macro>$PROJ_DIR$\..\Libraries\Device\IAR-ARM\flashloader\FlashKE04Z128_4.mac</macro>
+  <aggregate>1</aggregate>
+  <args_doc>--clock 8000 - Passes the clock frequency to the flash loader,
+value is the CPU clock speed in kHz. The default clock frequency depend from 
+settings in flash mac file.
+  --enable_config_write - allow programming of 0x408 - 0x40F with user supplied
+data, in other case flashloader after erase of block 0 will write 0xFEFFFFFF
+(unsecure state).</args_doc>
+</flash_device>

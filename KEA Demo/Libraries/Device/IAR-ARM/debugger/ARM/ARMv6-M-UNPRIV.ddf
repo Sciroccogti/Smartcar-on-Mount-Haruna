@@ -1,0 +1,8 @@
+;           ARMv6-M Unprivilege/Privileged Extension
+[Sfr]
+
+;
+;     Name                        Zone      Address     Bytesize  Displaybase Bitrange
+;     ----                        ----      -------     --------  ----------- --------
+
+sfr = "CONTROL.nPRIV", "Register", 0x60,     4,        base=2,     bitRange=0-0, tooltip="Execution privilege in Thread mode\n0: Thread mode has privileged access\n1: Thread mode has unprivileged access"

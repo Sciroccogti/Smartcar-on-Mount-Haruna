@@ -1,0 +1,22 @@
+setup()
+{
+	__writeMemory8(	0x13,		 0x40020003, "Memory");	// flash clock divider (BUSCLK frequency - 20MHz > 0x13)
+	__writeMemory32(__readMemory32(0x40048004, "Memory") & ~(1UL<<1),	0x40048004,	"Memory");	// SIM_SOPT	&= 0xfd;
+	__writeMemory32(0x1BC00, 0xF000300C, "Memory");	// disable flash cache
+
+	/*Vectors	at RAM*/
+	__writeMemory32(0x1FFFF000,	0xE000ED08,	"Memory"); //Vector	table	remap	at 0x1FFFF000
+}
+
+execUserPreload()
+{
+	__message	"----- Prepare hardware	for	Flashloader	-----\n";
+	setup();
+}
+
+execUserFlashInit()	 //	Called by	debugger before	loading	flash	loader in	RAM.
+{
+	__message	"----- Prepare hardware	for	Flashloader	-----\n";
+	setup();
+}
+
