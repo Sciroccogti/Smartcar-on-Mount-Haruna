@@ -1,26 +1,26 @@
 #include "common.h"
 #include "main.h"
 
-//ĞéÄâÊ¾²¨Æ÷ÏÔÊ¾
-void VirOSC(UARTn uartn)//Èç¹ûµ÷ÓÃUART_Putint16£¬ÔòÀïÃæµÄ²ÎÊıĞèÒªÇ¿ÖÆÀàĞÍ×ª»»
+//è™šæ‹Ÿç¤ºæ³¢å™¨æ˜¾ç¤º
+void VirOSC(UARTn uartn) //å¦‚æœè°ƒç”¨UART_Putint16ï¼Œåˆ™é‡Œé¢çš„å‚æ•°éœ€è¦å¼ºåˆ¶ç±»å‹è½¬æ¢
 {
 
   UART_Putchar(uartn, 0x03);
   UART_Putchar(uartn, 0xFC);
-//ÒÔÉÏÎªÊı¾İÖ¡Í·
-  
-//  UART_Putint16(uartn, (int16_t) gyro_z);//motor_left_target1
-//  UART_Putint16(uartn, (int16_t) offset_cal);//real_left_speed
-//  UART_Putint16(uartn, (int16_t) acce_y);//motor_left_out_vir//±£³ÖÓëÆÚÍûÖµÁ¿¼¶ÏàÍ¬,±ãÓÚ¹Û²ìgyro_z
-  UART_Putint16(uartn, (int16_t) offset_out);
-//  UART_Putint16(uartn, (int16_t) real_left_speed);
-//  UART_Putint16(uartn, (int16_t) real_right_speed);
-//  UART_Putint16(uartn, (int16_t) (real_left_speed+real_right_speed));//(real_left_speed+real_right_speed)
-  
-//¸ù¾İĞèÒªµÄ²¨ĞÎÊıÁ¿Ìí¼Ó»òÉ¾¼õ
-//½«ÒªÏÔÊ¾µÄ±äÁ¿¶¨ÒåÎªÈ«¾Ö±äÁ¿
-  
-//ÒÔÏÂÎªÊı¾İÖ¡Î²
+  //ä»¥ä¸Šä¸ºæ•°æ®å¸§å¤´
+
+  //  UART_Putint16(uartn, (int16_t) gyro_z);//motor_left_target1
+  //  UART_Putint16(uartn, (int16_t) offset_cal);//real_left_speed
+  //  UART_Putint16(uartn, (int16_t) acce_y);//motor_left_out_vir//ä¿æŒä¸æœŸæœ›å€¼é‡çº§ç›¸åŒ,ä¾¿äºè§‚å¯Ÿgyro_z
+  UART_Putint16(uartn, (int16_t)offset_out);
+  //  UART_Putint16(uartn, (int16_t) real_left_speed);
+  //  UART_Putint16(uartn, (int16_t) real_right_speed);
+  //  UART_Putint16(uartn, (int16_t) (real_left_speed+real_right_speed));//(real_left_speed+real_right_speed)
+
+  //æ ¹æ®éœ€è¦çš„æ³¢å½¢æ•°é‡æ·»åŠ æˆ–åˆ å‡
+  //å°†è¦æ˜¾ç¤ºçš„å˜é‡å®šä¹‰ä¸ºå…¨å±€å˜é‡
+
+  //ä»¥ä¸‹ä¸ºæ•°æ®å¸§å°¾
   UART_Putchar(uartn, 0xFC);
   UART_Putchar(uartn, 0x03);
 }
@@ -33,15 +33,15 @@ void VirOSC(UARTn uartn)//Èç¹ûµ÷ÓÃUART_Putint16£¬ÔòÀïÃæµÄ²ÎÊıĞèÒªÇ¿ÖÆÀàĞÍ×ª»»
 ************************************************************************************************/
 void KBI_Interrupt(uint8 ch)
 {
-  switch(ch)
+  switch (ch)
   {
-    case 0://(uint8)KBI0_P0
+  case 0: //(uint8)KBI0_P0
     break;
-    case (uint8)KBI1_P20://52
-      GPIO_Turn(G1);
+  case (uint8)KBI1_P20: //52
+    GPIO_Turn(G1);
     break;
-    case (uint8)KBI1_P21://53
-      GPIO_Turn(G2);
+  case (uint8)KBI1_P21: //53
+    GPIO_Turn(G2);
     break;
   }
 }
@@ -55,151 +55,161 @@ void KBI_Interrupt(uint8 ch)
 void UART_Interrupt(uint8 ch)
 {
   uint8 data_get;
-  switch(ch)
+  switch (ch)
   {
-    case 0:
-      UART_Getchar(uart0, &data_get);
-      data_getstring[0] = data_get;
-      if(data_getstring[0]=='s')//À¶ÑÀ·¢ËÍsÈË¹¤Í£Ö¹³µÄ£ÔËĞĞ
-      {
-        flag_stop = 1;
-        flag_run = 0;
-      }
-      //UART_Putstr(uart0, data_getstring);
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
+  case 0:
+    UART_Getchar(uart0, &data_get);
+    data_getstring[0] = data_get;
+    if (data_getstring[0] == 's') //è“ç‰™å‘é€säººå·¥åœæ­¢è½¦æ¨¡è¿è¡Œ
+    {
+      flag_stop = 1;
+      flag_run = 0;
+    }
+    //UART_Putstr(uart0, data_getstring);
+    break;
+  case 1:
+    break;
+  case 2:
+    break;
   }
 }
 
 void PIT_Interrupt(uint8 ch)
 {
   Get_Gyro();
-//  gyro_x=mpu_gyro_x;
-  gyro_y=mpu_gyro_y;//ÉÏÏÂÆÂ
-  if(car_version)  gyro_z=mpu_gyro_z+50;//×ªÍä
-  else gyro_z=mpu_gyro_z+17;
+  //  gyro_x=mpu_gyro_x;
+  gyro_y = mpu_gyro_y; //ä¸Šä¸‹å¡
+  if (car_version)
+    gyro_z = mpu_gyro_z + 50; //è½¬å¼¯
+  else
+    gyro_z = mpu_gyro_z + 17;
   Get_AccData();
   acce_x = mpu_acc_x;
   acce_y = mpu_acc_y;
   acce_z = mpu_acc_z;
-  
+
   pit0_count++;
   pit0_flag_stop_en++;
-  if(pit0_flag_stop_en>2010) pit0_flag_stop_en = 2010;
-  
+  if (pit0_flag_stop_en > 2010)
+    pit0_flag_stop_en = 2010;
+
   count_unround++;
-  if(count_unround>((int)count_unround_low*100) && count_unround<((int)count_unround_high*100))
+  if (count_unround > ((int)count_unround_low * 100) && count_unround < ((int)count_unround_high * 100))
     state_unround = 1;
-  else state_unround = 0;
+  else
+    state_unround = 0;
   count_slow++;
-  if(count_slow>((int)count_slow_low*100) && count_slow<((int)count_slow_high*100))
+  if (count_slow > ((int)count_slow_low * 100) && count_slow < ((int)count_slow_high * 100))
     flag_slow = 1;
-  else flag_slow = 0;
-  
-  if(pit0_count%80 == 0)
+  else
+    flag_slow = 0;
+
+  if (pit0_count % 80 == 0)
   {
-    GPIO_Turn(G2);//ÂÌµÆÉÁË¸±íÊ¾Õı³£¹¤×÷
-    #ifdef OLED_RUN_SHOW
-    flag_show_oled = 1;//ÈôÒª¹Û²ìĞéÄâÊ¾²¨Æ÷²¨ĞÎ,×îºÃ½ûÖ¹OLEDÏÔÊ¾
-//    OLED_Myshow();//±ØĞë·ÅÔÚwhileÖĞ,·ñÔòOLEDË¢ĞÂ¹ıÂı»áÔì³É¿¨ÖĞ¶Ï,¸Ä±äÊµ¼ÊÖĞ¶ÏÖÜÆÚ
-    #endif
+    GPIO_Turn(G2); //ç»¿ç¯é—ªçƒè¡¨ç¤ºæ­£å¸¸å·¥ä½œ
+#ifdef OLED_RUN_SHOW
+    flag_show_oled = 1; //è‹¥è¦è§‚å¯Ÿè™šæ‹Ÿç¤ºæ³¢å™¨æ³¢å½¢,æœ€å¥½ç¦æ­¢OLEDæ˜¾ç¤º
+                        //    OLED_Myshow();//å¿…é¡»æ”¾åœ¨whileä¸­,å¦åˆ™OLEDåˆ·æ–°è¿‡æ…¢ä¼šé€ æˆå¡ä¸­æ–­,æ”¹å˜å®é™…ä¸­æ–­å‘¨æœŸ
+#endif
     pit0_count = 0;
   }
-  #ifdef BLUESEND//Í·ÎÄ¼şÖĞ¶¨Òå
-//UART·¢ËÍÊı¾İ
-//  UART_Putstr(uart0,"SEU_smartcar");
-    flag_bluesend = 1;
-//    VirOSC();//ĞéÄâÊ¾²¨Æ÷    ²»Òª·ÅÔÚÖĞ¶ÏÀï
-  #endif
-  if(pit0_flag_stop_en>2000 && (forbid_stop==0))//2s½ûÖ¹Í£³µ
+#ifdef BLUESEND //å¤´æ–‡ä»¶ä¸­å®šä¹‰
+                //UARTå‘é€æ•°æ®
+                //  UART_Putstr(uart0,"SEU_smartcar");
+  flag_bluesend = 1;
+  //    VirOSC();//è™šæ‹Ÿç¤ºæ³¢å™¨    ä¸è¦æ”¾åœ¨ä¸­æ–­é‡Œ
+#endif
+  if (pit0_flag_stop_en > 2000 && (forbid_stop == 0)) //2sç¦æ­¢åœè½¦
   {
-    if((Pin(I4)==0)||(Pin(C6)==0)||(Pin(E4)==0)) flag_stop = 1;
+    if ((Pin(I4) == 0) || (Pin(C6) == 0) || (Pin(E4) == 0))
+      flag_stop = 1;
   }
-  pit0_flag_start++;//1sÄÚÖğ½¥¼ÓËÙ
+  pit0_flag_start++; //1så†…é€æ¸åŠ é€Ÿ
 
-  if(pit0_flag_start>100) pit0_flag_start = 100;
-    
+  if (pit0_flag_start > 100)
+    pit0_flag_start = 100;
+
   Control();
-
 }
 
 int main(void)
 {
-  while((1280*ex_clk_khz) != (256*ics_clk_khz));//È·±£Ê±ÖÓÅäÖÃÎŞÎó
+  while ((1280 * ex_clk_khz) != (256 * ics_clk_khz))
+    ; //ç¡®ä¿æ—¶é’Ÿé…ç½®æ— è¯¯
   Initial_All();
 
   LCD_Init();
-//  LCD_Clear(WHITE);
-//  char num_char[4]="adc";
-//  LCD_Show_String(6,8,0,0,num_char,0,BLACK,WHITE);
-//  LCD_Fill_CharImage(20,20,40,30,test,BLACK,WHITE);
-//  LCD_Fill_Image(60,60,54,25,gImage_baidu);
-//  LCD_Fill_Image(0,0,64,80,gImage_zhuoqing);//
+  //  LCD_Clear(WHITE);
+  //  char num_char[4]="adc";
+  //  LCD_Show_String(6,8,0,0,num_char,0,BLACK,WHITE);
+  //  LCD_Fill_CharImage(20,20,40,30,test,BLACK,WHITE);
+  //  LCD_Fill_Image(60,60,54,25,gImage_baidu);
+  //  LCD_Fill_Image(0,0,64,80,gImage_zhuoqing);//
   // LCD_Fill_Image(64,0,64,80,gImage_zhuoqing);//
   // LCD_Fill_Image(0,80,64,80,gImage_zhuoqing);//
   // LCD_Fill_Image(64,80,64,80,gImage_zhuoqing);//
-  
+
   OLED_Init();
-//  OLED_Picture(128,64,&show[0]);//?????????
+  //  OLED_Picture(128,64,&show[0]);//?????????
   Soft_Delay_ms(100);
   OLED_Clear(0x00);
 
-//  float flash_write_float = 12.3;
-//  double flash_write_double = 13.4;
-//  FLASH_EraseSector(254);
-//  
-//  FLASH_WriteFloat(254,flash_write_float,4);
-//  FLASH_WriteDouble(254,flash_write_double,16);
-//  
-//  sprintf(spring_oled,"RR:%d",ad_right2);//
-//  OLED_Show_String(8,16,64,16,1,spring_oled,1);
-//  float flash_read_float = 0;
-//  double flash_read_d = 0;
-//  
-//  flash_read_float = flash_read(254,4,float);
-//  flash_read_d = flash_read_double(254,16);
-//
-////sprintf¸¡µãÊıÎŞ·¨Ê¹ÓÃ,ĞèÒªĞŞ¸ÄÎª
-////  sprintf(spring_oled, "F:%.2f",flash_read_float);//
-//	sprintf(spring_oled,"F:%d.%03d",(int)flash_read_float,(int)((flash_read_float-(int)flash_read_float)*1000));
-//  OLED_Show_String(8,16,0,30,1,spring_oled,1);
-//	sprintf(spring_oled,"D:%d.%03d",(int)flash_read_d,(int)((flash_read_d-(int)flash_read_d)*1000));
-////  sprintf(spring_oled, "D:%f",flash_read_d);//
-//  OLED_Show_String(8,16,0,50,1,spring_oled,1);
-//  Soft_Delay_ms(2000);
+  //  float flash_write_float = 12.3;
+  //  double flash_write_double = 13.4;
+  //  FLASH_EraseSector(254);
+  //
+  //  FLASH_WriteFloat(254,flash_write_float,4);
+  //  FLASH_WriteDouble(254,flash_write_double,16);
+  //
+  //  sprintf(spring_oled,"RR:%d",ad_right2);//
+  //  OLED_Show_String(8,16,64,16,1,spring_oled,1);
+  //  float flash_read_float = 0;
+  //  double flash_read_d = 0;
+  //
+  //  flash_read_float = flash_read(254,4,float);
+  //  flash_read_d = flash_read_double(254,16);
+  //
+  ////sprintfæµ®ç‚¹æ•°æ— æ³•ä½¿ç”¨,éœ€è¦ä¿®æ”¹ä¸º
+  ////  sprintf(spring_oled, "F:%.2f",flash_read_float);//
+  //	sprintf(spring_oled,"F:%d.%03d",(int)flash_read_float,(int)((flash_read_float-(int)flash_read_float)*1000));
+  //  OLED_Show_String(8,16,0,30,1,spring_oled,1);
+  //	sprintf(spring_oled,"D:%d.%03d",(int)flash_read_d,(int)((flash_read_d-(int)flash_read_d)*1000));
+  ////  sprintf(spring_oled, "D:%f",flash_read_d);//
+  //  OLED_Show_String(8,16,0,50,1,spring_oled,1);
+  //  Soft_Delay_ms(2000);
   IIC_init();
   InitMPU6050();
-//
+  //
 
-
-
-  //¿ªÆô²Ëµ¥µ÷ÊÔ
+  //å¼€å¯èœå•è°ƒè¯•
   RTC_Init();
   RTC_Timeset(5);
-  while(1)//Á½¸ö¼üÍ¬Ê±°´ÏÂ³ÖĞø0.5sÍê³Éµ÷ÊÔ
+  while (1) //ä¸¤ä¸ªé”®åŒæ—¶æŒ‰ä¸‹æŒç»­0.5så®Œæˆè°ƒè¯•
   {
-    if(Pin(G4) && Pin(G5)) menu_debug_finish = RTC_Check();
-    else RTC_Clear();
-//    if(menu_show_choose) Menu_Debug_LCD();
-////    else 
-    
+    if (Pin(G4) && Pin(G5))
+      menu_debug_finish = RTC_Check();
+    else
+      RTC_Clear();
+    //    if(menu_show_choose) Menu_Debug_LCD();
+    ////    else
+
     Menu_Debug();
-    if(menu_debug_finish) break;
+    if (menu_debug_finish)
+      break;
   }
-  //-----²Ëµ¥µ÷ÊÔ½áÊøÖ¸Ê¾,RGBÅÜÂíµÆÑ­»·1´Î
+  //-----èœå•è°ƒè¯•ç»“æŸæŒ‡ç¤º,RGBè·‘é©¬ç¯å¾ªç¯1æ¬¡
   oled_menu_pagenum = 0;
   oled_position_cursory = 16;
   OLED_Clear(0x00);
   LCD_DisplayOff();
   LCD_Sleep();
-  
-  while(Pin(G4));
-  while(Pin(G5));//µÈ´ı°´¼ü·Å¿ª
-  
-  //¸³ÖµÁíÒ»°ëc_ad
+
+  while (Pin(G4))
+    ;
+  while (Pin(G5))
+    ; //ç­‰å¾…æŒ‰é”®æ”¾å¼€
+
+  //èµ‹å€¼å¦ä¸€åŠc_ad
   c_ad5 = -c_ad4;
   c_ad6 = -c_ad3;
   c_ad7 = -c_ad2;
@@ -208,390 +218,428 @@ int main(void)
   offset_c67 = -offset_c23;
   offset_c56 = -offset_c34;
 
-//  offset_c34 = -offset_c12;
+  //  offset_c34 = -offset_c12;
   min_offset = -max_offset;
-  
-  //Ğ´flashÉÈÇø
+
+  //å†™flashæ‰‡åŒº
   //-----------------------------------------------
-  menu_array_length = sizeof(menu_array)/sizeof(float);//È·±£ÕıÈ·µÄ³¤¶È
+  menu_array_length = sizeof(menu_array) / sizeof(float); //ç¡®ä¿æ­£ç¡®çš„é•¿åº¦
 
-  int menu_array_count_temp = 0,menu_flash_count_temp = 0;
+  int menu_array_count_temp = 0, menu_flash_count_temp = 0;
 
-  while(menu_array_count_temp < menu_array_length)
+  while (menu_array_count_temp < menu_array_length)
   {
-    flash_num8[menu_flash_count_temp] = (uint8)(100*(*menu_array[menu_array_count_temp]));//???
+    flash_num8[menu_flash_count_temp] = (uint8)(100 * (*menu_array[menu_array_count_temp])); //???
     menu_flash_count_temp++;
-    flash_num8[menu_flash_count_temp] = (uint8)((uint16)(*menu_array[menu_array_count_temp]*100)>>8);//???,????uint16
+    flash_num8[menu_flash_count_temp] = (uint8)((uint16)(*menu_array[menu_array_count_temp] * 100) >> 8); //???,????uint16
     menu_flash_count_temp++;
     menu_array_count_temp++;
   }
 
   FLASH_EraseSector(255);
 
-  FLASH_WriteSector(255,(const uint8 *)flash_num8,(2*menu_array_length+4-(menu_array_length*2)%4),0);//Ã¿¸öÊ®ÁùÎ»Êı¾İ³¤Á½¸ö×Ö½Ú
+  FLASH_WriteSector(255, (const uint8 *)flash_num8, (2 * menu_array_length + 4 - (menu_array_length * 2) % 4), 0); //æ¯ä¸ªåå…­ä½æ•°æ®é•¿ä¸¤ä¸ªå­—èŠ‚
   //--------------------------------------------------------------------------
-  Pout(G1,1);
-  Pout(G2,1);
-  Pout(G3,1);
-//  Soft_Delay_ms(200);
-//  Pout(G1,0);
-//  Soft_Delay_ms(200);
-//  Pout(G1,1);
-//  Pout(G2,0);
-//  Soft_Delay_ms(200);
-//  Pout(G2,1);
-//  Pout(G3,0);
-//  Soft_Delay_ms(200);  
-//  Pout(G3,1);
-  
-//  Pout(G1,0);
-//  Soft_Delay_ms(200);  
-//  Pout(G1,1);
-//  Pout(G2,0);
-//  Soft_Delay_ms(200);  
-//  Pout(G2,1);
-//  Pout(G3,0);
-//  Soft_Delay_ms(200);
-//  Pout(G3,1);
+  Pout(G1, 1);
+  Pout(G2, 1);
+  Pout(G3, 1);
+  //  Soft_Delay_ms(200);
+  //  Pout(G1,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G1,1);
+  //  Pout(G2,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G2,1);
+  //  Pout(G3,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G3,1);
+
+  //  Pout(G1,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G1,1);
+  //  Pout(G2,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G2,1);
+  //  Pout(G3,0);
+  //  Soft_Delay_ms(200);
+  //  Pout(G3,1);
 
   //---------------------------
 
-  
-//»·µºÉèÖÃ
-  round_count = 0;//»·µºÎ»Çå¿Õ
+  //ç¯å²›è®¾ç½®
+  round_count = 0; //ç¯å²›ä½æ¸…ç©º
   uint8 round_size_int = (uint8)undefine_para;
   uint8 round_dir_int = (uint8)flash_round_dir;
   uint8 round_size_array = 0;
-  round_array_length = sizeof(round_size)/sizeof(char);
-  for(round_size_array=0;round_size_array<round_array_length;round_size_array++)
+  round_array_length = sizeof(round_size) / sizeof(char);
+  for (round_size_array = 0; round_size_array < round_array_length; round_size_array++)
   {
     round_size[round_size_array] = round_size_int & (0x01);
     round_dir[round_size_array] = round_dir_int & (0x01);
-    round_dir_int = round_dir_int>>1;
-    round_size_int = round_size_int>>1;
+    round_dir_int = round_dir_int >> 1;
+    round_size_int = round_size_int >> 1;
   }
 
-  
-  Pout(G1,0);//ºìµÆ³£ÁÁ,µÈ´ı·¢³µ
+  Pout(G1, 0); //çº¢ç¯å¸¸äº®,ç­‰å¾…å‘è½¦
 
-//»·µº±êÖ¾¶ÁÈ¡
+  //ç¯å²›æ ‡å¿—è¯»å–
   RTC_Timeset(5);
-  RTC_Clear();                          //Çå¿Õµ±Ç°RTC
+  RTC_Clear(); //æ¸…ç©ºå½“å‰RTC
   menu_debug_finish = 0;
-  while(1)//ÏÂ¼ü°´ÏÂ³ÖĞø0.5sÍê³Éµ÷ÊÔ
+  while (1) //ä¸‹é”®æŒ‰ä¸‹æŒç»­0.5så®Œæˆè°ƒè¯•
   {
-    if(Pin(G5)) menu_debug_finish = RTC_Check();
-    else RTC_Clear();
+    if (Pin(G5))
+      menu_debug_finish = RTC_Check();
+    else
+      RTC_Clear();
     Round_Read_Menu();
-    if(menu_debug_finish) break;
+    if (menu_debug_finish)
+      break;
   }
-  //-----²Ëµ¥µ÷ÊÔ½áÊøÖ¸Ê¾,RGBÅÜÂíµÆÑ­»·1´Î
+  //-----èœå•è°ƒè¯•ç»“æŸæŒ‡ç¤º,RGBè·‘é©¬ç¯å¾ªç¯1æ¬¡
   oled_menu_pagenum = 0;
   OLED_Clear(0x00);
-  //Ğ´flash
-  menu_array_length = sizeof(ad_flag_round)/sizeof(uint16_t);
+  //å†™flash
+  menu_array_length = sizeof(ad_flag_round) / sizeof(uint16_t);
   menu_array_count_temp = 0;
   menu_flash_count_temp = 0;
 
-  while(menu_array_count_temp < menu_array_length)
+  while (menu_array_count_temp < menu_array_length)
   {
     flash_round_write[menu_flash_count_temp] = (uint8)(ad_flag_round[menu_array_count_temp]);
     menu_flash_count_temp++;
-    flash_round_write[menu_flash_count_temp] = (uint8)((uint16)(ad_flag_round[menu_array_count_temp])>>8);
+    flash_round_write[menu_flash_count_temp] = (uint8)((uint16)(ad_flag_round[menu_array_count_temp]) >> 8);
     menu_flash_count_temp++;
     menu_array_count_temp++;
   }
 
   FLASH_EraseSector(254);
-  FLASH_WriteSector(254,(const uint8 *)flash_round_write,20,0);
-  while(Pin(G5));//µÈ´ı°´¼ü·Å¿ª
-  
-  while(!Pin(G4))
+  FLASH_WriteSector(254, (const uint8 *)flash_round_write, 20, 0);
+  while (Pin(G5))
+    ; //ç­‰å¾…æŒ‰é”®æ”¾å¼€
+
+  while (!Pin(G4))
   {
-//    GPIO_Turn(G1);
-//    int i = 10;//ºìµÆÉÁË¸£¬µÈ´ı·¢³µ
-//    while(i)
-//    {
-//      if(Pin(G4)) break;
-//      Soft_Delay_ms(20);
-//      i--;
-//    }
+    //    GPIO_Turn(G1);
+    //    int i = 10;//çº¢ç¯é—ªçƒï¼Œç­‰å¾…å‘è½¦
+    //    while(i)
+    //    {
+    //      if(Pin(G4)) break;
+    //      Soft_Delay_ms(20);
+    //      i--;
+    //    }
   }
-  flag_speed_choose = 2*Pin(H5)+Pin(H2);//8*Pin(C5)+4*Pin(H7)+
-  motor_set_speed_temp = 72+4*flag_speed_choose;
+  flag_speed_choose = 2 * Pin(H5) + Pin(H2); //8*Pin(C5)+4*Pin(H7)+
+  motor_set_speed_temp = 72 + 4 * flag_speed_choose;
   motor_set_speed = motor_set_speed_temp;
   forbid_stop = Pin(H7);
   flag_speed_up = Pin(C5);
-  flag_run = 1;//ĞŞ¸Ä±êÖ¾Î»
+  flag_run = 1; //ä¿®æ”¹æ ‡å¿—ä½
   flag_stop = 0;
   preround_delay = 2000;
-  Pout(G1,1);
+  Pout(G1, 1);
   Soft_Delay_ms(500);
-  RTC_Timeset((uint16)(run_time_set*10));
-  RTC_Clear();                          //Çå¿Õµ±Ç°RTC
+  RTC_Timeset((uint16)(run_time_set * 10));
+  RTC_Clear(); //æ¸…ç©ºå½“å‰RTC
   UART_RX_IRQ_Enable(uart0);
-  Enable_Interrupt(INT_PIT_CH0); 	/* Enable Interrupts */
+  Enable_Interrupt(INT_PIT_CH0); /* Enable Interrupts */
 
-  while(1)
+  while (1)
   {
-    if(1 == RTC_Check()) flag_stop = 1;
-//    flag_stop = RTC_Check();
-    if(flag_bluesend)
+    if (1 == RTC_Check())
+      flag_stop = 1;
+    //    flag_stop = RTC_Check();
+    if (flag_bluesend)
     {
       VirOSC(uart0);
       flag_bluesend = 0;
     }
-    if(flag_show_oled)
+    if (flag_show_oled)
     {
       OLED_Myshow();
       flag_show_oled = 0;
     }
-//    if(Pin(G4))
-//    {
-//      Soft_Delay_ms(500);
-//      flag_run = 1;//?????
-//      flag_stop = 0;
-//      data_getstring[0] = '0';
-//    }
-//    if(Pin(G5)||flag_stop)
-//    {
-//      flag_run = 0;//?????
-//      flag_stop = 1;
-//      motor_left_error = 0;//?????
-//      pre_motor_left_error = 0;
-//      ppre_motor_left_error = 0;
-//      lastactive_area = 0;
-//      position_area = 0;
-//      motor_right_out = 0;
-//      motor_left_out = 0;
-//    }
+    //    if(Pin(G4))
+    //    {
+    //      Soft_Delay_ms(500);
+    //      flag_run = 1;//?????
+    //      flag_stop = 0;
+    //      data_getstring[0] = '0';
+    //    }
+    //    if(Pin(G5)||flag_stop)
+    //    {
+    //      flag_run = 0;//?????
+    //      flag_stop = 1;
+    //      motor_left_error = 0;//?????
+    //      pre_motor_left_error = 0;
+    //      ppre_motor_left_error = 0;
+    //      lastactive_area = 0;
+    //      position_area = 0;
+    //      motor_right_out = 0;
+    //      motor_left_out = 0;
+    //    }
   }
-	return 1;
+  return 1;
 }
 
 void Control(void)
 {
 
-//  buffer_gyro_y[9] = gyro_y;
-//  gyro_sum = array_sum(buffer_gyro_y,10);
-//  buffer_left_move(buffer_gyro_y,10);
-//  if(abs(gyro_sum)>3000) flag_updown = 1;
-//  else flag_updown = 0;
-  
-//×î´óÖµÆ¥ÅäL_R 435,440,555,440,530
+  //  buffer_gyro_y[9] = gyro_y;
+  //  gyro_sum = array_sum(buffer_gyro_y,10);
+  //  buffer_left_move(buffer_gyro_y,10);
+  //  if(abs(gyro_sum)>3000) flag_updown = 1;
+  //  else flag_updown = 0;
+
+  //æœ€å¤§å€¼åŒ¹é…L_R 435,440,555,440,530
   //    475,445,550,455,540
   //655,665,625,715,655
-  if(sensor_version==0)
+  if (sensor_version == 0)
   {
-    ad_right2 = (int)(ADC_Read(ADC0_SE2)*0.954); //A6------------------------------------------------------------------------
-    ad_right1 = (int)(ADC_Read(ADC0_SE3)*0.874); //A7-------------------------------------------------------------------------
-    ad_center = ADC_Read(ADC0_SE1); //A1
-    ad_left1 = (int)(ADC_Read(ADC0_SE9)*0.94); //C1
-    ad_left2 = (int)(ADC_Read(ADC0_SE10)*0.954);//C2
+    ad_right2 = (int)(ADC_Read(ADC0_SE2) * 0.954); //A6------------------------------------------------------------------------
+    ad_right1 = (int)(ADC_Read(ADC0_SE3) * 0.874); //A7-------------------------------------------------------------------------
+    ad_center = ADC_Read(ADC0_SE1);                //A1
+    ad_left1 = (int)(ADC_Read(ADC0_SE9) * 0.94);   //C1
+    ad_left2 = (int)(ADC_Read(ADC0_SE10) * 0.954); //C2
   }
   else
   {
-    ad_center = ADC_Read(ADC0_SE1); //A1
-    ad_right2 = (int)(ADC_Read(ADC0_SE2)*1.0); //A6
-    ad_right1 = (int)(ADC_Read(ADC0_SE3)*1); //A7
-    ad_left1 = (int)(ADC_Read(ADC0_SE9)*1); //C1
-    ad_left2 = (int)(ADC_Read(ADC0_SE10)*1);//C2
+    ad_center = ADC_Read(ADC0_SE1);              //A1
+    ad_right2 = (int)(ADC_Read(ADC0_SE2) * 1.0); //A6
+    ad_right1 = (int)(ADC_Read(ADC0_SE3) * 1);   //A7
+    ad_left1 = (int)(ADC_Read(ADC0_SE9) * 1);    //C1
+    ad_left2 = (int)(ADC_Read(ADC0_SE10) * 1);   //C2
   }
-  ad_total = ad_center+ad_right2+ad_right1+ad_left1+ad_left2;
-  //Îåµç¸ĞËã·¨
-  //AD×î´óÖµ¼ÆËã
+  ad_total = ad_center + ad_right2 + ad_right1 + ad_left1 + ad_left2;
+  //äº”ç”µæ„Ÿç®—æ³•
+  //ADæœ€å¤§å€¼è®¡ç®—
   uint16_t max_ad = 0;
-  if(ad_left2 >= ad_left1) max_ad = ad_left2;
-  else max_ad = ad_left1;
-  if(ad_center >= max_ad) max_ad = ad_center;
-  else ;//max_ad = max_ad
-  if(ad_right1 >= max_ad) max_ad = ad_right1;
-  else ;
-  if(ad_right2 >= max_ad) max_ad = ad_right2;
-  else ;
-  
-  char area;//Çø¿éÅĞ¶Ï
-  
-  //·ÖÇø
-  if((lastactive_area == 0)&&(max_ad <= outrange_admax)) area=NONE_SIT;//³õÊ¼»¯
-  else if(max_ad <= outrange_admax) area=OUTRANGE_SIT;
-  else if(max_ad == ad_right2) area=LEFT_LEFT;            //1
-  else if(max_ad == ad_left2) area=RIGHT_RIGHT;          //8
-  else if(max_ad == ad_center)
+  if (ad_left2 >= ad_left1)
+    max_ad = ad_left2;
+  else
+    max_ad = ad_left1;
+  if (ad_center >= max_ad)
+    max_ad = ad_center;
+  else
+    ; //max_ad = max_ad
+  if (ad_right1 >= max_ad)
+    max_ad = ad_right1;
+  else
+    ;
+  if (ad_right2 >= max_ad)
+    max_ad = ad_right2;
+  else
+    ;
+
+  char area; //åŒºå—åˆ¤æ–­
+
+  //åˆ†åŒº
+  if ((lastactive_area == 0) && (max_ad <= outrange_admax))
+    area = NONE_SIT; //åˆå§‹åŒ–
+  else if (max_ad <= outrange_admax)
+    area = OUTRANGE_SIT;
+  else if (max_ad == ad_right2)
+    area = LEFT_LEFT; //1
+  else if (max_ad == ad_left2)
+    area = RIGHT_RIGHT; //8
+  else if (max_ad == ad_center)
   {
-    if(ad_left1>=ad_right1) area=CENTER_RIGHT;               //5
-    else if(ad_right1>ad_left1) area=CENTER_LEFT;            //4
-    else area=OUTRANGE_SIT;
+    if (ad_left1 >= ad_right1)
+      area = CENTER_RIGHT; //5
+    else if (ad_right1 > ad_left1)
+      area = CENTER_LEFT; //4
+    else
+      area = OUTRANGE_SIT;
   }
-  else if(max_ad == ad_left1)
+  else if (max_ad == ad_left1)
   {
-    if(ad_left2>=ad_center) area=MIDRIGHT_RIGHT;            //7
-    else if(ad_center>ad_left2) area=MIDRIGHT_LEFT;           //6
-    else area=OUTRANGE_SIT;
+    if (ad_left2 >= ad_center)
+      area = MIDRIGHT_RIGHT; //7
+    else if (ad_center > ad_left2)
+      area = MIDRIGHT_LEFT; //6
+    else
+      area = OUTRANGE_SIT;
   }
-  else if(max_ad == ad_right1)
+  else if (max_ad == ad_right1)
   {
-    if(ad_right2>=ad_center) area=MIDLEFT_LEFT;            //2
-    else if(ad_center>ad_right2) area=MIDLEFT_RIGHT;             //3
-    else area=OUTRANGE_SIT;
+    if (ad_right2 >= ad_center)
+      area = MIDLEFT_LEFT; //2
+    else if (ad_center > ad_right2)
+      area = MIDLEFT_RIGHT; //3
+    else
+      area = OUTRANGE_SIT;
   }
-  else area=OUTRANGE_SIT;
-  
+  else
+    area = OUTRANGE_SIT;
 
-  
-  //Æ«ÒÆ¼ÆËã
-  switch(area)
+  //åç§»è®¡ç®—
+  switch (area)
   {
-    case 1:        offset_cal = c_ad1*((float)(ad_right2-ad_right1)/(ad_right2))+offset_c12;break;
-    case 2:        offset_cal = (((float)(ad_right1-ad_right2)/(ad_right1)+offset_c12)*(ad_right2-ad_center)/(ad_right1-ad_center))+((-(float)(ad_right2-ad_center)/(ad_right1)+offset_c23)*(ad_right1-ad_right2)/(ad_right1-ad_center));break;
+  case 1:
+    offset_cal = c_ad1 * ((float)(ad_right2 - ad_right1) / (ad_right2)) + offset_c12;
+    break;
+  case 2:
+    offset_cal = (((float)(ad_right1 - ad_right2) / (ad_right1) + offset_c12) * (ad_right2 - ad_center) / (ad_right1 - ad_center)) + ((-(float)(ad_right2 - ad_center) / (ad_right1) + offset_c23) * (ad_right1 - ad_right2) / (ad_right1 - ad_center));
+    break;
 
-    case 3:        offset_cal = (((float)(ad_right2-ad_center)/(ad_right1)+offset_c23)*(ad_center-ad_right1)/(ad_right2-ad_right1))+((-(float)(ad_center-ad_right1)/(ad_center)+offset_c34)*(ad_right2-ad_center)/(ad_right2-ad_right1));break;
+  case 3:
+    offset_cal = (((float)(ad_right2 - ad_center) / (ad_right1) + offset_c23) * (ad_center - ad_right1) / (ad_right2 - ad_right1)) + ((-(float)(ad_center - ad_right1) / (ad_center) + offset_c34) * (ad_right2 - ad_center) / (ad_right2 - ad_right1));
+    break;
 
-    case 4:        offset_cal = (((float)(ad_center-ad_right1)/(ad_center)+offset_c34)*(ad_right1-ad_left1)/(ad_center-ad_left1))+((-(float)(ad_right1-ad_left1)/(ad_center)+offset_c45)*(ad_center-ad_right1)/(ad_center-ad_left1));break;
-    case 5:        offset_cal = (((float)(ad_center-ad_left1)/(ad_center)+offset_c56)*(ad_left1-ad_right1)/(ad_center-ad_right1))+((-(float)(ad_left1-ad_right1)/(ad_center)+offset_c45)*(ad_center-ad_left1)/(ad_center-ad_right1));break;
+  case 4:
+    offset_cal = (((float)(ad_center - ad_right1) / (ad_center) + offset_c34) * (ad_right1 - ad_left1) / (ad_center - ad_left1)) + ((-(float)(ad_right1 - ad_left1) / (ad_center) + offset_c45) * (ad_center - ad_right1) / (ad_center - ad_left1));
+    break;
+  case 5:
+    offset_cal = (((float)(ad_center - ad_left1) / (ad_center) + offset_c56) * (ad_left1 - ad_right1) / (ad_center - ad_right1)) + ((-(float)(ad_left1 - ad_right1) / (ad_center) + offset_c45) * (ad_center - ad_left1) / (ad_center - ad_right1));
+    break;
 
-    case 6:        offset_cal = (((float)(ad_left2-ad_center)/(ad_left1)+offset_c67)*(ad_center-ad_left1)/(ad_left2-ad_left1))+((-(float)(ad_center-ad_left1)/(ad_center)+offset_c56)*(ad_left2-ad_center)/(ad_left2-ad_left1));break;
+  case 6:
+    offset_cal = (((float)(ad_left2 - ad_center) / (ad_left1) + offset_c67) * (ad_center - ad_left1) / (ad_left2 - ad_left1)) + ((-(float)(ad_center - ad_left1) / (ad_center) + offset_c56) * (ad_left2 - ad_center) / (ad_left2 - ad_left1));
+    break;
 
-    case 7:        offset_cal = (((float)(ad_left1-ad_left2)/(ad_left2)+offset_c78)*(ad_left2-ad_center)/(ad_left1-ad_center))+((-(float)(ad_left2-ad_center)/(ad_left1)+offset_c67)*(ad_left1-ad_left2)/(ad_left1-ad_center));break;
-    case 8:        offset_cal = c_ad8*((float)(ad_left2-ad_left1)/(ad_left2))+offset_c78;break;
+  case 7:
+    offset_cal = (((float)(ad_left1 - ad_left2) / (ad_left2) + offset_c78) * (ad_left2 - ad_center) / (ad_left1 - ad_center)) + ((-(float)(ad_left2 - ad_center) / (ad_left1) + offset_c67) * (ad_left1 - ad_left2) / (ad_left1 - ad_center));
+    break;
+  case 8:
+    offset_cal = c_ad8 * ((float)(ad_left2 - ad_left1) / (ad_left2)) + offset_c78;
+    break;
 
-    case 9:        offset_cal = offset_cal;break;
-   // default :     offset_cal = pre_offset;
+  case 9:
+    offset_cal = offset_cal;
+    break;
+    // default :     offset_cal = pre_offset;
   }
-  
-  if(offset_cal>max_offset) offset_cal = max_offset;
-  else if(offset_cal<min_offset) offset_cal = min_offset;
 
-  
-  //¶ªÏßÑ°Ïß
-  if(area == 9)
+  if (offset_cal > max_offset)
+    offset_cal = max_offset;
+  else if (offset_cal < min_offset)
+    offset_cal = min_offset;
+
+  //ä¸¢çº¿å¯»çº¿
+  if (area == 9)
   {
-    if(lastactive_area == 0) offset_cal= 0;//³õÊ¼»¯
-    else if(lastactive_area >= 5) offset_cal = min_offset;
-    else offset_cal = max_offset;
+    if (lastactive_area == 0)
+      offset_cal = 0; //åˆå§‹åŒ–
+    else if (lastactive_area >= 5)
+      offset_cal = min_offset;
+    else
+      offset_cal = max_offset;
   }
 
   delay_updown_count += gyro_y;
-  
-////3µç¸ĞËã·¨
-//  //AD×î´óÖµ¼ÆËã
-//  uint16_t max_ad = 0;
-//  if(ad_left2 >= ad_center) max_ad = ad_left2;
-//  else max_ad = ad_center;
-//  if(ad_right2 >= max_ad) max_ad = ad_right2;
-//  else ;//max_ad = max_ad
-//
-//  
-//  char area;//Çø¿éÅĞ¶Ï
-//  
-//  //·ÖÇø
-//  if((lastactive_area == 0)&&(max_ad <= 100)) area=NONE_SIT;//³õÊ¼»¯
-//  else if(max_ad <= 100) area=OUTRANGE_SIT;
-//  else if(max_ad == ad_left2) area=RIGHT_RIGHT;          //4
-//  else if(max_ad == ad_right2) area=LEFT_LEFT;            //1
-//  else if(max_ad == ad_center)
-//  {
-//    if(ad_left2>=ad_right2) area=CENTER_RIGHT;               //3
-//    else if(ad_right2>ad_left2) area=CENTER_LEFT;            //2
-//    else area=OUTRANGE_SIT;
-//  }
-//  else area=OUTRANGE_SIT;
-    //Æ«ÒÆ¼ÆËã
-//  switch(area)
-//  {
-//    case 1:        offset_cal = c_ad1*((float)(ad_right2-ad_center)/(ad_right2))+offset_c12;break;
-//    case 2:        offset_cal = (((float)(ad_center-ad_right2)/(ad_center)+offset_c12)*(ad_right2-ad_left2)/(ad_center-ad_left2))+((-(ad_right2-ad_left2)/(ad_center)+offset_c23)*(ad_center-ad_right2)/(ad_center-ad_left2));break;
-//    case 3:        offset_cal = (((float)(ad_center-ad_left2)/(ad_center)+offset_c34)*(ad_left2-ad_right2)/(ad_center-ad_right2))+((-(ad_left2-ad_right2)/(ad_center)+offset_c23)*(ad_center-ad_left2)/(ad_center-ad_right2));break;
-//    case 4:        offset_cal = c_ad8*((float)(ad_left2-ad_left1)/(ad_left2))+offset_c34;break;
-//    
-//    case 5:        offset_cal = offset_cal;break;
-//  }
-//
-//  
-//  if(offset_cal>max_offset) offset_cal = max_offset;
-//  else if(offset_cal<min_offset) offset_cal = min_offset;
+
+  ////3ç”µæ„Ÿç®—æ³•
+  //  //ADæœ€å¤§å€¼è®¡ç®—
+  //  uint16_t max_ad = 0;
+  //  if(ad_left2 >= ad_center) max_ad = ad_left2;
+  //  else max_ad = ad_center;
+  //  if(ad_right2 >= max_ad) max_ad = ad_right2;
+  //  else ;//max_ad = max_ad
+  //
+  //
+  //  char area;//åŒºå—åˆ¤æ–­
+  //
+  //  //åˆ†åŒº
+  //  if((lastactive_area == 0)&&(max_ad <= 100)) area=NONE_SIT;//åˆå§‹åŒ–
+  //  else if(max_ad <= 100) area=OUTRANGE_SIT;
+  //  else if(max_ad == ad_left2) area=RIGHT_RIGHT;          //4
+  //  else if(max_ad == ad_right2) area=LEFT_LEFT;            //1
+  //  else if(max_ad == ad_center)
+  //  {
+  //    if(ad_left2>=ad_right2) area=CENTER_RIGHT;               //3
+  //    else if(ad_right2>ad_left2) area=CENTER_LEFT;            //2
+  //    else area=OUTRANGE_SIT;
+  //  }
+  //  else area=OUTRANGE_SIT;
+  //åç§»è®¡ç®—
+  //  switch(area)
+  //  {
+  //    case 1:        offset_cal = c_ad1*((float)(ad_right2-ad_center)/(ad_right2))+offset_c12;break;
+  //    case 2:        offset_cal = (((float)(ad_center-ad_right2)/(ad_center)+offset_c12)*(ad_right2-ad_left2)/(ad_center-ad_left2))+((-(ad_right2-ad_left2)/(ad_center)+offset_c23)*(ad_center-ad_right2)/(ad_center-ad_left2));break;
+  //    case 3:        offset_cal = (((float)(ad_center-ad_left2)/(ad_center)+offset_c34)*(ad_left2-ad_right2)/(ad_center-ad_right2))+((-(ad_left2-ad_right2)/(ad_center)+offset_c23)*(ad_center-ad_left2)/(ad_center-ad_right2));break;
+  //    case 4:        offset_cal = c_ad8*((float)(ad_left2-ad_left1)/(ad_left2))+offset_c34;break;
+  //
+  //    case 5:        offset_cal = offset_cal;break;
+  //  }
+  //
+  //
+  //  if(offset_cal>max_offset) offset_cal = max_offset;
+  //  else if(offset_cal<min_offset) offset_cal = min_offset;
 
   //offset
-//  char area;//Çø¿éÅĞ¶Ï
-//  offset_cal=100*(ad_right2-ad_left2)/(float)(ad_right2+ad_left2);
-//  if(fabs(offset_cal)<20) area=1;//1Ö±µÀ
-//  else if(fabs(offset_cal)<60) area=2;//2Ğ¡Íä
-//  else if(fabs(offset_cal)<300) area=3;//3
-//  else area=OUTRANGE_SIT;
-//  if(max_ad<150) area=OUTRANGE_SIT;
-//  //¶ªÏßÑ°Ïß
-//  if(area == 5)
-//  {
-//    if(lastactive_area == 0) offset_cal= 0;//³õÊ¼»¯
-//    else if(offset_precal <= 0) offset_cal = min_offset;
-//    else offset_cal = max_offset;
-//  }
-//  offset_precal = offset_cal;  
-//  switch(area)
-//  {  
-//    case 1:        offset_out = p1*offset_cal + (int)(d1 * (offset_cal-offset_precal));break;
-//    case 2:        offset_out = p2*offset_cal + (int)(d2 * (offset_cal-offset_precal));break;
-//    case 3:        offset_out = p3*offset_cal + (int)(d3 * (offset_cal-offset_precal));break;
-//    
-//    case 5:        offset_cal = offset_cal;break;
-//  }
-//
-  
-//  if(area==3) Pout(C7,1);
-//  else Pout(C7,0);
-  
+  //  char area;//åŒºå—åˆ¤æ–­
+  //  offset_cal=100*(ad_right2-ad_left2)/(float)(ad_right2+ad_left2);
+  //  if(fabs(offset_cal)<20) area=1;//1ç›´é“
+  //  else if(fabs(offset_cal)<60) area=2;//2å°å¼¯
+  //  else if(fabs(offset_cal)<300) area=3;//3
+  //  else area=OUTRANGE_SIT;
+  //  if(max_ad<150) area=OUTRANGE_SIT;
+  //  //ä¸¢çº¿å¯»çº¿
+  //  if(area == 5)
+  //  {
+  //    if(lastactive_area == 0) offset_cal= 0;//åˆå§‹åŒ–
+  //    else if(offset_precal <= 0) offset_cal = min_offset;
+  //    else offset_cal = max_offset;
+  //  }
+  //  offset_precal = offset_cal;
+  //  switch(area)
+  //  {
+  //    case 1:        offset_out = p1*offset_cal + (int)(d1 * (offset_cal-offset_precal));break;
+  //    case 2:        offset_out = p2*offset_cal + (int)(d2 * (offset_cal-offset_precal));break;
+  //    case 3:        offset_out = p3*offset_cal + (int)(d3 * (offset_cal-offset_precal));break;
+  //
+  //    case 5:        offset_cal = offset_cal;break;
+  //  }
+  //
 
-  
-//  offset_vertical = ad_right1-ad_left1;
-//
-//  offset_verint = (int)offset_vertical;
-//  
-// 
-//  if(((area==2)||(area==3))&&((offset_verint>150)||(offset_verint<-150)))
-//  {
-//    if(flag_offset_double==0)
-//    {
-//      flag_offset_double = 1;
-//    }
-//    else
-//    {
-//      offset_double_count = 0;
-//    }
-//  }
-//  if(flag_offset_double==1)
-//  {
-//    offset_double_count++;
-//    offset_cal*=2;
-//    Pout(C7,1);
-//  }
-//  if(offset_double_count>70)
-//  {
-//    flag_offset_double = 0;
-//    offset_double_count = 0;
-//  }
-//  if(flag_offset_double == 0) Pout(C7,0);
-  
-  //Æ«ÒÆ¾ÀÕı
-  
-//  if(area != 9 && area != 0)//ÓĞĞ§·ÖÇøÄÚ
-//  {
-//    if(area == (pre_area-1))//Æ«ÒÆÏò×ó,ĞèÒª¸ü´óµÄÓÒÆ«¾ÀÕı
-//	{
-//      c_ad[area] *= (offset_area[area]/offset_cal)
-//      offset_cal = offset_area[area];
-//	}
-//  }
-//  
-//  pre_area = area;
-  
+  //  if(area==3) Pout(C7,1);
+  //  else Pout(C7,0);
 
-  
+  //  offset_vertical = ad_right1-ad_left1;
+  //
+  //  offset_verint = (int)offset_vertical;
+  //
+  //
+  //  if(((area==2)||(area==3))&&((offset_verint>150)||(offset_verint<-150)))
+  //  {
+  //    if(flag_offset_double==0)
+  //    {
+  //      flag_offset_double = 1;
+  //    }
+  //    else
+  //    {
+  //      offset_double_count = 0;
+  //    }
+  //  }
+  //  if(flag_offset_double==1)
+  //  {
+  //    offset_double_count++;
+  //    offset_cal*=2;
+  //    Pout(C7,1);
+  //  }
+  //  if(offset_double_count>70)
+  //  {
+  //    flag_offset_double = 0;
+  //    offset_double_count = 0;
+  //  }
+  //  if(flag_offset_double == 0) Pout(C7,0);
 
-  //ÔªËØÅĞ¶Ï
+  //åç§»çº æ­£
 
-  
+  //  if(area != 9 && area != 0)//æœ‰æ•ˆåˆ†åŒºå†…
+  //  {
+  //    if(area == (pre_area-1))//åç§»å‘å·¦,éœ€è¦æ›´å¤§çš„å³åçº æ­£
+  //	{
+  //      c_ad[area] *= (offset_area[area]/offset_cal)
+  //      offset_cal = offset_area[area];
+  //	}
+  //  }
+  //
+  //  pre_area = area;
 
-  //±àÂëÆ÷±äÁ¿
+  //å…ƒç´ åˆ¤æ–­
+
+  //ç¼–ç å™¨å˜é‡
   uint16_t motor_get_value_left;
   uint16_t motor_get_value_right;
   uint8_t motor_get_direction_left;
@@ -599,199 +647,204 @@ void Control(void)
 
   motor_get_direction_left = Pin(E1);
   motor_get_direction_right = Pin(H6);
-   
-  if(motor_get_direction_left != get_left_dir) //ÉÏ´ÎµÄ·½ÏòÓë´Ë´Î²»Í¬,Ö±½Ó½«Õâ¸öÖÜÆÚµÄÂö³åÊı¼Æ0
+
+  if (motor_get_direction_left != get_left_dir) //ä¸Šæ¬¡çš„æ–¹å‘ä¸æ­¤æ¬¡ä¸åŒ,ç›´æ¥å°†è¿™ä¸ªå‘¨æœŸçš„è„‰å†²æ•°è®¡0
     motor_get_value_left = 0;
-  else  motor_get_value_left = FTM_Pulse_Get(ftm0);//±àÂëÆ÷ÊıÖµ¶ÁÈ¡
+  else
+    motor_get_value_left = FTM_Pulse_Get(ftm0); //ç¼–ç å™¨æ•°å€¼è¯»å–
 
   get_left_speed = motor_get_value_left;
-  get_left_dir = motor_get_direction_left;//½«¶ÁÈ¡µ½µÄ·½Ïò´æ´¢
-  
-  if(get_left_dir)   real_left_speed = get_left_speed;//¼ÆËã´ø·ûºÅÂö³åÊı
-  else real_left_speed = -get_left_speed;
+  get_left_dir = motor_get_direction_left; //å°†è¯»å–åˆ°çš„æ–¹å‘å­˜å‚¨
 
-  if(motor_get_direction_right != get_right_dir) //ÉÏ´ÎµÄ·½ÏòÓë´Ë´Î²»Í¬,Ö±½Ó½«Õâ¸öÖÜÆÚµÄÂö³åÊı¼Æ0
+  if (get_left_dir)
+    real_left_speed = get_left_speed; //è®¡ç®—å¸¦ç¬¦å·è„‰å†²æ•°
+  else
+    real_left_speed = -get_left_speed;
+
+  if (motor_get_direction_right != get_right_dir) //ä¸Šæ¬¡çš„æ–¹å‘ä¸æ­¤æ¬¡ä¸åŒ,ç›´æ¥å°†è¿™ä¸ªå‘¨æœŸçš„è„‰å†²æ•°è®¡0
     motor_get_value_right = 0;
-  else  motor_get_value_right = FTM_Pulse_Get(ftm1);//±àÂëÆ÷ÊıÖµ¶ÁÈ¡
-  
+  else
+    motor_get_value_right = FTM_Pulse_Get(ftm1); //ç¼–ç å™¨æ•°å€¼è¯»å–
+
   get_right_speed = motor_get_value_right;
-  get_right_dir = motor_get_direction_right;//½«¶ÁÈ¡µ½µÄ·½Ïò´æ´¢
-  
-  if(get_right_dir)   real_right_speed = -get_right_speed;//¼ÆËã´ø·ûºÅÂö³åÊı
-  else real_right_speed = get_right_speed;
-  
-  FTM_Count_Clean(ftm0);//±àÂëÆ÷ÊıÖµÇåÁã
-  FTM_Count_Clean(ftm1);//±àÂëÆ÷ÊıÖµÇåÁã
-    
-//  //Ö±µÀ¡¢»·µºÅĞ¶Ï
-//  if((ad_center>(ad_flag_round[round_count]/6*5))&&(flag_round==1)&&(flag_state==0))
-//  {
-//    flag_round = 0;//³ö»·Éè¶¨40ms
-//    flag_round_out = 1;//ÖÃÎ»³ö»·±êÖ¾,Ò»¶¨Ê±¼äÄÚ²»ÔÊĞíÈë»·ÅĞ¶¨
-//  }
-//
-//  if((ad_center>ad_flag_round[round_count])&&(flag_state==0))
-//  {
-//    flag_round_count ++;
-//    if(flag_round != 1) offset_cal/=4;//¼õĞ¡P,Ó²»¯×ª½Ç¿ØÖÆ
-//    if(flag_round_count)//È¡½øÈëÌØÕ÷ÖµÅĞ¶¨ºóÁ½´ÎÓëÀë¿ªÌØÕ÷ÖµÅĞ¶¨µ±´Î,×Ü¼ÆÈı´ÎÅĞ¶Ï»·µº·½Ïò
-//    {//&&ad_left1>(ad_center/5*2) && ad_right1>(ad_center/5*2) && ad_right2>(ad_center/5) && ad_left2>(ad_center/5)
-//      flag_round_mid = outrange_admax;//ad_center/5*2;///5*3
-//      if(ad_left2>flag_round_mid && ad_left1>flag_round_mid) round_state_count++;
-//      else if(ad_right2>flag_round_mid && ad_right1>flag_round_mid) round_state_count++;
-//      else
-//      {
-//        flag_round_mid = ad_center/10*7;
-//        if(ad_left1>flag_round_mid && ad_right1>flag_round_mid)
-//        {
-//          flag_round_mid = ad_center/5*2;
-//          if(ad_left2>flag_round_mid || ad_left1>flag_round_mid)
-//            round_state_count++;
-//        }
-//      }
-//    }
-//    round_out_count = 0;
-//  }
-//  else//³ö
-//  {
-//    round_out_count +=(real_left_speed+real_right_speed);
-//    if(round_out_count>700)
-//    {
-//      if((flag_round_count>1)&&(flag_round == 0)&&(flag_round_out == 0))//Èë»·Éè¶¨50ms
-//      {
-//        flag_round_mid = outrange_admax;//ad_center/5*2;
-//        if(ad_left2>flag_round_mid && ad_left1>flag_round_mid) round_state_count++;
-//        else if(ad_right2>flag_round_mid && ad_right1>flag_round_mid) round_state_count++;
-//        if(round_state_count>0)
-//        {
-//          if(round_dir[round_count])     flag_state = 1;
-//          else flag_state = 2;
-//        }
-//
-//        if(flag_state == 2||flag_state == 1)   flag_round = 1;
-//      }
-//      else if((flag_round_count>1)&&(flag_round == 1)&&(flag_round_noout==0))
-//      {
-//        flag_round = 0;//³ö»·Éè¶¨40ms
-//        flag_round_out = 1;//ÖÃÎ»³ö»·±êÖ¾,Ò»¶¨Ê±¼äÄÚ²»ÔÊĞíÈë»·ÅĞ¶¨
-//  //      if(round_count<(round_array_length-1)) round_count++;//»·µº¼ÆÊı+1
-//  //      else round_count = 0;//³¬¹ı×î´ó»·µºÊı,´Ó0¿ªÊ¼ÖØĞÂ¼ÆÊı
-//      }
-//      flag_round_count = 0;//Çå¿ÕÔ²»·±êÖ¾¼ÆÊı
-//      round_state_count=0;
-//    }
-//  }
-//
-//  
-//  if(flag_round_out==1) flag_round_delay++;//ÅĞ¶¨³ö»·ºóÑÓ³ÙÒ»¶¨Ê±¼ä²ÅÔÊĞíÅĞ¶¨ÏÂÒ»¸öÈë»·
-//  if(flag_state == 2||flag_state == 1) 
-//  {
-//    //flag_round_float +=gyro_z/100;//flag_round_delay +=(real_left_speed+real_right_speed);//ÅĞ¶¨Èë»·ºóÑÓ³ÙÒ»¶¨Ê±¼ä²ÅÔÊĞíÅĞ¶¨³ö»·
-//    flag_round_delay++;//=gyro_z/100;
-//  }
-////  if((abs(flag_round_delay) > 800)&&(flag_state == 2||flag_state == 1))//4mËÙ¶ÈÏÂµÄ¾­¹ı1/2¸ö×îĞ¡R50Ô²»·Â·¾¶Ê±¼ä//3500
-//  if((flag_round_delay > 50)&&(flag_state == 2||flag_state == 1))
-//  {
-//    flag_state = 0;//Àë¿ªÅĞ¶¨»·µºÇø
-//    flag_round_delay = 0;//¼ÆÊ±Çå¿Õ
-//    flag_round_float = 0;
-//    flag_round_noout = 1;//²»ÔÊĞí³ö»·ÅĞ¶¨
-//  }
-//  else if((flag_round_delay > 150)&& (flag_round_out==1) &&(round_cfg==1))//5
-//  {
-//    flag_state = 0;//Àë¿ªÅĞ¶¨»·µºÇø
-//    flag_round_delay = 0;//¼ÆÊ±Çå¿Õ
-//    flag_round_out = 0;//³ö»·±êÖ¾Çå¿Õ,¿ÉÒÔÅĞ¶¨ÏÂÒ»´ÎÈë»·
-//    if(round_count<(round_array_length-1)) round_count++;//»·µº¼ÆÊı+1
-//    else round_count = 0;//³¬¹ı×î´ó»·µºÊı,´Ó0¿ªÊ¼ÖØĞÂ¼ÆÊı
-//  }
-//  else if((flag_round_delay > 150)&& (flag_round_out==1) &&(round_cfg==0))
-//  {
-//
-//      flag_state = 0;//Àë¿ªÅĞ¶¨»·µºÇø
-//      flag_round_delay = 0;//¼ÆÊ±Çå¿Õ
-//      flag_round_out = 0;//³ö»·±êÖ¾Çå¿Õ,¿ÉÒÔÅĞ¶¨ÏÂÒ»´ÎÈë»·
-//      if(round_count<(round_array_length-1)) round_count++;//»·µº¼ÆÊı+1
-//      else round_count = 0;//³¬¹ı×î´ó»·µºÊı,´Ó0¿ªÊ¼ÖØĞÂ¼ÆÊı
-//  }
-//  
-//  if(flag_round_noout) delay_round_noout++;
-//  if(delay_round_noout > 100)
-//  {
-//    flag_round_out = 0;//³ö»·±êÖ¾Çå¿Õ,¿ÉÒÔÅĞ¶¨ÏÂÒ»´ÎÈë»·
-//    delay_round_noout = 0;
-//    flag_round_noout = 0;
-//  }
-//  if((flag_round_out==1)&& (flag_round_delay>0) &&(flag_round_delay<25)&&(round_cfg2==1))
-//  {
-//    round_cfg2_flag=1;
-//  }
-//  
-//  if(round_size[round_count] == 0)//Ğ¡»·´ò×î´ó½ÇR50-60  //50µÄÇ°ÂÖµÄÎ²²¿ÔÚÇĞÏß²ÉÑù£¬70µÄºóÂÖµç»úÔÚÇĞÏß²ÉÑù£¨°´ÕÕĞ¡»·¸ø£©£¬100ºóÂÖÔÚÇĞÏß£¨°´ÕÕ´ó»·¸ø£©
-//  {
-//    if(flag_state == 2 && flag_round)
-//      offset_cal = min_offset;//-(real_left_speed+real_right_speed)/10*3;
-//    else if(flag_state == 1 && flag_round)
-//      offset_cal = max_offset;//+(real_left_speed+real_right_speed)/10*3;
-//  }
-//  else//´ó»·R65ÒÔÉÏ´ò×î´ó½ÇµÄÒ»°ë
-//  {
-//    if(flag_state == 2 && flag_round)
-//      offset_cal = -25;
-//    else if(flag_state == 1 && flag_round)
-//      offset_cal = 25;
-//    if(round_count==3) offset_cal = 0;
-//  }
-//  
-//  if(flag_state==2 && flag_round)//×ó»·ÏûÓÒ×ªÆ«²î
-//  {
-//    if(offset_cal>0) offset_cal = 0;
-//    
-//  }
-//  else if (flag_state==1 && flag_round)
-//  {
-//    if(offset_cal<0) offset_cal = 0;
-//  }
-////  if(flag_round && (max_ad>ad_flag_round[round_count]) && round_cfg2 && (round_cfg2_flag==0))//Ë«»·µºµÚ¶ş¸öË¦³ö»·
-////  {
-////    round_cfg2_flag = 1;
-////  }
-//  
-////  if(flag_round_out==1) offset_cal/=4;//³ö»·Ó²»¯P
-//  if(round_cfg2_flag==1)  round_cfg2_delay++;
-//  if((round_cfg2_flag==1)&&(round_cfg2_delay<20))
-//  {
-//    if(round_size[round_count] == 0)//Ğ¡»·´ò×î´ó½ÇR50-60
-//    {
-//      if((round_dir[round_count]==0))
-//        offset_cal = -120;
-//      else if((round_dir[round_count]==1))
-//        offset_cal = 120;
-//    }
-//    else//´ó»·R65ÒÔÉÏ´ò×î´ó½ÇµÄÒ»°ë
-//    {
-//      if((round_dir[round_count]==0))
-//        offset_cal = min_offset/6*3;
-//      else if((round_dir[round_count]==1))
-//        offset_cal = max_offset/6*3;
-//    }
-//    round_cfgbeep = 1;
-//  }
-//  else
-//  {
-//    round_cfg2_flag = 0;
-//    round_cfg2_delay = 0;
-//    round_cfgbeep = 0;
-//  }
-//  
-//////Pout(C7,round_cfgbeep);
-//  Pout(C7,flag_round);
-////  if(flag_round_delay)  Pout(C7,1);//³öÈë»·ÀûÓÃ·äÃùÆ÷±êÖ¾
-////  else Pout(C7,0);
-//  //´ó»·±êÖ¾Pout(C7,flag_round && (round_size[round_count]));
-  
-  
-  if(area != 1 && area != 8 && area != 9)
+  get_right_dir = motor_get_direction_right; //å°†è¯»å–åˆ°çš„æ–¹å‘å­˜å‚¨
+
+  if (get_right_dir)
+    real_right_speed = -get_right_speed; //è®¡ç®—å¸¦ç¬¦å·è„‰å†²æ•°
+  else
+    real_right_speed = get_right_speed;
+
+  FTM_Count_Clean(ftm0); //ç¼–ç å™¨æ•°å€¼æ¸…é›¶
+  FTM_Count_Clean(ftm1); //ç¼–ç å™¨æ•°å€¼æ¸…é›¶
+
+  //  //ç›´é“ã€ç¯å²›åˆ¤æ–­
+  //  if((ad_center>(ad_flag_round[round_count]/6*5))&&(flag_round==1)&&(flag_state==0))
+  //  {
+  //    flag_round = 0;//å‡ºç¯è®¾å®š40ms
+  //    flag_round_out = 1;//ç½®ä½å‡ºç¯æ ‡å¿—,ä¸€å®šæ—¶é—´å†…ä¸å…è®¸å…¥ç¯åˆ¤å®š
+  //  }
+  //
+  //  if((ad_center>ad_flag_round[round_count])&&(flag_state==0))
+  //  {
+  //    flag_round_count ++;
+  //    if(flag_round != 1) offset_cal/=4;//å‡å°P,ç¡¬åŒ–è½¬è§’æ§åˆ¶
+  //    if(flag_round_count)//å–è¿›å…¥ç‰¹å¾å€¼åˆ¤å®šåä¸¤æ¬¡ä¸ç¦»å¼€ç‰¹å¾å€¼åˆ¤å®šå½“æ¬¡,æ€»è®¡ä¸‰æ¬¡åˆ¤æ–­ç¯å²›æ–¹å‘
+  //    {//&&ad_left1>(ad_center/5*2) && ad_right1>(ad_center/5*2) && ad_right2>(ad_center/5) && ad_left2>(ad_center/5)
+  //      flag_round_mid = outrange_admax;//ad_center/5*2;///5*3
+  //      if(ad_left2>flag_round_mid && ad_left1>flag_round_mid) round_state_count++;
+  //      else if(ad_right2>flag_round_mid && ad_right1>flag_round_mid) round_state_count++;
+  //      else
+  //      {
+  //        flag_round_mid = ad_center/10*7;
+  //        if(ad_left1>flag_round_mid && ad_right1>flag_round_mid)
+  //        {
+  //          flag_round_mid = ad_center/5*2;
+  //          if(ad_left2>flag_round_mid || ad_left1>flag_round_mid)
+  //            round_state_count++;
+  //        }
+  //      }
+  //    }
+  //    round_out_count = 0;
+  //  }
+  //  else//å‡º
+  //  {
+  //    round_out_count +=(real_left_speed+real_right_speed);
+  //    if(round_out_count>700)
+  //    {
+  //      if((flag_round_count>1)&&(flag_round == 0)&&(flag_round_out == 0))//å…¥ç¯è®¾å®š50ms
+  //      {
+  //        flag_round_mid = outrange_admax;//ad_center/5*2;
+  //        if(ad_left2>flag_round_mid && ad_left1>flag_round_mid) round_state_count++;
+  //        else if(ad_right2>flag_round_mid && ad_right1>flag_round_mid) round_state_count++;
+  //        if(round_state_count>0)
+  //        {
+  //          if(round_dir[round_count])     flag_state = 1;
+  //          else flag_state = 2;
+  //        }
+  //
+  //        if(flag_state == 2||flag_state == 1)   flag_round = 1;
+  //      }
+  //      else if((flag_round_count>1)&&(flag_round == 1)&&(flag_round_noout==0))
+  //      {
+  //        flag_round = 0;//å‡ºç¯è®¾å®š40ms
+  //        flag_round_out = 1;//ç½®ä½å‡ºç¯æ ‡å¿—,ä¸€å®šæ—¶é—´å†…ä¸å…è®¸å…¥ç¯åˆ¤å®š
+  //  //      if(round_count<(round_array_length-1)) round_count++;//ç¯å²›è®¡æ•°+1
+  //  //      else round_count = 0;//è¶…è¿‡æœ€å¤§ç¯å²›æ•°,ä»0å¼€å§‹é‡æ–°è®¡æ•°
+  //      }
+  //      flag_round_count = 0;//æ¸…ç©ºåœ†ç¯æ ‡å¿—è®¡æ•°
+  //      round_state_count=0;
+  //    }
+  //  }
+  //
+  //
+  //  if(flag_round_out==1) flag_round_delay++;//åˆ¤å®šå‡ºç¯åå»¶è¿Ÿä¸€å®šæ—¶é—´æ‰å…è®¸åˆ¤å®šä¸‹ä¸€ä¸ªå…¥ç¯
+  //  if(flag_state == 2||flag_state == 1)
+  //  {
+  //    //flag_round_float +=gyro_z/100;//flag_round_delay +=(real_left_speed+real_right_speed);//åˆ¤å®šå…¥ç¯åå»¶è¿Ÿä¸€å®šæ—¶é—´æ‰å…è®¸åˆ¤å®šå‡ºç¯
+  //    flag_round_delay++;//=gyro_z/100;
+  //  }
+  ////  if((abs(flag_round_delay) > 800)&&(flag_state == 2||flag_state == 1))//4mé€Ÿåº¦ä¸‹çš„ç»è¿‡1/2ä¸ªæœ€å°R50åœ†ç¯è·¯å¾„æ—¶é—´//3500
+  //  if((flag_round_delay > 50)&&(flag_state == 2||flag_state == 1))
+  //  {
+  //    flag_state = 0;//ç¦»å¼€åˆ¤å®šç¯å²›åŒº
+  //    flag_round_delay = 0;//è®¡æ—¶æ¸…ç©º
+  //    flag_round_float = 0;
+  //    flag_round_noout = 1;//ä¸å…è®¸å‡ºç¯åˆ¤å®š
+  //  }
+  //  else if((flag_round_delay > 150)&& (flag_round_out==1) &&(round_cfg==1))//5
+  //  {
+  //    flag_state = 0;//ç¦»å¼€åˆ¤å®šç¯å²›åŒº
+  //    flag_round_delay = 0;//è®¡æ—¶æ¸…ç©º
+  //    flag_round_out = 0;//å‡ºç¯æ ‡å¿—æ¸…ç©º,å¯ä»¥åˆ¤å®šä¸‹ä¸€æ¬¡å…¥ç¯
+  //    if(round_count<(round_array_length-1)) round_count++;//ç¯å²›è®¡æ•°+1
+  //    else round_count = 0;//è¶…è¿‡æœ€å¤§ç¯å²›æ•°,ä»0å¼€å§‹é‡æ–°è®¡æ•°
+  //  }
+  //  else if((flag_round_delay > 150)&& (flag_round_out==1) &&(round_cfg==0))
+  //  {
+  //
+  //      flag_state = 0;//ç¦»å¼€åˆ¤å®šç¯å²›åŒº
+  //      flag_round_delay = 0;//è®¡æ—¶æ¸…ç©º
+  //      flag_round_out = 0;//å‡ºç¯æ ‡å¿—æ¸…ç©º,å¯ä»¥åˆ¤å®šä¸‹ä¸€æ¬¡å…¥ç¯
+  //      if(round_count<(round_array_length-1)) round_count++;//ç¯å²›è®¡æ•°+1
+  //      else round_count = 0;//è¶…è¿‡æœ€å¤§ç¯å²›æ•°,ä»0å¼€å§‹é‡æ–°è®¡æ•°
+  //  }
+  //
+  //  if(flag_round_noout) delay_round_noout++;
+  //  if(delay_round_noout > 100)
+  //  {
+  //    flag_round_out = 0;//å‡ºç¯æ ‡å¿—æ¸…ç©º,å¯ä»¥åˆ¤å®šä¸‹ä¸€æ¬¡å…¥ç¯
+  //    delay_round_noout = 0;
+  //    flag_round_noout = 0;
+  //  }
+  //  if((flag_round_out==1)&& (flag_round_delay>0) &&(flag_round_delay<25)&&(round_cfg2==1))
+  //  {
+  //    round_cfg2_flag=1;
+  //  }
+  //
+  //  if(round_size[round_count] == 0)//å°ç¯æ‰“æœ€å¤§è§’R50-60  //50çš„å‰è½®çš„å°¾éƒ¨åœ¨åˆ‡çº¿é‡‡æ ·ï¼Œ70çš„åè½®ç”µæœºåœ¨åˆ‡çº¿é‡‡æ ·ï¼ˆæŒ‰ç…§å°ç¯ç»™ï¼‰ï¼Œ100åè½®åœ¨åˆ‡çº¿ï¼ˆæŒ‰ç…§å¤§ç¯ç»™ï¼‰
+  //  {
+  //    if(flag_state == 2 && flag_round)
+  //      offset_cal = min_offset;//-(real_left_speed+real_right_speed)/10*3;
+  //    else if(flag_state == 1 && flag_round)
+  //      offset_cal = max_offset;//+(real_left_speed+real_right_speed)/10*3;
+  //  }
+  //  else//å¤§ç¯R65ä»¥ä¸Šæ‰“æœ€å¤§è§’çš„ä¸€åŠ
+  //  {
+  //    if(flag_state == 2 && flag_round)
+  //      offset_cal = -25;
+  //    else if(flag_state == 1 && flag_round)
+  //      offset_cal = 25;
+  //    if(round_count==3) offset_cal = 0;
+  //  }
+  //
+  //  if(flag_state==2 && flag_round)//å·¦ç¯æ¶ˆå³è½¬åå·®
+  //  {
+  //    if(offset_cal>0) offset_cal = 0;
+  //
+  //  }
+  //  else if (flag_state==1 && flag_round)
+  //  {
+  //    if(offset_cal<0) offset_cal = 0;
+  //  }
+  ////  if(flag_round && (max_ad>ad_flag_round[round_count]) && round_cfg2 && (round_cfg2_flag==0))//åŒç¯å²›ç¬¬äºŒä¸ªç”©å‡ºç¯
+  ////  {
+  ////    round_cfg2_flag = 1;
+  ////  }
+  //
+  ////  if(flag_round_out==1) offset_cal/=4;//å‡ºç¯ç¡¬åŒ–P
+  //  if(round_cfg2_flag==1)  round_cfg2_delay++;
+  //  if((round_cfg2_flag==1)&&(round_cfg2_delay<20))
+  //  {
+  //    if(round_size[round_count] == 0)//å°ç¯æ‰“æœ€å¤§è§’R50-60
+  //    {
+  //      if((round_dir[round_count]==0))
+  //        offset_cal = -120;
+  //      else if((round_dir[round_count]==1))
+  //        offset_cal = 120;
+  //    }
+  //    else//å¤§ç¯R65ä»¥ä¸Šæ‰“æœ€å¤§è§’çš„ä¸€åŠ
+  //    {
+  //      if((round_dir[round_count]==0))
+  //        offset_cal = min_offset/6*3;
+  //      else if((round_dir[round_count]==1))
+  //        offset_cal = max_offset/6*3;
+  //    }
+  //    round_cfgbeep = 1;
+  //  }
+  //  else
+  //  {
+  //    round_cfg2_flag = 0;
+  //    round_cfg2_delay = 0;
+  //    round_cfgbeep = 0;
+  //  }
+  //
+  //////Pout(C7,round_cfgbeep);
+  //  Pout(C7,flag_round);
+  ////  if(flag_round_delay)  Pout(C7,1);//å‡ºå…¥ç¯åˆ©ç”¨èœ‚é¸£å™¨æ ‡å¿—
+  ////  else Pout(C7,0);
+  //  //å¤§ç¯æ ‡å¿—Pout(C7,flag_round && (round_size[round_count]));
+
+  if (area != 1 && area != 8 && area != 9)
   {
     count_straight++;
   }
@@ -799,71 +852,78 @@ void Control(void)
   {
     count_straight = 0;
   }
-  if(count_straight>3000) count_straight = 3000;
-  if(count_straight>100) flag_straight_en = 1;
-  else flag_straight_en = 0;
-  //Ö±µÀ¡¢»·µºÅĞ¶Ï
-  //»·µº´¦Àí
-//Ë«»Æµ°----------------------------------------------------------------------------------------------------------------------
+  if (count_straight > 3000)
+    count_straight = 3000;
+  if (count_straight > 100)
+    flag_straight_en = 1;
+  else
+    flag_straight_en = 0;
+  //ç›´é“ã€ç¯å²›åˆ¤æ–­
+  //ç¯å²›å¤„ç†
+  //åŒé»„è›‹----------------------------------------------------------------------------------------------------------------------
 
-//  if(round_count == 1)  round_cfg=1;
-//  else round_cfg=0;
-//  if(round_count == 2) round_cfg2 = 1;
-//  else round_cfg2 = 0;
+  //  if(round_count == 1)  round_cfg=1;
+  //  else round_cfg=0;
+  //  if(round_count == 2) round_cfg2 = 1;
+  //  else round_cfg2 = 0;
 
-
-  
-  
-  //ÅĞ»·Çø
-  if((ad_center>=ad_flag_round[round_count])&&(state == STATE_NOTROUND||state == STATE_PREROUND)&&(state_unround==0))
+  //åˆ¤ç¯åŒº
+  if ((ad_center >= ad_flag_round[round_count]) && (state == STATE_NOTROUND || state == STATE_PREROUND) && (state_unround == 0))
   {
     state = STATE_PREROUND;
-    preround_delay = 0;//Èç¹ûÓÖÒ»´Î¼ì²âµ½±êÖ¾Öµ,Çå¿ÕÑÓÊ±,ÖØĞÂ¼Æ´Î
+    preround_delay = 0; //å¦‚æœåˆä¸€æ¬¡æ£€æµ‹åˆ°æ ‡å¿—å€¼,æ¸…ç©ºå»¶æ—¶,é‡æ–°è®¡æ¬¡
   }
-  else if((ad_center<ad_flag_round[round_count]) && (state == STATE_PREROUND))//Àë¿ªÅĞ»·Çø ÂË²¨±£Ö¤ÕıÈ·½øÈë»·µºµÄÊ±¼ä
+  else if ((ad_center < ad_flag_round[round_count]) && (state == STATE_PREROUND)) //ç¦»å¼€åˆ¤ç¯åŒº æ»¤æ³¢ä¿è¯æ­£ç¡®è¿›å…¥ç¯å²›çš„æ—¶é—´
   {
-    preround_delay += (real_left_speed+real_right_speed);
-    if(preround_delay>2000) preround_delay =2000;//ÏŞ·ù
-    if(preround_delay>100) state = STATE_SETROUND;//¿ªÊ¼´ò½Ç1700
+    preround_delay += (real_left_speed + real_right_speed);
+    if (preround_delay > 2000)
+      preround_delay = 2000; //é™å¹…
+    if (preround_delay > 100)
+      state = STATE_SETROUND; //å¼€å§‹æ‰“è§’1700
   }
-  
-  if(state==STATE_SETROUND)
+
+  if (state == STATE_SETROUND)
   {
     setround_delay++;
-    if(setround_delay<50)
+    if (setround_delay < 50)
     {
-      if(round_size[round_count])
+      if (round_size[round_count])
       {
-        //ÆÂµÀ²»´¦Àí
+        //å¡é“ä¸å¤„ç†
       }
       else
       {
-        if(round_dir[round_count]) offset_cal = max_offset;//ÓÒ»·
-        else offset_cal = min_offset;  
+        if (round_dir[round_count])
+          offset_cal = max_offset; //å³ç¯
+        else
+          offset_cal = min_offset;
       }
     }
-    else state = STATE_INROUND;
+    else
+      state = STATE_INROUND;
   }
-  else setround_delay = 0;
-  
-  if(state==STATE_INROUND)
+  else
+    setround_delay = 0;
+
+  if (state == STATE_INROUND)
   {
     inround_delay++;
-    if(inround_delay>100)
+    if (inround_delay > 100)
     {
       inround_delay = 0;
       state = STATE_ROUND;
     }
   }
-  else inround_delay = 0;
-  
-  if(state == STATE_ROUND)
+  else
+    inround_delay = 0;
+
+  if (state == STATE_ROUND)
   {
     round_delay++;
-    if(round_size[round_count])
+    if (round_size[round_count])
     {
-      //ÆÂµÀ
-      if(round_delay > time_updown)
+      //å¡é“
+      if (round_delay > time_updown)
       {
         round_delay = 0;
         state = STATE_NOTROUND;
@@ -871,28 +931,28 @@ void Control(void)
     }
     else
     {
-      //Õı³£»·µº
-      if(round_delay > 600)
+      //æ­£å¸¸ç¯å²›
+      if (round_delay > 600)
       {
         round_delay = 0;
         state = STATE_NOTROUND;
       }
     }
   }
-  else round_delay = 0;
-  
-  if((state == STATE_ROUND) && (max_ad>=ad_flag_round[round_count]/10*7))
+  else
+    round_delay = 0;
+
+  if ((state == STATE_ROUND) && (max_ad >= ad_flag_round[round_count] / 10 * 7))
   {
     state = STATE_OUTROUND;
-
   }
-  
-  if(state == STATE_OUTROUND)
+
+  if (state == STATE_OUTROUND)
   {
     outround_delay++;
-    if(round_cfg==0)
+    if (round_cfg == 0)
     {
-      if(outround_delay>100)
+      if (outround_delay > 100)
       {
         outround_delay = 0;
         state = STATE_NOTROUND;
@@ -901,138 +961,155 @@ void Control(void)
     }
     else
     {
-      if(outround_delay>5)
+      if (outround_delay > 5)
       {
         outround_delay = 0;
         state = STATE_NOTROUND;
         round_count++;
       }
     }
-    if(round_cfg2)
+    if (round_cfg2)
     {
-      if(outround_delay<50)
+      if (outround_delay < 50)
       {
-        if(round_dir[round_count]) offset_cal = max_offset;//ÓÒ»·
-        else offset_cal = min_offset;
+        if (round_dir[round_count])
+          offset_cal = max_offset; //å³ç¯
+        else
+          offset_cal = min_offset;
       }
     }
-//    if(round_size[round_count] == 0)
-//    {
-//      offset_cal=offset_cal/2*3;
-//    }
+    //    if(round_size[round_count] == 0)
+    //    {
+    //      offset_cal=offset_cal/2*3;
+    //    }
   }
-  
-  if(state== STATE_SETROUND || state== STATE_OUTROUND)  Pout(C7,1);//³öÈë»·ÀûÓÃ·äÃùÆ÷±êÖ¾|| state== STATE_INROUND 
-  else Pout(C7,0);
-  
-  
-  //offset_calµÈÍ¬ÓÚÒÑ¾­³ËÁËpÏµÊı
-// ----------------------------------------------------------------------------------------------------------------
-//  if(area == 1||area == 8||area == 9)  offset_out = offset_cal;
-//  else if(area == 2 || area == 3)
-//  {
-//    if(offset_cal-offset_precal<0) offset_out = offset_cal;
-//    else offset_out = offset_cal + (offset_kd * (offset_cal-offset_precal));
-//  }
-//  else if(area == 6 || area == 7)
-//  {
-//    if(offset_cal-offset_precal>0) offset_out = offset_cal;
-//    else offset_out = offset_cal + (offset_kd * (offset_cal-offset_precal));
-//  }
+
+  if (state == STATE_SETROUND || state == STATE_OUTROUND)
+    Pout(C7, 1); //å‡ºå…¥ç¯åˆ©ç”¨èœ‚é¸£å™¨æ ‡å¿—|| state== STATE_INROUND
+  else
+    Pout(C7, 0);
+
+  //offset_calç­‰åŒäºå·²ç»ä¹˜äº†pç³»æ•°
+  // ----------------------------------------------------------------------------------------------------------------
+  //  if(area == 1||area == 8||area == 9)  offset_out = offset_cal;
+  //  else if(area == 2 || area == 3)
+  //  {
+  //    if(offset_cal-offset_precal<0) offset_out = offset_cal;
+  //    else offset_out = offset_cal + (offset_kd * (offset_cal-offset_precal));
+  //  }
+  //  else if(area == 6 || area == 7)
+  //  {
+  //    if(offset_cal-offset_precal>0) offset_out = offset_cal;
+  //    else offset_out = offset_cal + (offset_kd * (offset_cal-offset_precal));
+  //  }
 
   offset_ei += offset_cal;
-  if(area==4||area==5) offset_ei = 0;
-  else if(area <= 3 && pre_area >= 6) offset_ei = 0;
-  else if(area >= 6 && pre_area <= 3) offset_ei = 0;
-  if(offset_ei>200) offset_ei = 200;
-  else if(offset_ei<-200) offset_ei = -200;
-  
-  offset_ed = (offset_cal-offset_precal);
+  if (area == 4 || area == 5)
+    offset_ei = 0;
+  else if (area <= 3 && pre_area >= 6)
+    offset_ei = 0;
+  else if (area >= 6 && pre_area <= 3)
+    offset_ei = 0;
+  if (offset_ei > 200)
+    offset_ei = 200;
+  else if (offset_ei < -200)
+    offset_ei = -200;
+
+  offset_ed = (offset_cal - offset_precal);
 
   offset_out = offset_cal + offset_kd * offset_ed + offset_ki * offset_ei;
   offset_int = (int)(offset_out);
-//  offset_verint=(int)(100*(ad_right2*ad_right2-ad_left2*ad_left2)/(float)(ad_right2+ad_left2));
-//  offset_verint = (int)offset_out;
+  //  offset_verint=(int)(100*(ad_right2*ad_right2-ad_left2*ad_left2)/(float)(ad_right2+ad_left2));
+  //  offset_verint = (int)offset_out;
   offset_precal = offset_cal;
-  //Êı¾İ´¦Àí
+  //æ•°æ®å¤„ç†
 
   pre_motor_left_target = motor_left_target;
   pre_motor_right_target = motor_right_target;
 
   flag_prestate = flag_state;
-  
-  
-  if(round_count==3) count_out_round_three++;
-  if(count_out_round_three>8000) count_out_round_three = 8000;
-  if(count_out_round_three >out_round_count_three_low*100 && count_out_round_three<out_round_count_three_high*100) flag_round_updown = 1;
-  else flag_round_updown = 0;
-  
-  if(pit0_flag_start<100)
+
+  if (round_count == 3)
+    count_out_round_three++;
+  if (count_out_round_three > 8000)
+    count_out_round_three = 8000;
+  if (count_out_round_three > out_round_count_three_low * 100 && count_out_round_three < out_round_count_three_high * 100)
+    flag_round_updown = 1;
+  else
+    flag_round_updown = 0;
+
+  if (pit0_flag_start < 100)
   {
-    motor_set_speed = motor_set_speed_temp*pit0_flag_start/100;
+    motor_set_speed = motor_set_speed_temp * pit0_flag_start / 100;
   }
-  else if(flag_round_updown)
+  else if (flag_round_updown)
   {
     motor_set_speed = speed_inupdown;
   }
-  else if(flag_slow)
+  else if (flag_slow)
   {
-    motor_set_speed = speed_slow;//¼õËÙ´ø------------------------------------------------------------------------------------------------------------
+    motor_set_speed = speed_slow; //å‡é€Ÿå¸¦------------------------------------------------------------------------------------------------------------
   }
-  else if(state == STATE_PREROUND)
+  else if (state == STATE_PREROUND)
   {
-    if(round_cfg)
+    if (round_cfg)
       motor_set_speed = 40;
-    else motor_set_speed = 80;
-    if(round_size[round_count]==0)  motor_set_speed = motor_set_speed_temp;//100
-    else motor_set_speed = speed_inupdown;//ÆÂµÀ¼õËÙ
+    else
+      motor_set_speed = 80;
+    if (round_size[round_count] == 0)
+      motor_set_speed = motor_set_speed_temp; //100
+    else
+      motor_set_speed = speed_inupdown; //å¡é“å‡é€Ÿ
   }
-  else if(state == STATE_ROUND)
+  else if (state == STATE_ROUND)
   {
-    if(round_size[round_count]==0)  motor_set_speed = speed_round;//100
-    else motor_set_speed = speed_inupdown;//ÆÂµÀ¼õËÙ
+    if (round_size[round_count] == 0)
+      motor_set_speed = speed_round; //100
+    else
+      motor_set_speed = speed_inupdown; //å¡é“å‡é€Ÿ
   }
-  else if(flag_speed_up==1 && area != 4 && area != 5 && area != 3 && area != 6 && (real_right_speed+real_left_speed>(motor_set_speed_temp+motor_set_speed_temp)))
+  else if (flag_speed_up == 1 && area != 4 && area != 5 && area != 3 && area != 6 && (real_right_speed + real_left_speed > (motor_set_speed_temp + motor_set_speed_temp)))
   {
     motor_set_speed = -100;
   }
-//  else if(area != 4 && area != 5 && (real_right_speed+real_left_speed>(motor_set_speed_temp+motor_set_speed_temp)))
-//  {
-//    motor_set_speed = 80;
-//  }
-  else if(flag_speed_up==1 && flag_straight_en == 1) motor_set_speed = motor_set_speed_temp+count_unround_low;
-//  else if(area == 3)
-//  {
-//    if((real_left_speed>(motor_set_speed-offset_cal))&&(real_right_speed>(motor_set_speed-offset_cal))) motor_set_speed = 2*motor_set_speed-2*offset_out-(real_left_speed+real_right_speed)/2;
-//    else motor_set_speed = motor_set_speed_temp;
-//  }
-//  else if(area == 6)
-//  {
-//    if((real_left_speed>(motor_set_speed+offset_cal))&&(real_right_speed>(motor_set_speed+offset_cal))) motor_set_speed = 2*motor_set_speed+2*offset_out-(real_left_speed+real_right_speed)/2;
-//    else motor_set_speed = motor_set_speed_temp;
-//  }
+  //  else if(area != 4 && area != 5 && (real_right_speed+real_left_speed>(motor_set_speed_temp+motor_set_speed_temp)))
+  //  {
+  //    motor_set_speed = 80;
+  //  }
+  else if (flag_speed_up == 1 && flag_straight_en == 1)
+    motor_set_speed = motor_set_speed_temp + count_unround_low;
+  //  else if(area == 3)
+  //  {
+  //    if((real_left_speed>(motor_set_speed-offset_cal))&&(real_right_speed>(motor_set_speed-offset_cal))) motor_set_speed = 2*motor_set_speed-2*offset_out-(real_left_speed+real_right_speed)/2;
+  //    else motor_set_speed = motor_set_speed_temp;
+  //  }
+  //  else if(area == 6)
+  //  {
+  //    if((real_left_speed>(motor_set_speed+offset_cal))&&(real_right_speed>(motor_set_speed+offset_cal))) motor_set_speed = 2*motor_set_speed+2*offset_out-(real_left_speed+real_right_speed)/2;
+  //    else motor_set_speed = motor_set_speed_temp;
+  //  }
   //----------------------------------------------------------------------------------------------------------------------
-  else if(state == STATE_OUTROUND)
+  else if (state == STATE_OUTROUND)
   {
-    if(round_size[round_count]==0)  motor_set_speed = motor_set_speed_temp;
-    else motor_set_speed = motor_set_speed_temp;//ÆÂµÀ¼õËÙ
+    if (round_size[round_count] == 0)
+      motor_set_speed = motor_set_speed_temp;
+    else
+      motor_set_speed = motor_set_speed_temp; //å¡é“å‡é€Ÿ
   }
-//  else if(area == 4||area == 5) motor_set_speed = 84;
-//  else if(real_left_speed>65 && real_right_speed>65 &&(area == 3||area == 6||area == 2||area == 7)) motor_set_speed = 40;
+  //  else if(area == 4||area == 5) motor_set_speed = 84;
+  //  else if(real_left_speed>65 && real_right_speed>65 &&(area == 3||area == 6||area == 2||area == 7)) motor_set_speed = 40;
   else
   {
     motor_set_speed = motor_set_speed_temp;
   }
-  
 
-  
   //---------------------------------------------------------------------------------------------------------------------------
-  if(flag_stop||area == NONE_SIT||area == OUTRANGE_SIT)//¶ªÏßÍ£Ö¹)
+  if (flag_stop || area == NONE_SIT || area == OUTRANGE_SIT) //ä¸¢çº¿åœæ­¢)
   {
     motor_left_target = 0;
     motor_right_target = 0;
   }
-  else if(lastactive_area==0)
+  else if (lastactive_area == 0)
   {
     motor_left_target = motor_set_speed;
     motor_right_target = motor_set_speed;
@@ -1041,193 +1118,194 @@ void Control(void)
   {
     motor_left_target = motor_set_speed;
     motor_right_target = motor_set_speed;
-    offset_and_speed = offset_out;// / ((float)(real_right_speed + real_left_speed)/2)/(float)motor_set_speed;
-    if(offset_out>0)
+    offset_and_speed = offset_out; // / ((float)(real_right_speed + real_left_speed)/2)/(float)motor_set_speed;
+    if (offset_out > 0)
     {
       motor_right_target = motor_right_target - offset_out;
       motor_left_target = motor_left_target + offset_out;
-//      motor_right_target = motor_right_target*motor_left_p_right + motor_left_d_right;
-//      motor_left_target = motor_left_target;
+      //      motor_right_target = motor_right_target*motor_left_p_right + motor_left_d_right;
+      //      motor_left_target = motor_left_target;
     }
-    else 
+    else
     {
-      //´®ĞĞPID
-      motor_right_target = motor_right_target*motor_left_p_right + motor_left_d_right - offset_out;
+      //ä¸²è¡ŒPID
+      motor_right_target = motor_right_target * motor_left_p_right + motor_left_d_right - offset_out;
       motor_left_target = motor_left_target + offset_out;
-      //²¢ĞĞPID
-//      motor_right_target = motor_right_target*motor_left_p_right + motor_left_d_right;
-//      motor_left_target = motor_left_target;
+      //å¹¶è¡ŒPID
+      //      motor_right_target = motor_right_target*motor_left_p_right + motor_left_d_right;
+      //      motor_left_target = motor_left_target;
     }
   }
 
-  //µç»ú¿ØÖÆPID------------------------------------------------------------------------------
+  //ç”µæœºæ§åˆ¶PID------------------------------------------------------------------------------
   ppre_motor_left_error = pre_motor_left_error;
   pre_motor_left_error = motor_left_error;
   motor_left_error = motor_left_target - real_left_speed;
-//  if(motor_left_error>10)//¼ÓËÙp¿ØÖÆÁ¿
-//  {
-//    motor_left_error = 10;
-//  }
+  //  if(motor_left_error>10)//åŠ é€Ÿpæ§åˆ¶é‡
+  //  {
+  //    motor_left_error = 10;
+  //  }
 
   ppre_motor_right_error = pre_motor_right_error;
   pre_motor_right_error = motor_right_error;
   motor_right_error = motor_right_target - real_right_speed;
-//  if(motor_right_error>10)
-//  {
-//    motor_right_error = 10;
-//  }
-  
-//ÔöÁ¿Ê½
-//  motor_left_ep = motor_left_error - pre_motor_left_error;
-//  motor_left_ei = motor_left_error;
-//  motor_left_ed = motor_left_error - 2*pre_motor_left_error + ppre_motor_left_error;
-  //Î»ÖÃÊ½
+  //  if(motor_right_error>10)
+  //  {
+  //    motor_right_error = 10;
+  //  }
+
+  //å¢é‡å¼
+  //  motor_left_ep = motor_left_error - pre_motor_left_error;
+  //  motor_left_ei = motor_left_error;
+  //  motor_left_ed = motor_left_error - 2*pre_motor_left_error + ppre_motor_left_error;
+  //ä½ç½®å¼
   motor_left_ep = motor_left_error;
   motor_left_ei += motor_left_error;
-  if(motor_left_ei>50) motor_left_ei=50;
-  else if(motor_left_ei<-50) motor_left_ei=-50;
+  if (motor_left_ei > 50)
+    motor_left_ei = 50;
+  else if (motor_left_ei < -50)
+    motor_left_ei = -50;
   motor_left_ed = motor_left_error - pre_motor_left_error;
-//  ·Ö¶Î»ı·ÖI
-//  if((motor_left_error<(motor_left_target/2))&&(motor_left_error<-(motor_left_target/2)))
-//  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  else  motor_left_out += motor_kp * motor_left_ep  + motor_kd * motor_left_ed;
-  
-//  if(motor_left_error<=0) motor_left_ei=0;
-  
-  //·Ö¶Î±ÈÀıP
-//  if((motor_left_error<(motor_set_speed/2))&&(motor_left_error>-(motor_set_speed/2)))
-//  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  else  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  
-//  if((flag_stop==0))
-//    motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  else 
-//    motor_left_out += motor_kp * motor_left_ep + motor_kd * motor_left_ed;
-  
-  //°ô°ô¿ØÖÆ
-//  if(motor_left_error>80) motor_left_out = 800;
-  
-//  if(motor_left_error<0)
-  
-//  motor_left_out += 60 * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  else  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-//  motor_right_ep = motor_right_error - pre_motor_right_error;
-//  motor_right_ei = motor_right_error;
-//  motor_right_ed = motor_right_error - 2*pre_motor_right_error + ppre_motor_right_error;
-  
+  //  åˆ†æ®µç§¯åˆ†I
+  //  if((motor_left_error<(motor_left_target/2))&&(motor_left_error<-(motor_left_target/2)))
+  //  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  else  motor_left_out += motor_kp * motor_left_ep  + motor_kd * motor_left_ed;
+
+  //  if(motor_left_error<=0) motor_left_ei=0;
+
+  //åˆ†æ®µæ¯”ä¾‹P
+  //  if((motor_left_error<(motor_set_speed/2))&&(motor_left_error>-(motor_set_speed/2)))
+  //  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  else  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //
+  //  if((flag_stop==0))
+  //    motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  else
+  //    motor_left_out += motor_kp * motor_left_ep + motor_kd * motor_left_ed;
+
+  //æ£’æ£’æ§åˆ¶
+  //  if(motor_left_error>80) motor_left_out = 800;
+
+  //  if(motor_left_error<0)
+
+  //  motor_left_out += 60 * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  else  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  motor_left_out += motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  //  motor_right_ep = motor_right_error - pre_motor_right_error;
+  //  motor_right_ei = motor_right_error;
+  //  motor_right_ed = motor_right_error - 2*pre_motor_right_error + ppre_motor_right_error;
+
   motor_right_ep = motor_right_error;
   motor_right_ei += motor_right_error;
-  if(motor_right_ei>50) motor_right_ei=50;
-  else if(motor_right_ei<-50) motor_right_ei=-50;
+  if (motor_right_ei > 50)
+    motor_right_ei = 50;
+  else if (motor_right_ei < -50)
+    motor_right_ei = -50;
   motor_right_ed = motor_right_error - pre_motor_right_error;
-//  if((motor_right_error<(motor_right_target/2))&&(motor_right_error<-(motor_right_target/2))) 
-//  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//  else  motor_right_out += motor_kp * motor_right_ep + motor_kd * motor_right_ed;
-  
-//  if(motor_right_error<=0) motor_right_ei=0;
-//  if((motor_right_error<(motor_set_speed/2))&&(motor_right_error>-(motor_set_speed/2))) 
-  
-//  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//  else  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-  
-//  if((flag_stop==0))
-//    motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//  else
-//    motor_right_out += motor_kp * motor_right_ep + motor_kd * motor_right_ed;
-  
-  
+  //  if((motor_right_error<(motor_right_target/2))&&(motor_right_error<-(motor_right_target/2)))
+  //  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //  else  motor_right_out += motor_kp * motor_right_ep + motor_kd * motor_right_ed;
 
-    
-  if(state == STATE_ROUND)
+  //  if(motor_right_error<=0) motor_right_ei=0;
+  //  if((motor_right_error<(motor_set_speed/2))&&(motor_right_error>-(motor_set_speed/2)))
+
+  //  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //  else  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+
+  //  if((flag_stop==0))
+  //    motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //  else
+  //    motor_right_out += motor_kp * motor_right_ep + motor_kd * motor_right_ed;
+
+  if (state == STATE_ROUND)
   {
     offset_kd = 0;
   }
-  else offset_kd = 15.12;
-
-
-  
-  if((flag_stop==0)&&(offset_and_speed<20)&&(offset_and_speed>-20))
-    motor_left_out = motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
-  else if(state == STATE_ROUND  && (round_size[round_count]==0)) motor_left_out = motor_kp * motor_left_ep  + motor_ki * motor_left_ei;
   else
-    motor_left_out = motor_kp * motor_left_ep;//*3
-  
+    offset_kd = 15.12;
 
+  if ((flag_stop == 0) && (offset_and_speed < 20) && (offset_and_speed > -20))
+    motor_left_out = motor_kp * motor_left_ep + motor_ki * motor_left_ei + motor_kd * motor_left_ed;
+  else if (state == STATE_ROUND && (round_size[round_count] == 0))
+    motor_left_out = motor_kp * motor_left_ep + motor_ki * motor_left_ei;
+  else
+    motor_left_out = motor_kp * motor_left_ep; //*3
 
-  if((flag_stop==0)&&(offset_and_speed<20)&&(offset_and_speed>-20))
+  if ((flag_stop == 0) && (offset_and_speed < 20) && (offset_and_speed > -20))
     motor_right_out = motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-  else if(state == STATE_ROUND && (round_size[round_count]==0)) motor_right_out = motor_kp * motor_right_ep + motor_ki * motor_right_ei;
-  else  motor_right_out = motor_kp * motor_right_ep;
-  
-//  if(motor_right_error>30) motor_right_out = 700;
-//  if(motor_right_error<0)
-//  motor_right_out += 60 * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//  else  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
-//
-//  if(motor_left_out > MAX_SPEED_DUTY) motor_left_out = MAX_SPEED_DUTY;
-//  else if(motor_left_out < MIN_SPEED_DUTY) motor_left_out = MIN_SPEED_DUTY;
-//
-//  if(motor_right_out > MAX_SPEED_DUTY) motor_right_out = MAX_SPEED_DUTY;
-//  else if(motor_right_out < MIN_SPEED_DUTY) motor_right_out = MIN_SPEED_DUTY;
+  else if (state == STATE_ROUND && (round_size[round_count] == 0))
+    motor_right_out = motor_kp * motor_right_ep + motor_ki * motor_right_ei;
+  else
+    motor_right_out = motor_kp * motor_right_ep;
 
-  
-//  if(motor_left_error>=50) motor_left_out = 430+(motor_left_error-50)*10;
-//  else if(motor_left_error<=-50) motor_left_out = -290+(motor_left_error+50)*10;
-//  else motor_left_out = motor_left_error*8.6;
-//  motor_left_out += motor_left_target*10;
-//  if(motor_left_out>900) motor_left_out = 900;
-//  
-//  if(motor_right_error>=50) motor_right_out = 430+(motor_right_error-50)*10;
-//  else if(motor_right_error<=-50) motor_right_out = -290+(motor_right_error+50)*10;
-//  else motor_right_out = motor_right_error*8.6;
-//  motor_right_out += motor_right_target*10;
-//  if(motor_right_out>900) motor_right_out = 900;
-  
-  if(max_ad > outrange_admax) lastactive_area = area;//ÓĞĞ§ÇøÓò
+  //  if(motor_right_error>30) motor_right_out = 700;
+  //  if(motor_right_error<0)
+  //  motor_right_out += 60 * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //  else  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //  motor_right_out += motor_kp * motor_right_ep + motor_ki * motor_right_ei + motor_kd * motor_right_ed;
+  //
+  //  if(motor_left_out > MAX_SPEED_DUTY) motor_left_out = MAX_SPEED_DUTY;
+  //  else if(motor_left_out < MIN_SPEED_DUTY) motor_left_out = MIN_SPEED_DUTY;
+  //
+  //  if(motor_right_out > MAX_SPEED_DUTY) motor_right_out = MAX_SPEED_DUTY;
+  //  else if(motor_right_out < MIN_SPEED_DUTY) motor_right_out = MIN_SPEED_DUTY;
+
+  //  if(motor_left_error>=50) motor_left_out = 430+(motor_left_error-50)*10;
+  //  else if(motor_left_error<=-50) motor_left_out = -290+(motor_left_error+50)*10;
+  //  else motor_left_out = motor_left_error*8.6;
+  //  motor_left_out += motor_left_target*10;
+  //  if(motor_left_out>900) motor_left_out = 900;
+  //
+  //  if(motor_right_error>=50) motor_right_out = 430+(motor_right_error-50)*10;
+  //  else if(motor_right_error<=-50) motor_right_out = -290+(motor_right_error+50)*10;
+  //  else motor_right_out = motor_right_error*8.6;
+  //  motor_right_out += motor_right_target*10;
+  //  if(motor_right_out>900) motor_right_out = 900;
+
+  if (max_ad > outrange_admax)
+    lastactive_area = area; //æœ‰æ•ˆåŒºåŸŸ
   pre_area = area;
-//  if(motor_left_error>60)
-//  {
-//    SetMotor(990,(int)motor_right_out+70);
-//  }
-//  else if(motor_right_error>60)
-//  {
-//    SetMotor((int)motor_left_out+70,990);
-//  }
-  //if(area == OUTRANGE_SIT) SetMotor(0,0); 
+  //  if(motor_left_error>60)
+  //  {
+  //    SetMotor(990,(int)motor_right_out+70);
+  //  }
+  //  else if(motor_right_error>60)
+  //  {
+  //    SetMotor((int)motor_left_out+70,990);
+  //  }
+  //if(area == OUTRANGE_SIT) SetMotor(0,0);
 
-//    if(flag_stop==0)
-//    {
-      if(offset_out>0)
-      {
-//        if(real_right_speed<1) SetMotor(1000,0);
-//        else 
-//          if(area == 1||(area == 2)||(area == 9)||(state == STATE_ROUND && (round_size[round_count]==0)))
-////          SetMotor(1000,-1000);
-////        else if(area == 2)
-//          SetMotor(1000,(int)(motor_right_out+motor_right_target*5.4));
-//        else
-          SetMotor((int)(motor_left_out+motor_left_target*5.4),(int)(motor_right_out+motor_right_target*5.4));
-      }
-      else
-      {
-//        if(real_left_speed<1) SetMotor(0,1000);
-//        else 
-//          if((area==7||area == 8||area == 9)||((state == STATE_ROUND && (round_size[round_count]==0))))
-////          SetMotor(-1000,1000);
-////        else if(area == 7)
-//          SetMotor((int)(motor_left_out+motor_left_target*5.4),1000);
-//        else
-          SetMotor((int)(motor_left_out+motor_left_target*5.4),(int)(motor_right_out+motor_right_target*5.4));
-      }
-//    }
-//      SetMotor((int)(motor_left_out+motor_left_target*5.4),(int)(motor_right_out+motor_right_target*5.4));
-//    if(flag_stop==0) SetMotor((int)(motor_left_out),(int)(motor_right_out));
-//  else SetMotor((int)(motor_left_out),(int)(motor_right_out));
-//    else SetMotor(0,0);//ĞÂ³µ¿ÕÔØÓÒÂÖ¶ÔÓ¦¹ØÏµ26-100//58-200//93-300//126-400//154-500//              ×óÂÖ//26.5-100//62-200////100-300//167-500//´øÔØºó´óÔ¼60-300
-    /*
-mathematicaÒ»´ÎÇúÏßÄâºÏ
+  //    if(flag_stop==0)
+  //    {
+  if (offset_out > 0)
+  {
+    //        if(real_right_speed<1) SetMotor(1000,0);
+    //        else
+    //          if(area == 1||(area == 2)||(area == 9)||(state == STATE_ROUND && (round_size[round_count]==0)))
+    ////          SetMotor(1000,-1000);
+    ////        else if(area == 2)
+    //          SetMotor(1000,(int)(motor_right_out+motor_right_target*5.4));
+    //        else
+    SetMotor((int)(motor_left_out + motor_left_target * 5.4), (int)(motor_right_out + motor_right_target * 5.4));
+  }
+  else
+  {
+    //        if(real_left_speed<1) SetMotor(0,1000);
+    //        else
+    //          if((area==7||area == 8||area == 9)||((state == STATE_ROUND && (round_size[round_count]==0))))
+    ////          SetMotor(-1000,1000);
+    ////        else if(area == 7)
+    //          SetMotor((int)(motor_left_out+motor_left_target*5.4),1000);
+    //        else
+    SetMotor((int)(motor_left_out + motor_left_target * 5.4), (int)(motor_right_out + motor_right_target * 5.4));
+  }
+  //    }
+  //      SetMotor((int)(motor_left_out+motor_left_target*5.4),(int)(motor_right_out+motor_right_target*5.4));
+  //    if(flag_stop==0) SetMotor((int)(motor_left_out),(int)(motor_right_out));
+  //  else SetMotor((int)(motor_left_out),(int)(motor_right_out));
+  //    else SetMotor(0,0);//æ–°è½¦ç©ºè½½å³è½®å¯¹åº”å…³ç³»26-100//58-200//93-300//126-400//154-500//              å·¦è½®//26.5-100//62-200////100-300//167-500//å¸¦è½½åå¤§çº¦60-300
+  /*
+mathematicaä¸€æ¬¡æ›²çº¿æ‹Ÿåˆ
 data = {{0, 0}, {13, 100}, {29, 200}, {46.5, 300}, {63, 400}, {77, 
     500}};
 model = a*t;(*^2+b*t;*)
@@ -1236,566 +1314,592 @@ modelf = Function[{t}, Evaluate[model /. fit]]
 Plot[modelf[t], {t, 0, 80}, Epilog -> Map[Point, data]]
 
 */
-//  SetMotor(60,60);//¾²Ì¬¹¤×÷µã
+  //  SetMotor(60,60);//é™æ€å·¥ä½œç‚¹
 }
 
 /***********************
-  ÉèÖÃµç»ú
-  ²ÎÊı  MotorDuty :Õ¼¿Õ±È
+  è®¾ç½®ç”µæœº
+  å‚æ•°  MotorDuty :å ç©ºæ¯”
 *************************/
-void  SetMotor(int motorduty_left, int motorduty_right)
+void SetMotor(int motorduty_left, int motorduty_right)
 {
-  //¶Ô´«ÈëÕ¼¿Õ±È½øĞĞÏŞ·ù
-  if(motorduty_left > MAX_SPEED_DUTY)
+  //å¯¹ä¼ å…¥å ç©ºæ¯”è¿›è¡Œé™å¹…
+  if (motorduty_left > MAX_SPEED_DUTY)
   {
     motorduty_left = MAX_SPEED_DUTY;
   }
-  else if(motorduty_left<MIN_SPEED_DUTY)
+  else if (motorduty_left < MIN_SPEED_DUTY)
   {
     motorduty_left = MIN_SPEED_DUTY;
   }
-  if(motorduty_left < 0) 
+  if (motorduty_left < 0)
   {
-    if(drive_version)
+    if (drive_version)
     {
-      FTM_PWM_Duty(ftm2,ftm_ch1,-motorduty_left);
-      FTM_PWM_Duty(ftm2,ftm_ch0,0);
+      FTM_PWM_Duty(ftm2, ftm_ch1, -motorduty_left);
+      FTM_PWM_Duty(ftm2, ftm_ch0, 0);
     }
     else
     {
-      FTM_PWM_Duty(ftm2,ftm_ch5,-motorduty_left);
-      FTM_PWM_Duty(ftm2,ftm_ch4,0);
+      FTM_PWM_Duty(ftm2, ftm_ch5, -motorduty_left);
+      FTM_PWM_Duty(ftm2, ftm_ch4, 0);
     }
   }
-  else 
+  else
   {
-    if(drive_version)
+    if (drive_version)
     {
-      FTM_PWM_Duty(ftm2,ftm_ch1,0);
-      FTM_PWM_Duty(ftm2,ftm_ch0,motorduty_left);
+      FTM_PWM_Duty(ftm2, ftm_ch1, 0);
+      FTM_PWM_Duty(ftm2, ftm_ch0, motorduty_left);
     }
     else
     {
-      FTM_PWM_Duty(ftm2,ftm_ch5,0);
-      FTM_PWM_Duty(ftm2,ftm_ch4,motorduty_left);
+      FTM_PWM_Duty(ftm2, ftm_ch5, 0);
+      FTM_PWM_Duty(ftm2, ftm_ch4, motorduty_left);
     }
   }
-  
-  if(motorduty_right > MAX_SPEED_DUTY)
+
+  if (motorduty_right > MAX_SPEED_DUTY)
   {
     motorduty_right = MAX_SPEED_DUTY;
   }
-  else if(motorduty_right<MIN_SPEED_DUTY)
+  else if (motorduty_right < MIN_SPEED_DUTY)
   {
     motorduty_right = MIN_SPEED_DUTY;
   }
-  if(motorduty_right < 0) 
+  if (motorduty_right < 0)
   {
-    if(drive_version)
+    if (drive_version)
     {
-      FTM_PWM_Duty(ftm2,ftm_ch5,-motorduty_right);
-      FTM_PWM_Duty(ftm2,ftm_ch4,0);
+      FTM_PWM_Duty(ftm2, ftm_ch5, -motorduty_right);
+      FTM_PWM_Duty(ftm2, ftm_ch4, 0);
     }
     else
     {
-      FTM_PWM_Duty(ftm2,ftm_ch1,-motorduty_right);
-      FTM_PWM_Duty(ftm2,ftm_ch0,0);
-
+      FTM_PWM_Duty(ftm2, ftm_ch1, -motorduty_right);
+      FTM_PWM_Duty(ftm2, ftm_ch0, 0);
     }
   }
-  else 
+  else
   {
-    if(drive_version)
+    if (drive_version)
     {
-      FTM_PWM_Duty(ftm2,ftm_ch5,0);
-      FTM_PWM_Duty(ftm2,ftm_ch4,motorduty_right);
+      FTM_PWM_Duty(ftm2, ftm_ch5, 0);
+      FTM_PWM_Duty(ftm2, ftm_ch4, motorduty_right);
     }
     else
     {
-      FTM_PWM_Duty(ftm2,ftm_ch1,0);
-      FTM_PWM_Duty(ftm2,ftm_ch0,motorduty_right);
+      FTM_PWM_Duty(ftm2, ftm_ch1, 0);
+      FTM_PWM_Duty(ftm2, ftm_ch0, motorduty_right);
     }
   }
 }
 
 void Initial_All(void)
 {
-  //ºËĞÄ°å3É«RGB LED³õÊ¼»¯,¸ßµçÆ½Ãğ,µÍµçÆ½ÁÁ
-  GPIO_Init(G1,GPO,HIGH);//R
-  GPIO_Init(G2,GPO,HIGH);//G
-  GPIO_Init(G3,GPO,HIGH); //B
-  //°´¼ü³õÊ¼»¯
-  GPIO_Init(G4,GPI,LOW);//button2,ÉÏ·½,×Ô´øÏÂÀ­,²»ÄÜÊ¹ÄÜÉÏÀ­,°´ÏÂÎª¸ßµçÆ½
-  GPIO_Init(G5,GPI,LOW);//button1,ÏÂ·½,×Ô´øÏÂÀ­,²»ÄÜÊ¹ÄÜÉÏÀ­,°´ÏÂÎª¸ßµçÆ½
-  GPIO_Init(I0,GPI,HIGH);//Ò¡¸Ë°´¼ü,×ó²à,×Ô´øÉÏÀ­,¿ÉÒÔÊ¹ÄÜÉÏÀ­,°´ÏÂÎªµÍµçÆ½
-  KBI_Init(KBI1_P20,IRQ_RISING);
-  KBI_Init(KBI1_P21,IRQ_RISING);
-  Port_Ioflt(FLTKBI1,FLTLPO2);//½üËÆ1kHz/2=500HzµÍÍ¨ÂË²¨
+  //æ ¸å¿ƒæ¿3è‰²RGB LEDåˆå§‹åŒ–,é«˜ç”µå¹³ç­,ä½ç”µå¹³äº®
+  GPIO_Init(G1, GPO, HIGH); //R
+  GPIO_Init(G2, GPO, HIGH); //G
+  GPIO_Init(G3, GPO, HIGH); //B
+  //æŒ‰é”®åˆå§‹åŒ–
+  GPIO_Init(G4, GPI, LOW);  //button2,ä¸Šæ–¹,è‡ªå¸¦ä¸‹æ‹‰,ä¸èƒ½ä½¿èƒ½ä¸Šæ‹‰,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  GPIO_Init(G5, GPI, LOW);  //button1,ä¸‹æ–¹,è‡ªå¸¦ä¸‹æ‹‰,ä¸èƒ½ä½¿èƒ½ä¸Šæ‹‰,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  GPIO_Init(I0, GPI, HIGH); //æ‘‡æ†æŒ‰é”®,å·¦ä¾§,è‡ªå¸¦ä¸Šæ‹‰,å¯ä»¥ä½¿èƒ½ä¸Šæ‹‰,æŒ‰ä¸‹ä¸ºä½ç”µå¹³
+  KBI_Init(KBI1_P20, IRQ_RISING);
+  KBI_Init(KBI1_P21, IRQ_RISING);
+  Port_Ioflt(FLTKBI1, FLTLPO2);   //è¿‘ä¼¼1kHz/2=500Hzä½é€šæ»¤æ³¢
   ADC_Init(ADC0_SE11, ADC_12bit); //SWX
   ADC_Init(ADC0_SE8, ADC_12bit);  //SWY
-  //»ô¶û¿ª¹Ø
-  GPIO_Init(I4,GPI,HIGH);//×ó²à»ô¶û¿ª¹Ø,stop3
-  GPIO_Init(C6,GPI,HIGH);//ÖĞ¼ä»ô¶û¿ª¹Ø,stop1
-  GPIO_Init(E4,GPI,HIGH);//ÓÒ²à»ô¶û¿ª¹Ø,stop2
-  //²¦Âë¿ª¹Ø
-  GPIO_Init(C5,GPI,LOW);//4,°´ÏÂÎª¸ßµçÆ½
-  GPIO_Init(H7,GPI,LOW);//3,°´ÏÂÎª¸ßµçÆ½
-  GPIO_Init(H5,GPI,LOW);//2,°´ÏÂÎª¸ßµçÆ½
-  GPIO_Init(H2,GPI,LOW);//1,°´ÏÂÎª¸ßµçÆ½
-  //·äÃùÆ÷
-  GPIO_Init(C7,GPO,LOW);
-  //SD¿¨
-  GPIO_Init(G0,GPI,HIGH);//card detect 0ÎªÓĞ¿¨,1ÎªÎŞ¿¨
-  uint32 baud = spi_init(spi1,USE_PCS,MASTER,1*1000*100);//100kHz
+  //éœå°”å¼€å…³
+  GPIO_Init(I4, GPI, HIGH); //å·¦ä¾§éœå°”å¼€å…³,stop3
+  GPIO_Init(C6, GPI, HIGH); //ä¸­é—´éœå°”å¼€å…³,stop1
+  GPIO_Init(E4, GPI, HIGH); //å³ä¾§éœå°”å¼€å…³,stop2
+  //æ‹¨ç å¼€å…³
+  GPIO_Init(C5, GPI, LOW); //4,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  GPIO_Init(H7, GPI, LOW); //3,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  GPIO_Init(H5, GPI, LOW); //2,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  GPIO_Init(H2, GPI, LOW); //1,æŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+  //èœ‚é¸£å™¨
+  GPIO_Init(C7, GPO, LOW);
+  //SDå¡
+  GPIO_Init(G0, GPI, HIGH);                                      //card detect 0ä¸ºæœ‰å¡,1ä¸ºæ— å¡
+  uint32 baud = spi_init(spi1, USE_PCS, MASTER, 1 * 1000 * 100); //100kHz
   //FLASH
   FLASH_Init();
   uint8 flash_count = 0;
-  uint8 flash_data_num = sizeof(flash_num16)/sizeof(uint16);
-  //¶ÁflashÉÈÇøÊı¾İ
-  while(flash_count < flash_data_num)
+  uint8 flash_data_num = sizeof(flash_num16) / sizeof(uint16);
+  //è¯»flashæ‰‡åŒºæ•°æ®
+  while (flash_count < flash_data_num)
   {
-    flash_num16[flash_count] = flash_read(255,2*flash_count,uint16);
+    flash_num16[flash_count] = flash_read(255, 2 * flash_count, uint16);
     flash_count++;
   }
-  menu_array_length = sizeof(menu_array)/sizeof(float);
-  //¸üĞÂflashÊı¾İµ½È«¾Ö±äÁ¿ÖĞ
-  #if (LOAD_FLASH == 1)
-  while(menu_array_length)
+  menu_array_length = sizeof(menu_array) / sizeof(float);
+//æ›´æ–°flashæ•°æ®åˆ°å…¨å±€å˜é‡ä¸­
+#if (LOAD_FLASH == 1)
+  while (menu_array_length)
   {
     menu_array_length--;
-    *menu_array[menu_array_length] = (float)flash_num16[menu_array_length]/100;
+    *menu_array[menu_array_length] = (float)flash_num16[menu_array_length] / 100;
   }
-  #endif
+#endif
   flash_count = 0;
-  flash_data_num = sizeof(flash_round_read)/sizeof(uint16);
-  //¶ÁflashÉÈÇøÊı¾İ
-  while(flash_count < flash_data_num)
+  flash_data_num = sizeof(flash_round_read) / sizeof(uint16);
+  //è¯»flashæ‰‡åŒºæ•°æ®
+  while (flash_count < flash_data_num)
   {
-    flash_round_read[flash_count] = flash_read(254,2*flash_count,uint16);
+    flash_round_read[flash_count] = flash_read(254, 2 * flash_count, uint16);
     flash_count++;
   }
-  menu_array_length = sizeof(menu_round_array)/sizeof(float);
-  //¸üĞÂflashÊı¾İµ½È«¾Ö±äÁ¿ÖĞ
-  #if (LOAD_FLASH == 1)
-  while(menu_array_length)
+  menu_array_length = sizeof(menu_round_array) / sizeof(float);
+//æ›´æ–°flashæ•°æ®åˆ°å…¨å±€å˜é‡ä¸­
+#if (LOAD_FLASH == 1)
+  while (menu_array_length)
   {
     menu_array_length--;
     *menu_round_array[menu_array_length] = flash_round_read[menu_array_length];
   }
-  #endif
-  
+#endif
+
   //ADC
-  ADC_Init(ADC0_SE1, ADC_12bit); //A1
-  ADC_Init(ADC0_SE2, ADC_12bit); //A6
-  ADC_Init(ADC0_SE3, ADC_12bit); //A7
-  ADC_Init(ADC0_SE9, ADC_12bit); //C1
-  ADC_Init(ADC0_SE10, ADC_12bit);//C2
-  //UART´®¿Ú(À¶ÑÀ)
+  ADC_Init(ADC0_SE1, ADC_12bit);  //A1
+  ADC_Init(ADC0_SE2, ADC_12bit);  //A6
+  ADC_Init(ADC0_SE3, ADC_12bit);  //A7
+  ADC_Init(ADC0_SE9, ADC_12bit);  //C1
+  ADC_Init(ADC0_SE10, ADC_12bit); //C2
+  //UARTä¸²å£(è“ç‰™)
   UART_Init(uart0, 9600, RXTX_B0B1);
   UART_SetCallback(UART_Interrupt);
-  NVIC_SetPriority(UART0_IRQn, 0x02);//Èç¹ûÎÒÃÇ²»¶ÔÓÅÏÈ¼¶½øĞĞÅäÖÃµÄ»°£¬ÔòÄ¬ÈÏÏàÓ¦ÖĞ¶ÏÔ´µÄÏòÁ¿ºÅÔ½µÍÆäÓÅÏÈ¼¶Ô½¸ß
+  NVIC_SetPriority(UART0_IRQn, 0x02); //å¦‚æœæˆ‘ä»¬ä¸å¯¹ä¼˜å…ˆçº§è¿›è¡Œé…ç½®çš„è¯ï¼Œåˆ™é»˜è®¤ç›¸åº”ä¸­æ–­æºçš„å‘é‡å·è¶Šä½å…¶ä¼˜å…ˆçº§è¶Šé«˜
   UART_RX_IRQ_Disable(uart0);
-  //FTM µç»úPWMÊä³ö
-  FTM_PWM_Init(ftm2,ftm_ch0,F0,14000,0); //PWM1 ×óºó
-  FTM_PWM_Init(ftm2,ftm_ch1,F1,14000,0); //PWM2 ×óÇ°
-  FTM_PWM_Init(ftm2,ftm_ch4,G6,14000,0); //PWM3 ÓÒºó
-  FTM_PWM_Init(ftm2,ftm_ch5,G7,14000,0); //PWM4 ÓÒÇ°
-  //FTM Âö³å¼ÆÊı
-  FTM_Pulse_Init(ftm0,  FTM_PS_1, TCLK1);//×óÂÖ
-  FTM_Pulse_Init(ftm1,  FTM_PS_1, TCLK2);//ÓÒÂÖ
-  GPIO_Init(E1,GPI,HIGH);
-  GPIO_Init(H6,GPI,HIGH);
-  //PIT¶¨Ê±Æ÷
-  #if (SIGNAL_DETECT == 1)
-  PIT_Init1(pit0,5000);//µ¥Î»us,5ms
-  #else
-  PIT_Init1(pit1,2000);//µ¥Î»us,2ms
-  #endif
-  PIT_SetCallback(PIT_Interrupt);	/* Set the PIT callback function to be called on time 0.2s */
+  //FTM ç”µæœºPWMè¾“å‡º
+  FTM_PWM_Init(ftm2, ftm_ch0, F0, 14000, 0); //PWM1 å·¦å
+  FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0); //PWM2 å·¦å‰
+  FTM_PWM_Init(ftm2, ftm_ch4, G6, 14000, 0); //PWM3 å³å
+  FTM_PWM_Init(ftm2, ftm_ch5, G7, 14000, 0); //PWM4 å³å‰
+  //FTM è„‰å†²è®¡æ•°
+  FTM_Pulse_Init(ftm0, FTM_PS_1, TCLK1); //å·¦è½®
+  FTM_Pulse_Init(ftm1, FTM_PS_1, TCLK2); //å³è½®
+  GPIO_Init(E1, GPI, HIGH);
+  GPIO_Init(H6, GPI, HIGH);
+//PITå®šæ—¶å™¨
+#if (SIGNAL_DETECT == 1)
+  PIT_Init1(pit0, 5000); //å•ä½us,5ms
+#else
+  PIT_Init1(pit1, 2000); //å•ä½us,2ms
+#endif
+  PIT_SetCallback(PIT_Interrupt); /* Set the PIT callback function to be called on time 0.2s */
   Disable_Interrupt(INT_PIT_CH0);
-  KBI_SetCallback(KBI_Interrupt);	/* Set the KBI callback function to be called on each button press */
-  Enable_Interrupt(INT_KBI1); 	/* Enable KBI0 Interrupts */
+  KBI_SetCallback(KBI_Interrupt); /* Set the KBI callback function to be called on each button press */
+  Enable_Interrupt(INT_KBI1);     /* Enable KBI0 Interrupts */
   //
 }
 void OLED_Myshow(void)
 {
   OLED_Clear(0x00);
-  
-//AD
-  sprintf(spring_oled, "LL:%d",ad_left2);//
-  OLED_Show_String(8,16,0,0,1,spring_oled,0);
-  sprintf(spring_oled," M:%d",ad_center);//
-  OLED_Show_String(8,16,0,16,1,spring_oled,0);
-  sprintf(spring_oled,"RR:%d",ad_right2);//
-  OLED_Show_String(8,16,0,32,1,spring_oled,0);  
-  sprintf(spring_oled," L:%d",ad_left1);//
-  OLED_Show_String(8,16,64,0,1,spring_oled,0);
-  sprintf(spring_oled," R:%d",ad_right1);//
-  OLED_Show_String(8,16,64,16,1,spring_oled,0);
 
-  
-////µç»úÆ«²î
-//  sprintf(spring_oled,"taL:%d",(int)motor_left_error);
-//  OLED_Show_String(8,16,0,32,1,spring_oled,0);
-//  sprintf(spring_oled,"taR:%d",(int)motor_right_error);
-//  OLED_Show_String(8,16,64,32,1,spring_oled,0);
-////±àÂëÆ÷Êµ¼ÊËÙ¶È,´ø·½Ïò
-//  sprintf(spring_oled,"spL:%d",real_left_speed);
-//  OLED_Show_String(8,16,0,48,1,spring_oled,0);
-//  sprintf(spring_oled,"spR:%d",real_right_speed);
-//  OLED_Show_String(8,16,64,48,1,spring_oled,0);
-//µç¸Ğ¼ÆËãµÄÈüµÀÆ«²î
-  sprintf(spring_oled, "off:%d",offset_int);
-  OLED_Show_String(8,16,0,48,1,spring_oled,0);
-//×îºóÒ»´ÎÓĞĞ§·ÖÇø
-  sprintf(spring_oled,"area:%d",lastactive_area);
-  OLED_Show_String(8,16,64,32,1,spring_oled,0);
-//  if(lastactive_area==8) 
-//  {
-//    Disable_Interrupt(INT_PIT_CH0);
-//    while(1);
-//    OLED_Show_String(8,16,64,32,1,spring_oled,0);
-//  }
-  sprintf(spring_oled,"d:%d",(int)count_unround);
-  OLED_Show_String(8,16,64,48,1,spring_oled,0);
-  
+  //AD
+  sprintf(spring_oled, "LL:%d", ad_left2); //
+  OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+  sprintf(spring_oled, " M:%d", ad_center); //
+  OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
+  sprintf(spring_oled, "RR:%d", ad_right2); //
+  OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
+  sprintf(spring_oled, " L:%d", ad_left1); //
+  OLED_Show_String(8, 16, 64, 0, 1, spring_oled, 0);
+  sprintf(spring_oled, " R:%d", ad_right1); //
+  OLED_Show_String(8, 16, 64, 16, 1, spring_oled, 0);
+
+  ////ç”µæœºåå·®
+  //  sprintf(spring_oled,"taL:%d",(int)motor_left_error);
+  //  OLED_Show_String(8,16,0,32,1,spring_oled,0);
+  //  sprintf(spring_oled,"taR:%d",(int)motor_right_error);
+  //  OLED_Show_String(8,16,64,32,1,spring_oled,0);
+  ////ç¼–ç å™¨å®é™…é€Ÿåº¦,å¸¦æ–¹å‘
+  //  sprintf(spring_oled,"spL:%d",real_left_speed);
+  //  OLED_Show_String(8,16,0,48,1,spring_oled,0);
+  //  sprintf(spring_oled,"spR:%d",real_right_speed);
+  //  OLED_Show_String(8,16,64,48,1,spring_oled,0);
+  //ç”µæ„Ÿè®¡ç®—çš„èµ›é“åå·®
+  sprintf(spring_oled, "off:%d", offset_int);
+  OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
+  //æœ€åä¸€æ¬¡æœ‰æ•ˆåˆ†åŒº
+  sprintf(spring_oled, "area:%d", lastactive_area);
+  OLED_Show_String(8, 16, 64, 32, 1, spring_oled, 0);
+  //  if(lastactive_area==8)
+  //  {
+  //    Disable_Interrupt(INT_PIT_CH0);
+  //    while(1);
+  //    OLED_Show_String(8,16,64,32,1,spring_oled,0);
+  //  }
+  sprintf(spring_oled, "d:%d", (int)count_unround);
+  OLED_Show_String(8, 16, 64, 48, 1, spring_oled, 0);
+
   OLED_Refresh_Gram();
 }
-//LCD²Ëµ¥ÏÔÊ¾,´ıÓÅ»¯
+//LCDèœå•æ˜¾ç¤º,å¾…ä¼˜åŒ–
 void Menu_Debug_LCD(void)
 {
-  swx=ADC_Read(ADC0_SE11);
-  swy=ADC_Read(ADC0_SE8);
-  
-  if(Pin(G5))  lcd_enter_page = 0;
-  else if(Pin(G4)) lcd_enter_page = 1;
-  else if(!Pin(I0)) menu_show_choose = !menu_show_choose;
-  while(!Pin(I0));
-  
-  Pout(G1,!Pin(G4));
-  Pout(G2,!Pin(G5));
-  Pout(G3,Pin(I0));
+  swx = ADC_Read(ADC0_SE11);
+  swy = ADC_Read(ADC0_SE8);
+
+  if (Pin(G5))
+    lcd_enter_page = 0;
+  else if (Pin(G4))
+    lcd_enter_page = 1;
+  else if (!Pin(I0))
+    menu_show_choose = !menu_show_choose;
+  while (!Pin(I0))
+    ;
+
+  Pout(G1, !Pin(G4));
+  Pout(G2, !Pin(G5));
+  Pout(G3, Pin(I0));
   uint8 lcd_cursorx = 0;
   uint8 array_num = 0;
-  array_num = (lcd_position_cursory-12)/24+lcd_menu_pagenum*3;
+  array_num = (lcd_position_cursory - 12) / 24 + lcd_menu_pagenum * 3;
   uint8 num_length = 0;
-  num_length = Num_Length((int)((*menu_array_float[array_num])*100));
-  if(!lcd_enter_page) lcd_position_cursorx = num_length;
-  if(swy>OLED_XY_HIGH)
+  num_length = Num_Length((int)((*menu_array_float[array_num]) * 100));
+  if (!lcd_enter_page)
+    lcd_position_cursorx = num_length;
+  if (swy > OLED_XY_HIGH)
   {
-    if(lcd_enter_page)
+    if (lcd_enter_page)
     {
-      *menu_array_float[array_num]+= My_Pow(10,(lcd_position_cursorx-1))/100;
+      *menu_array_float[array_num] += My_Pow(10, (lcd_position_cursorx - 1)) / 100;
     }
     else
     {
-      if(lcd_position_cursory>12) lcd_position_cursory-=24;
+      if (lcd_position_cursory > 12)
+        lcd_position_cursory -= 24;
       else
       {
         lcd_position_cursory = 60;
-        if(lcd_menu_pagenum !=0)   lcd_menu_pagenum -= 1;
-        else lcd_menu_pagenum = 0;
-      }
-    }
-  }
-  else if(swy<OLED_XY_LOW)
-  {
-    if(lcd_enter_page)
-    {
-      *menu_array_float[array_num]-= My_Pow(10,(lcd_position_cursorx-1))/100;
-      num_length = Num_Length((int)((*menu_array_float[array_num])*100));
-      if(lcd_position_cursorx >= num_length) lcd_position_cursorx=num_length;
-    }
-    else
-    {
-      if(lcd_position_cursory<60) lcd_position_cursory+=24;
-      else
-      {
-        lcd_position_cursory = 12;
-//        if(lcd_menu_pagenum <0)lcd_menu_pagenum += 1;
-//        else
+        if (lcd_menu_pagenum != 0)
+          lcd_menu_pagenum -= 1;
+        else
           lcd_menu_pagenum = 0;
       }
     }
   }
-  else if(swx>OLED_XY_HIGH)
+  else if (swy < OLED_XY_LOW)
   {
-    if(lcd_enter_page)
+    if (lcd_enter_page)
     {
-      if(lcd_position_cursorx<=1)lcd_position_cursorx=1;
-      else lcd_position_cursorx-=1;
-    }
-  }
-  else if(swx<OLED_XY_LOW)
-  {
-    if(lcd_enter_page)
-    {
-      if(lcd_position_cursorx>=num_length) lcd_position_cursorx=num_length;
-      else lcd_position_cursorx+=1;
-    }
-  }
-  
-  lcd_cursorx = 16+18+(num_length-lcd_position_cursorx)*6;
-
-    sprintf(spring_menu,"%c%c:%d/100",menu_array_string_float[9*lcd_menu_pagenum],menu_array_string_float[9*lcd_menu_pagenum+1],(int)(100*(*menu_array_float[3*lcd_menu_pagenum])));
-    LCD_Show_String(6,12,16,0,spring_menu,0,BLACK,WHITE);
-    sprintf(spring_menu,"%c%c:%d/100",menu_array_string_float[9*lcd_menu_pagenum+3],menu_array_string_float[9*lcd_menu_pagenum+4],(int)(100*(*menu_array_float[3*lcd_menu_pagenum+1])));
-    LCD_Show_String(6,12,16,24,spring_menu,0,BLACK,WHITE);
-    sprintf(spring_menu,"%c%c:%d/100",menu_array_string_float[9*lcd_menu_pagenum+6],menu_array_string_float[9*lcd_menu_pagenum+7],(int)(100*(*menu_array_float[3*lcd_menu_pagenum+2])));
-    LCD_Show_String(6,12,16,48,spring_menu,0,BLACK,WHITE);
-
-
-
-
-  if(lcd_enter_page)
-  {
-    LCD_Show_String(6,12,lcd_cursorx,lcd_position_cursory-12,"_",1,BLACK,WHITE);
-    LCD_Fill(12,lcd_position_cursory-12,127,lcd_position_cursory,WHITE);
-  }
-  else LCD_Fill(0,0,6,60,WHITE);
-  LCD_Show_String(6,12,0,lcd_position_cursory-12,"~",0,BLACK,WHITE);
-
-  
-  while(swx<OLED_XY_LOW||swx>OLED_XY_HIGH||swy<OLED_XY_LOW||swy>OLED_XY_HIGH)
-  {
-    OLED_Fill(0,52,64,63,0,0);
-    swx=ADC_Read(ADC0_SE11);
-    swy=ADC_Read(ADC0_SE8);
-    sprintf(spring_menu,"btnx:%d",swx);
-    OLED_Show_String(6,12,0,52,1,spring_menu,1);
-    sprintf(spring_menu,"btny:%d",swy);
-    OLED_Show_String(6,12,64,52,1,spring_menu,1);
-
-  }
-  
-
-}
-
-
-/*----------------------------------------------------------------
-²Ëµ¥µ÷ÊÔ
-ËùÓĞ²ÎÊı¾ùÔÚÍË³ö²Ëµ¥ºóĞ´ÈëFlash(ROM)ÖĞ
-Ä¬ÈÏÊ¹ÓÃÎåÏò¿ª¹Ø£¬xyÖáÊ¹ÓÃAD¿Ú²É¼¯×÷Îª×ø±ê
-ËùÓĞ¸¡µãÊı°´ÕÕ100±¶±ÈÀıÏÔÊ¾£¬
-*/
-void Menu_Debug(void)
-{
-  //±£Ö¤Ò¡¸ËÒ»´ÎÖ»ÄÜÍÆ¶¯Ò»¸ñ
-  swx=ADC_Read(ADC0_SE11);//xÖáÒ¡¸ËAD¶ÁÖµÒ»´Î
-  swy=ADC_Read(ADC0_SE8);//yÖáÒ¡¸ËAD¶ÁÖµÒ»´Î
-
-  if(!Pin(I0)) oled_enter_page = !oled_enter_page;
-  //°´¼ü°´ÏÂÖ¸Ê¾
-  Pout(G3,Pin(I0));//½øÈë²ÎÊı¼­²Ëµ¥£¬·µ»Ø²ÎÊıÑ¡Ôñ²Ëµ¥
-  while(!Pin(I0));
-
-  card_detect = !Pin(G0);//¶ÁÈ¡SD¿¨×´Ì¬£¬ÏÔÊ¾ÔÚOLEDÆÁÓÒÉÏ½Ç£¬ÓĞSD¿¨Îª1£¬ÎŞSD¿¨Îª0
-  uint8 oled_cursorx = 0;
-  uint8 array_num = 0;
-  array_num = (oled_position_cursory-OLED_START_CURSORY)/OLED_FONT_HEIGHT+oled_menu_pagenum*OLED_MENU_PER_PAGE_COUNT;
-  uint8 num_length = 0;
-  num_length = Num_Length((int)((*menu_array[array_num])*100));
-  if(!oled_enter_page) oled_position_cursorx = num_length;//Ä¬ÈÏ³õÊ¼Îª×î¸ßÎ»
-  if(swy>OLED_XY_HIGH)//ÏòÉÏ
-  {
-    if(oled_enter_page)
-    {
-      *menu_array[array_num]+= My_Pow(10,(oled_position_cursorx-1))/100;
+      *menu_array_float[array_num] -= My_Pow(10, (lcd_position_cursorx - 1)) / 100;
+      num_length = Num_Length((int)((*menu_array_float[array_num]) * 100));
+      if (lcd_position_cursorx >= num_length)
+        lcd_position_cursorx = num_length;
     }
     else
     {
-      if(oled_position_cursory>OLED_START_CURSORY) oled_position_cursory-=OLED_FONT_HEIGHT;
+      if (lcd_position_cursory < 60)
+        lcd_position_cursory += 24;
       else
       {
-        oled_position_cursory = OLED_START_CURSORY+(OLED_MENU_PER_PAGE_COUNT-1)*OLED_FONT_HEIGHT;
+        lcd_position_cursory = 12;
+        //        if(lcd_menu_pagenum <0)lcd_menu_pagenum += 1;
+        //        else
+        lcd_menu_pagenum = 0;
       }
     }
   }
-  else if(swy<OLED_XY_LOW)//ÏòÏÂ
+  else if (swx > OLED_XY_HIGH)
   {
-    if(oled_enter_page)
+    if (lcd_enter_page)
     {
-      *menu_array[array_num]-= My_Pow(10,(oled_position_cursorx-1))/100;
-      num_length = Num_Length((int)((*menu_array[array_num])*100));//¸üĞÂÊı×ÖÎ»Êı
-      if(oled_position_cursorx >= num_length) oled_position_cursorx=num_length;
+      if (lcd_position_cursorx <= 1)
+        lcd_position_cursorx = 1;
+      else
+        lcd_position_cursorx -= 1;
+    }
+  }
+  else if (swx < OLED_XY_LOW)
+  {
+    if (lcd_enter_page)
+    {
+      if (lcd_position_cursorx >= num_length)
+        lcd_position_cursorx = num_length;
+      else
+        lcd_position_cursorx += 1;
+    }
+  }
+
+  lcd_cursorx = 16 + 18 + (num_length - lcd_position_cursorx) * 6;
+
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string_float[9 * lcd_menu_pagenum], menu_array_string_float[9 * lcd_menu_pagenum + 1], (int)(100 * (*menu_array_float[3 * lcd_menu_pagenum])));
+  LCD_Show_String(6, 12, 16, 0, spring_menu, 0, BLACK, WHITE);
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string_float[9 * lcd_menu_pagenum + 3], menu_array_string_float[9 * lcd_menu_pagenum + 4], (int)(100 * (*menu_array_float[3 * lcd_menu_pagenum + 1])));
+  LCD_Show_String(6, 12, 16, 24, spring_menu, 0, BLACK, WHITE);
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string_float[9 * lcd_menu_pagenum + 6], menu_array_string_float[9 * lcd_menu_pagenum + 7], (int)(100 * (*menu_array_float[3 * lcd_menu_pagenum + 2])));
+  LCD_Show_String(6, 12, 16, 48, spring_menu, 0, BLACK, WHITE);
+
+  if (lcd_enter_page)
+  {
+    LCD_Show_String(6, 12, lcd_cursorx, lcd_position_cursory - 12, "_", 1, BLACK, WHITE);
+    LCD_Fill(12, lcd_position_cursory - 12, 127, lcd_position_cursory, WHITE);
+  }
+  else
+    LCD_Fill(0, 0, 6, 60, WHITE);
+  LCD_Show_String(6, 12, 0, lcd_position_cursory - 12, "~", 0, BLACK, WHITE);
+
+  while (swx < OLED_XY_LOW || swx > OLED_XY_HIGH || swy < OLED_XY_LOW || swy > OLED_XY_HIGH)
+  {
+    OLED_Fill(0, 52, 64, 63, 0, 0);
+    swx = ADC_Read(ADC0_SE11);
+    swy = ADC_Read(ADC0_SE8);
+    sprintf(spring_menu, "btnx:%d", swx);
+    OLED_Show_String(6, 12, 0, 52, 1, spring_menu, 1);
+    sprintf(spring_menu, "btny:%d", swy);
+    OLED_Show_String(6, 12, 64, 52, 1, spring_menu, 1);
+  }
+}
+
+/*----------------------------------------------------------------
+èœå•è°ƒè¯•
+æ‰€æœ‰å‚æ•°å‡åœ¨é€€å‡ºèœå•åå†™å…¥Flash(ROM)ä¸­
+é»˜è®¤ä½¿ç”¨äº”å‘å¼€å…³ï¼Œxyè½´ä½¿ç”¨ADå£é‡‡é›†ä½œä¸ºåæ ‡
+æ‰€æœ‰æµ®ç‚¹æ•°æŒ‰ç…§100å€æ¯”ä¾‹æ˜¾ç¤ºï¼Œ
+*/
+void Menu_Debug(void)
+{
+  //ä¿è¯æ‘‡æ†ä¸€æ¬¡åªèƒ½æ¨åŠ¨ä¸€æ ¼
+  swx = ADC_Read(ADC0_SE11); //xè½´æ‘‡æ†ADè¯»å€¼ä¸€æ¬¡
+  swy = ADC_Read(ADC0_SE8);  //yè½´æ‘‡æ†ADè¯»å€¼ä¸€æ¬¡
+
+  if (!Pin(I0))
+    oled_enter_page = !oled_enter_page;
+  //æŒ‰é”®æŒ‰ä¸‹æŒ‡ç¤º
+  Pout(G3, Pin(I0)); //è¿›å…¥å‚æ•°è¾‘èœå•ï¼Œè¿”å›å‚æ•°é€‰æ‹©èœå•
+  while (!Pin(I0))
+    ;
+
+  card_detect = !Pin(G0); //è¯»å–SDå¡çŠ¶æ€ï¼Œæ˜¾ç¤ºåœ¨OLEDå±å³ä¸Šè§’ï¼Œæœ‰SDå¡ä¸º1ï¼Œæ— SDå¡ä¸º0
+  uint8 oled_cursorx = 0;
+  uint8 array_num = 0;
+  array_num = (oled_position_cursory - OLED_START_CURSORY) / OLED_FONT_HEIGHT + oled_menu_pagenum * OLED_MENU_PER_PAGE_COUNT;
+  uint8 num_length = 0;
+  num_length = Num_Length((int)((*menu_array[array_num]) * 100));
+  if (!oled_enter_page)
+    oled_position_cursorx = num_length; //é»˜è®¤åˆå§‹ä¸ºæœ€é«˜ä½
+  if (swy > OLED_XY_HIGH)               //å‘ä¸Š
+  {
+    if (oled_enter_page)
+    {
+      *menu_array[array_num] += My_Pow(10, (oled_position_cursorx - 1)) / 100;
     }
     else
     {
-      if(oled_position_cursory<OLED_START_CURSORY+(OLED_MENU_PER_PAGE_COUNT-1)*OLED_FONT_HEIGHT) oled_position_cursory+=OLED_FONT_HEIGHT;
+      if (oled_position_cursory > OLED_START_CURSORY)
+        oled_position_cursory -= OLED_FONT_HEIGHT;
+      else
+      {
+        oled_position_cursory = OLED_START_CURSORY + (OLED_MENU_PER_PAGE_COUNT - 1) * OLED_FONT_HEIGHT;
+      }
+    }
+  }
+  else if (swy < OLED_XY_LOW) //å‘ä¸‹
+  {
+    if (oled_enter_page)
+    {
+      *menu_array[array_num] -= My_Pow(10, (oled_position_cursorx - 1)) / 100;
+      num_length = Num_Length((int)((*menu_array[array_num]) * 100)); //æ›´æ–°æ•°å­—ä½æ•°
+      if (oled_position_cursorx >= num_length)
+        oled_position_cursorx = num_length;
+    }
+    else
+    {
+      if (oled_position_cursory < OLED_START_CURSORY + (OLED_MENU_PER_PAGE_COUNT - 1) * OLED_FONT_HEIGHT)
+        oled_position_cursory += OLED_FONT_HEIGHT;
       else
       {
         oled_position_cursory = OLED_START_CURSORY;
       }
     }
   }
-  else if(swx>OLED_XY_HIGH)//ÏòÓÒ
+  else if (swx > OLED_XY_HIGH) //å‘å³
   {
-    if(oled_enter_page)
+    if (oled_enter_page)
     {
-      if(oled_position_cursorx<=1)oled_position_cursorx=1;
-      else oled_position_cursorx-=1;
+      if (oled_position_cursorx <= 1)
+        oled_position_cursorx = 1;
+      else
+        oled_position_cursorx -= 1;
     }
     else
     {
-      if(oled_menu_pagenum < OLED_MENU_ALL_PAGE_COUNT-1)oled_menu_pagenum += 1;
-      else oled_menu_pagenum = 0;
+      if (oled_menu_pagenum < OLED_MENU_ALL_PAGE_COUNT - 1)
+        oled_menu_pagenum += 1;
+      else
+        oled_menu_pagenum = 0;
     }
   }
-  else if(swx<OLED_XY_LOW)//Ïò×ó
+  else if (swx < OLED_XY_LOW) //å‘å·¦
   {
-    if(oled_enter_page)
+    if (oled_enter_page)
     {
-      if(oled_position_cursorx>=(num_length+1)) oled_position_cursorx=(num_length+1);
-      else oled_position_cursorx+=1;
+      if (oled_position_cursorx >= (num_length + 1))
+        oled_position_cursorx = (num_length + 1);
+      else
+        oled_position_cursorx += 1;
     }
     else
     {
-      if(oled_menu_pagenum !=0)   oled_menu_pagenum -= 1;
-      else oled_menu_pagenum = OLED_MENU_ALL_PAGE_COUNT-1;
+      if (oled_menu_pagenum != 0)
+        oled_menu_pagenum -= 1;
+      else
+        oled_menu_pagenum = OLED_MENU_ALL_PAGE_COUNT - 1;
     }
   }
-  
-  oled_cursorx = 16+18+(num_length-oled_position_cursorx)*6;
 
-  sprintf(spring_menu,"%c%c:%d/100",menu_array_string[9*oled_menu_pagenum],menu_array_string[9*oled_menu_pagenum+1],(int)(100*(*menu_array[3*oled_menu_pagenum])));
-  OLED_Show_String(6,12,16,16,1,spring_menu,0);
-  sprintf(spring_menu,"%c%c:%d/100",menu_array_string[9*oled_menu_pagenum+3],menu_array_string[9*oled_menu_pagenum+4],(int)(100*(*menu_array[3*oled_menu_pagenum+1])));
-  OLED_Show_String(6,12,16,28,1,spring_menu,0);
-  sprintf(spring_menu,"%c%c:%d/100",menu_array_string[9*oled_menu_pagenum+6],menu_array_string[9*oled_menu_pagenum+7],(int)(100*(*menu_array[3*oled_menu_pagenum+2])));
-  OLED_Show_String(6,12,16,40,1,spring_menu,0);
+  oled_cursorx = 16 + 18 + (num_length - oled_position_cursorx) * 6;
 
-  
-  sprintf(spring_menu,"sd:%d",card_detect);
-  OLED_Show_String(6,12,104,0,1,spring_menu,0);
-  
-  sprintf(spring_menu,"sd:%d",flash_num16[3*oled_menu_pagenum]);
-  OLED_Show_String(6,12,72,16,1,spring_menu,0);
-  sprintf(spring_menu,"sd:%d",flash_num16[3*oled_menu_pagenum+1]);
-  OLED_Show_String(6,12,72,28,1,spring_menu,0);
-  sprintf(spring_menu,"sd:%d",flash_num16[3*oled_menu_pagenum+2]);
-  OLED_Show_String(6,12,72,40,1,spring_menu,0);
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string[9 * oled_menu_pagenum], menu_array_string[9 * oled_menu_pagenum + 1], (int)(100 * (*menu_array[3 * oled_menu_pagenum])));
+  OLED_Show_String(6, 12, 16, 16, 1, spring_menu, 0);
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string[9 * oled_menu_pagenum + 3], menu_array_string[9 * oled_menu_pagenum + 4], (int)(100 * (*menu_array[3 * oled_menu_pagenum + 1])));
+  OLED_Show_String(6, 12, 16, 28, 1, spring_menu, 0);
+  sprintf(spring_menu, "%c%c:%d/100", menu_array_string[9 * oled_menu_pagenum + 6], menu_array_string[9 * oled_menu_pagenum + 7], (int)(100 * (*menu_array[3 * oled_menu_pagenum + 2])));
+  OLED_Show_String(6, 12, 16, 40, 1, spring_menu, 0);
 
-  if(oled_enter_page)  OLED_Reverse(6,12,oled_cursorx,oled_position_cursory,0);
-  OLED_Show_String(6,12,0,oled_position_cursory,1,"~~",0);
-  sprintf(spring_menu,"btnx:%d",swx);
-  OLED_Show_String(6,12,0,52,1,spring_menu,0);
-  sprintf(spring_menu,"btny:%d",swy);
-  OLED_Show_String(6,12,64,52,1,spring_menu,0);
-  
-  while(swx<OLED_XY_LOW||swx>OLED_XY_HIGH||swy<OLED_XY_LOW||swy>OLED_XY_HIGH)//ÉÏÒ»´ÎÍÆ¶¯ÁËÒ¡¸Ë£¬µÈ´ıÒ¡¸ËÊÍ·Å
+  sprintf(spring_menu, "sd:%d", card_detect);
+  OLED_Show_String(6, 12, 104, 0, 1, spring_menu, 0);
+
+  sprintf(spring_menu, "sd:%d", flash_num16[3 * oled_menu_pagenum]);
+  OLED_Show_String(6, 12, 72, 16, 1, spring_menu, 0);
+  sprintf(spring_menu, "sd:%d", flash_num16[3 * oled_menu_pagenum + 1]);
+  OLED_Show_String(6, 12, 72, 28, 1, spring_menu, 0);
+  sprintf(spring_menu, "sd:%d", flash_num16[3 * oled_menu_pagenum + 2]);
+  OLED_Show_String(6, 12, 72, 40, 1, spring_menu, 0);
+
+  if (oled_enter_page)
+    OLED_Reverse(6, 12, oled_cursorx, oled_position_cursory, 0);
+  OLED_Show_String(6, 12, 0, oled_position_cursory, 1, "~~", 0);
+  sprintf(spring_menu, "btnx:%d", swx);
+  OLED_Show_String(6, 12, 0, 52, 1, spring_menu, 0);
+  sprintf(spring_menu, "btny:%d", swy);
+  OLED_Show_String(6, 12, 64, 52, 1, spring_menu, 0);
+
+  while (swx < OLED_XY_LOW || swx > OLED_XY_HIGH || swy < OLED_XY_LOW || swy > OLED_XY_HIGH) //ä¸Šä¸€æ¬¡æ¨åŠ¨äº†æ‘‡æ†ï¼Œç­‰å¾…æ‘‡æ†é‡Šæ”¾
   {
     OLED_Clear(0x00);
-    swx=ADC_Read(ADC0_SE11);
-    swy=ADC_Read(ADC0_SE8);
-    sprintf(spring_menu,"btnx:%d",swx);
-    OLED_Show_String(6,12,0,52,1,spring_menu,1);
-    sprintf(spring_menu,"btny:%d",swy);
-    OLED_Show_String(6,12,64,52,1,spring_menu,1);
+    swx = ADC_Read(ADC0_SE11);
+    swy = ADC_Read(ADC0_SE8);
+    sprintf(spring_menu, "btnx:%d", swx);
+    OLED_Show_String(6, 12, 0, 52, 1, spring_menu, 1);
+    sprintf(spring_menu, "btny:%d", swy);
+    OLED_Show_String(6, 12, 64, 52, 1, spring_menu, 1);
   }
-  
+
   OLED_Refresh_Gram();
 }
 
 void Round_Read_Menu(void)
 {
   ad_center = ADC_Read(ADC0_SE1);
-  swy=ADC_Read(ADC0_SE8);
+  swy = ADC_Read(ADC0_SE8);
 
-  //°´¼ü°´ÏÂÖ¸Ê¾
-  Pout(G1,!Pin(G4));//¶ÁÈ¡ADÖµ
+  //æŒ‰é”®æŒ‰ä¸‹æŒ‡ç¤º
+  Pout(G1, !Pin(G4)); //è¯»å–ADå€¼
 
   uint8 array_num = 0;
-  array_num = (oled_position_cursory-16)/12+oled_menu_pagenum*3;
+  array_num = (oled_position_cursory - 16) / 12 + oled_menu_pagenum * 3;
 
-  if(Pin(G4))
+  if (Pin(G4))
   {
     *menu_round_array[array_num] = ad_center;
-//    if(oled_position_cursory<40) oled_position_cursory+=12;
-//    else
-//    {
-//      oled_position_cursory = 16;
-//      if(oled_menu_pagenum <1)oled_menu_pagenum += 1;
-//      else oled_menu_pagenum = 0;
-//    }
+    //    if(oled_position_cursory<40) oled_position_cursory+=12;
+    //    else
+    //    {
+    //      oled_position_cursory = 16;
+    //      if(oled_menu_pagenum <1)oled_menu_pagenum += 1;
+    //      else oled_menu_pagenum = 0;
+    //    }
     OLED_Clear(0x00);
   }
-  else if(!Pin(I0))
+  else if (!Pin(I0))
   {
-    *menu_round_array[array_num] = 4100;//´óÓÚ4096,²»¿ÉÄÜÂú×ã,µÈĞ§ÓÚÈ¡ÏûºóĞø»·µºÅĞ¶¨
+    *menu_round_array[array_num] = 4100; //å¤§äº4096,ä¸å¯èƒ½æ»¡è¶³,ç­‰æ•ˆäºå–æ¶ˆåç»­ç¯å²›åˆ¤å®š
     OLED_Clear(0x00);
   }
-  while(Pin(G4));//µÈ´ı°´¼ü·Å¿ª
-  while(!Pin(I0));
-  
-  if(swy>OLED_XY_HIGH)//ÏòÉÏ
+  while (Pin(G4))
+    ; //ç­‰å¾…æŒ‰é”®æ”¾å¼€
+  while (!Pin(I0))
+    ;
+
+  if (swy > OLED_XY_HIGH) //å‘ä¸Š
   {
-    if(oled_position_cursory>16) oled_position_cursory-=12;
+    if (oled_position_cursory > 16)
+      oled_position_cursory -= 12;
     else
     {
       oled_position_cursory = 40;
-      if(oled_menu_pagenum !=0)   oled_menu_pagenum -= 1;
-      else oled_menu_pagenum = 1;
+      if (oled_menu_pagenum != 0)
+        oled_menu_pagenum -= 1;
+      else
+        oled_menu_pagenum = 1;
     }
   }
-  else if(swy<OLED_XY_LOW)//ÏòÏÂ
+  else if (swy < OLED_XY_LOW) //å‘ä¸‹
   {
-    if(oled_position_cursory<40) oled_position_cursory+=12;
+    if (oled_position_cursory < 40)
+      oled_position_cursory += 12;
     else
     {
       oled_position_cursory = 16;
-      if(oled_menu_pagenum <1)oled_menu_pagenum += 1;
-      else oled_menu_pagenum = 0;
+      if (oled_menu_pagenum < 1)
+        oled_menu_pagenum += 1;
+      else
+        oled_menu_pagenum = 0;
     }
   }
 
-  sprintf(spring_menu,"%c%c:%d",menu_array_round_string[9*oled_menu_pagenum],menu_array_round_string[9*oled_menu_pagenum+1],*menu_round_array[3*oled_menu_pagenum]);
-  OLED_Show_String(6,12,16,16,1,spring_menu,0);
-  sprintf(spring_menu,"%c%c:%d",menu_array_round_string[9*oled_menu_pagenum+3],menu_array_round_string[9*oled_menu_pagenum+4],*menu_round_array[3*oled_menu_pagenum+1]);
-  OLED_Show_String(6,12,16,28,1,spring_menu,0);
-  sprintf(spring_menu,"%c%c:%d",menu_array_round_string[9*oled_menu_pagenum+6],menu_array_round_string[9*oled_menu_pagenum+7],*menu_round_array[3*oled_menu_pagenum+2]);
-  OLED_Show_String(6,12,16,40,1,spring_menu,0);
+  sprintf(spring_menu, "%c%c:%d", menu_array_round_string[9 * oled_menu_pagenum], menu_array_round_string[9 * oled_menu_pagenum + 1], *menu_round_array[3 * oled_menu_pagenum]);
+  OLED_Show_String(6, 12, 16, 16, 1, spring_menu, 0);
+  sprintf(spring_menu, "%c%c:%d", menu_array_round_string[9 * oled_menu_pagenum + 3], menu_array_round_string[9 * oled_menu_pagenum + 4], *menu_round_array[3 * oled_menu_pagenum + 1]);
+  OLED_Show_String(6, 12, 16, 28, 1, spring_menu, 0);
+  sprintf(spring_menu, "%c%c:%d", menu_array_round_string[9 * oled_menu_pagenum + 6], menu_array_round_string[9 * oled_menu_pagenum + 7], *menu_round_array[3 * oled_menu_pagenum + 2]);
+  OLED_Show_String(6, 12, 16, 40, 1, spring_menu, 0);
 
-  sprintf(spring_menu,"sd:%d",flash_round_read[3*oled_menu_pagenum]);
-  OLED_Show_String(6,12,72,16,1,spring_menu,0);
-  sprintf(spring_menu,"sd:%d",flash_round_read[3*oled_menu_pagenum+1]);
-  OLED_Show_String(6,12,72,28,1,spring_menu,0);
-  sprintf(spring_menu,"sd:%d",flash_round_read[3*oled_menu_pagenum+2]);
-  OLED_Show_String(6,12,72,40,1,spring_menu,0);
+  sprintf(spring_menu, "sd:%d", flash_round_read[3 * oled_menu_pagenum]);
+  OLED_Show_String(6, 12, 72, 16, 1, spring_menu, 0);
+  sprintf(spring_menu, "sd:%d", flash_round_read[3 * oled_menu_pagenum + 1]);
+  OLED_Show_String(6, 12, 72, 28, 1, spring_menu, 0);
+  sprintf(spring_menu, "sd:%d", flash_round_read[3 * oled_menu_pagenum + 2]);
+  OLED_Show_String(6, 12, 72, 40, 1, spring_menu, 0);
 
-  OLED_Show_String(6,12,0,oled_position_cursory,1,"~~",0);
-  sprintf(spring_menu,"ad:%d",ad_center);
-  OLED_Show_String(6,12,0,52,1,spring_menu,0);
-  sprintf(spring_menu,"btny:%d",swy);
-  OLED_Show_String(6,12,64,52,1,spring_menu,0);
-  
-  while(swx<OLED_XY_LOW||swx>OLED_XY_HIGH||swy<OLED_XY_LOW||swy>OLED_XY_HIGH)//ÍÆ¶¯ÁËÒ¡¸Ë£¬µÈ´ıÒ¡¸ËÊÍ·Å
+  OLED_Show_String(6, 12, 0, oled_position_cursory, 1, "~~", 0);
+  sprintf(spring_menu, "ad:%d", ad_center);
+  OLED_Show_String(6, 12, 0, 52, 1, spring_menu, 0);
+  sprintf(spring_menu, "btny:%d", swy);
+  OLED_Show_String(6, 12, 64, 52, 1, spring_menu, 0);
+
+  while (swx < OLED_XY_LOW || swx > OLED_XY_HIGH || swy < OLED_XY_LOW || swy > OLED_XY_HIGH) //æ¨åŠ¨äº†æ‘‡æ†ï¼Œç­‰å¾…æ‘‡æ†é‡Šæ”¾
   {
     OLED_Clear(0x00);
     ad_center = ADC_Read(ADC0_SE1);
-    swy=ADC_Read(ADC0_SE8);
-    sprintf(spring_menu,"ad:%d",ad_center);
-    OLED_Show_String(6,12,0,52,1,spring_menu,1);
-    sprintf(spring_menu,"btny:%d",swy);
-    OLED_Show_String(6,12,64,52,1,spring_menu,1);
+    swy = ADC_Read(ADC0_SE8);
+    sprintf(spring_menu, "ad:%d", ad_center);
+    OLED_Show_String(6, 12, 0, 52, 1, spring_menu, 1);
+    sprintf(spring_menu, "btny:%d", swy);
+    OLED_Show_String(6, 12, 64, 52, 1, spring_menu, 1);
   }
-  
+
   OLED_Refresh_Gram();
 }
 
 uint8 Num_Length(int num)
 {
-  uint8 length=0;
-  if(num<0)
+  uint8 length = 0;
+  if (num < 0)
   {
-    num=-num;
+    num = -num;
     length++;
   }
   do
   {
-    num/=10;
+    num /= 10;
     length++;
-  }
-  while(num!=0);
+  } while (num != 0);
   return length;
 }
 
@@ -1805,42 +1909,44 @@ uint8 Num_float_Length(float num)
   return length;
 }
 
-double My_Pow(double m,int8 n)
+double My_Pow(double m, int8 n)
 {
-  double result=1;
-  if(n>0)
+  double result = 1;
+  if (n > 0)
   {
-    while(n--)result*=m;
+    while (n--)
+      result *= m;
   }
   else
   {
-    while(n++)result/=m;
+    while (n++)
+      result /= m;
   }
   return result;
 }
 
 void float3_sprintf(float num, char *buf)
 {
-  sprintf(buf,"F:%d.%03d",(int)num,(int)((num-(int)num)*1000));
+  sprintf(buf, "F:%d.%03d", (int)num, (int)((num - (int)num) * 1000));
 }
 
-void buffer_left_move(int16 *buffer , int buf_len)
+void buffer_left_move(int16 *buffer, int buf_len)
 {
   int i;
   char tmp = buffer[0];
-  for(i = 1 ; i < buf_len ; i++)
+  for (i = 1; i < buf_len; i++)
   {
-    buffer[i-1] = buffer[i];
+    buffer[i - 1] = buffer[i];
   }
-  buffer[buf_len-1] = tmp;
+  buffer[buf_len - 1] = tmp;
 }
 
-int array_sum(int16 array[],int n)                   //ÇóºÍº¯Êı
+int array_sum(int16 array[], int n) //æ±‚å’Œå‡½æ•°
 {
-  int sum=0;
-  for(int i=0;i<n;i++)
+  int sum = 0;
+  for (int i = 0; i < n; i++)
   {
-    sum+=array[i];
+    sum += array[i];
   }
   return sum;
 }
