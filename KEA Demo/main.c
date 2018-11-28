@@ -19,8 +19,11 @@ int main(void)
   PIT_SetCallback(PIT_Interrupt);	
   Disable_Interrupt(INT_PIT_CH0);
   Enable_Interrupt(INT_PIT_CH0); 
+   //FTM_PWM_Init(ftm2,ftm_ch1,F1,14000,0); //PWM2 ǰ
+  FTM_PWM_Init(ftm0,ftm_ch0,A0,300,500); 
   while(1)
   {
+    FTM_PWM_Duty(ftm0,ftm_ch0,700);
   }
 }
 

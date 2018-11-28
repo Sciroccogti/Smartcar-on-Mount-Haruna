@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\common\bin\cspybat" -f "C:\Users\曹博\Desktop\KEA测试代码\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --backend -f "C:\Users\曹博\Desktop\KEA测试代码\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
+"D:\智能车\iar1\common\bin\cspybat" -f "C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --backend -f "C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\common\bin\cspybat" -f "C:\Users\曹博\Desktop\KEA测试代码\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\曹博\Desktop\KEA测试代码\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
+"D:\智能车\iar1\common\bin\cspybat" -f "C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
 
 @echo off 
 :end

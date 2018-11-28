@@ -1,14 +1,14 @@
-"D:\Program Files (x86)\IAR Systems\arm\bin\armproc.dll" 
+"D:\智能车\iar1\arm\bin\armproc.dll" 
 
-"D:\Program Files (x86)\IAR Systems\arm\bin\armjlink2.dll" 
+"D:\智能车\iar1\arm\bin\armjlink2.dll" 
 
-"C:\Users\曹博\Desktop\KEA测试代码\IAR\Flash_Debug\Exe\SEUsmartcar_KEA.out" 
+"C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Exe\SEUsmartcar_KEA.out" 
 
---plugin "D:\Program Files (x86)\IAR Systems\arm\bin\armbat.dll" 
+--plugin "D:\智能车\iar1\arm\bin\armbat.dll" 
 
---device_macro "D:\Program Files (x86)\IAR Systems\arm\config\debugger\NXP\KExx.dmac" 
+--device_macro "D:\智能车\iar1\arm\config\debugger\NXP\KExx.dmac" 
 
---flash_loader "C:\Users\曹博\Desktop\KEA测试代码\IAR\..\Libraries\Device\IAR-ARM\flashloader\FlashKE04Z128_4.board" 
+--flash_loader "C:\Users\，lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\..\Libraries\Device\IAR-ARM\flashloader\FlashKE04Z128_4.board" 
 
 
 
