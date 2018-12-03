@@ -16,7 +16,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>2556110044</Checksum>
+        <Checksum>2731847033</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -26,8 +26,8 @@
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <MixedMode>1</MixedMode>
         <InstrCount>0</InstrCount>
+        <MixedMode>1</MixedMode>
     </Disassembly>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -83,10 +83,13 @@
     <Aliases>
         <A0>_ "" ""</A0>
         <A1>_ "C:\Users\admin\Desktop\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A1>
-        <A2>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A2>
-        <A3>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A3>
-        <A4>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A4>
-        <Count>5</Count>
+        <A2>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Device\low_level_init.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Device\low_level_init.c"</A2>
+        <A3>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_Port.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Driver\src\KEA128_Port.c"</A3>
+        <A4>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\delay.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Driver\src\delay.c"</A4>
+        <A5>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A5>
+        <A6>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A6>
+        <A7>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A7>
+        <Count>8</Count>
         <SuppressDialog>1</SuppressDialog>
     </Aliases>
     <DriverProfiling>
