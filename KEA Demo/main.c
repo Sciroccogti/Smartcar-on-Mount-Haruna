@@ -11,18 +11,17 @@ void Control()
 
   //读取AD值
   AD1 = ADC_Read(ADC0_SE1);
-  AD2 = ADC_Read(ADC0_SE3);
+  AD2 = ADC_Read(ADC0_SE2);
 
   //舵机控制 建议使用位置式PD控制 请参考相应的手册
   pre_offset = offset;
-  //offset = (float)1000.0 * (AD1 - AD2) * 1.0 / (AD1 + AD2 + 1);
   offset = (float)1000 * (AD1 - AD2) * 1.0 / (AD1 + AD2 + 1);
 
   count = FTM_Pulse_Get(ftm1); //编码器数值读取
   FTM_Count_Clean(ftm1);       //编码器数值清零
 
   //电机控制，建议对电机与舵机的占空比限幅，电机0~100%，舵机根据安装情况设置
-  //FTM_PWM_Duty(ftm2,ftm_ch0,100);
+  FTM_PWM_Duty(ftm2,ftm_ch0,100);
 }
 
 void PIT_Interrupt(uint8 ch)
@@ -58,6 +57,11 @@ int main(void)
   while (1)
   {
     //Control();
-    FTM_PWM_Duty(ftm0, ftm_ch0, 600);
+    while(1){
+      AD1 = ADC_Read(ADC0_SE1);
+      AD2 = ADC_Read(ADC0_SE2);
+      offset = (float)100*(AD1 - AD2)/(AD1 + AD2);
+      FTM_PWM_Duty(ftm0, ftm_ch0, 500+offset);
+    }
   }
 }

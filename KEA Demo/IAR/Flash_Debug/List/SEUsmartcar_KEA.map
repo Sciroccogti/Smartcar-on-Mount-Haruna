@@ -1,68 +1,68 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.22.1.15669/W32 for ARM                03/Dec/2018  21:48:33
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                05/Dec/2018  20:55:12
 # Copyright 2007-2018 IAR Systems AB.
 #
 #    Output file  =  
-#        E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Exe\SEUsmartcar_KEA.out
 #    Map file     =  
-#        E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\List\SEUsmartcar_KEA.map
 #    Command line =  
-#        -f C:\Users\zyf19\AppData\Local\Temp\EWE54A.tmp
-#        ("E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        -f C:\Users\£¬lenovo\AppData\Local\Temp\EWA0C3.tmp
+#        ("C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\cstartup_M_KEA128.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\delay.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\font.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_ADC.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_FLASH.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_FTM.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_GPIO.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_IRQ.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_KBI.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_PIT.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_Port.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_RTC.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_spi.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_systick.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\KEA128_UART.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\low_level_init.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\main.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\misc.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\OLED_0_96.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\SEEKFREE_IIC.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\SEEKFREE_MPU6050.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\system_SKEAZ1284.o"
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Obj\TFT_1_8.o" -o
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\Exe\SEUsmartcar_KEA.out" --redirect
 #        _Scanf=_ScanfSmallNoMb --map
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\Flash_Debug\List\SEUsmartcar_KEA.map" --config
-#        "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA
+#        "C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA
 #        Demo\IAR\..\Libraries\Device\IAR-ARM\linker\KEAZ128xxx4.icf"
 #        --semihosting --entry __iar_program_start --vfe --text_out locale)
 #
@@ -106,64 +106,75 @@ No sections matched the following patterns:
   section FlashConfig  in "P1"
 
 
-  Section            Kind        Address   Size  Object
-  -------            ----        -------   ----  ------
-"A0":                                      0xc0
-  .intvec            ro code  0x00000000   0xc0  cstartup_M_KEA128.o [1]
-                            - 0x000000c0   0xc0
+  Section            Kind        Address    Size  Object
+  -------            ----        -------    ----  ------
+"A0":                                       0xc0
+  .intvec            ro code  0x00000000    0xc0  cstartup_M_KEA128.o [1]
+                            - 0x000000c0    0xc0
 
-"P2", part 1 of 2:                         0x28
-  .rodata            const    0x000000c0    0x0  copy_init3.o [5]
-  Initializer bytes  const    0x000000c0   0x28  <for P3 s0>
-                            - 0x000000e8   0x28
+"P2", part 1 of 2:                          0x30
+  .rodata            const    0x000000c0     0x0  copy_init3.o [5]
+  Initializer bytes  const    0x000000c0    0x30  <for P3 s0>
+                            - 0x000000f0    0x30
 
-"P2", part 2 of 2:                        0xe4c
-  .text              ro code  0x00000410  0x524  KEA128_FTM.o [1]
-  .text              ro code  0x00000934   0xe0  I32DivModFast.o [5]
-  .text              ro code  0x00000a14    0x2  IntDivZer.o [5]
-  .text              ro code  0x00000a16    0x2  cstartup_M_KEA128.o [1]
-  .text              ro code  0x00000a18  0x18c  KEA128_GPIO.o [1]
-  .text              ro code  0x00000ba4   0x70  KEA128_Port.o [1]
-  .text              ro code  0x00000c14  0x16c  system_SKEAZ1284.o [1]
-  .text              ro code  0x00000d80   0x34  ABImemcpy.o [5]
-  .text              ro code  0x00000db4   0xe0  main.o [1]
-  .text              ro code  0x00000e94   0x4e  delay.o [1]
-  .text              ro code  0x00000ee4   0xd8  KEA128_PIT.o [1]
-  .text              ro code  0x00000fbc   0x40  KEA128_ADC.o [1]
-  .text              ro code  0x00000ffc   0xac  KEA128_KBI.o [1]
-  .text              ro code  0x000010a8   0x78  KEA128_UART.o [1]
-  .text              ro code  0x00001120   0x40  low_level_init.o [1]
-  .text              ro code  0x00001160   0x30  copy_init3.o [5]
-  .text              ro code  0x00001190   0x28  data_init.o [5]
-  .iar.init_table    const    0x000011b8   0x14  - Linker created -
-  .text              ro code  0x000011cc   0x1e  cmain.o [5]
-  .text              ro code  0x000011ea    0x8  exit.o [3]
-  .text              ro code  0x000011f4    0xa  cexit.o [5]
-  .text              ro code  0x00001200   0x14  exit.o [6]
-  .rodata            const    0x00001214   0x18  system_SKEAZ1284.o [1]
-  .rodata            const    0x0000122c    0xc  KEA128_FTM.o [1]
-  .rodata            const    0x00001238    0xc  KEA128_GPIO.o [1]
-  .rodata            const    0x00001244    0xc  KEA128_Port.o [1]
-  .text              ro code  0x00001250    0xc  cstartup_M.o [5]
-                            - 0x0000125c  0xe4c
+"P2", part 2 of 2:                        0x13d4
+  .text              ro code  0x00000410   0x524  KEA128_FTM.o [1]
+  .text              ro code  0x00000934    0xe0  I32DivModFast.o [5]
+  .text              ro code  0x00000a14     0x2  IntDivZer.o [5]
+  .text              ro code  0x00000a16     0x2  cstartup_M_KEA128.o [1]
+  .text              ro code  0x00000a18   0x18c  KEA128_GPIO.o [1]
+  .text              ro code  0x00000ba4    0x70  KEA128_Port.o [1]
+  .text              ro code  0x00000c14   0x184  DblMul.o [4]
+  .text              ro code  0x00000d98   0x16c  system_SKEAZ1284.o [1]
+  .text              ro code  0x00000f04    0x34  ABImemcpy.o [5]
+  .text              ro code  0x00000f38   0x160  main.o [1]
+  .text              ro code  0x00001098    0x4e  delay.o [1]
+  .text              ro code  0x000010e8    0xd8  KEA128_PIT.o [1]
+  .text              ro code  0x000011c0    0x78  KEA128_ADC.o [1]
+  .text              ro code  0x00001238    0x20  IxxToDbl.o [4]
+  .text              ro code  0x00001258    0x52  DblToI32.o [4]
+  .text              ro code  0x000012ac    0x36  IxxToFlt.o [4]
+  .text              ro code  0x000012e2    0xb0  FltMul.o [4]
+  .text              ro code  0x00001392    0xaa  FltDiv.o [4]
+  .text              ro code  0x0000143c   0x120  FltAddSub.o [4]
+  .text              ro code  0x0000155c    0x26  FltToU32.o [4]
+  .text              ro code  0x00001584    0xac  KEA128_KBI.o [1]
+  .text              ro code  0x00001630    0x78  KEA128_UART.o [1]
+  .text              ro code  0x000016a8    0x40  low_level_init.o [1]
+  .text              ro code  0x000016e8    0x30  copy_init3.o [5]
+  .text              ro code  0x00001718    0x28  data_init.o [5]
+  .iar.init_table    const    0x00001740    0x14  - Linker created -
+  .text              ro code  0x00001754    0x1e  cmain.o [5]
+  .text              ro code  0x00001772     0x8  exit.o [3]
+  .text              ro code  0x0000177c     0xa  cexit.o [5]
+  .text              ro code  0x00001788    0x14  exit.o [6]
+  .rodata            const    0x0000179c    0x18  system_SKEAZ1284.o [1]
+  .rodata            const    0x000017b4     0xc  KEA128_FTM.o [1]
+  .rodata            const    0x000017c0     0xc  KEA128_GPIO.o [1]
+  .rodata            const    0x000017cc     0xc  KEA128_Port.o [1]
+  .text              ro code  0x000017d8     0xc  cstartup_M.o [5]
+                            - 0x000017e4  0x13d4
 
-"P3", part 1 of 2:                         0x28
-  P3 s0                       0x1ffff000   0x28  <Init block>
-    .bss             inited   0x1ffff000    0x8  KEA128_FTM.o [1]
-    .data            inited   0x1ffff008    0x4  system_SKEAZ1284.o [1]
-    .data            inited   0x1ffff00c    0x4  system_SKEAZ1284.o [1]
-    .data            inited   0x1ffff010    0x4  system_SKEAZ1284.o [1]
-    .data            inited   0x1ffff014    0x4  system_SKEAZ1284.o [1]
-    .data            inited   0x1ffff018    0x4  system_SKEAZ1284.o [1]
-    .bss             inited   0x1ffff01c    0x4  KEA128_KBI.o [1]
-    .bss             inited   0x1ffff020    0x4  KEA128_PIT.o [1]
-    .bss             inited   0x1ffff024    0x4  KEA128_UART.o [1]
-                            - 0x1ffff028   0x28
+"P3", part 1 of 2:                          0x30
+  P3 s0                       0x1ffff000    0x30  <Init block>
+    .bss             inited   0x1ffff000     0x8  KEA128_FTM.o [1]
+    .data            inited   0x1ffff008     0x4  system_SKEAZ1284.o [1]
+    .data            inited   0x1ffff00c     0x4  system_SKEAZ1284.o [1]
+    .data            inited   0x1ffff010     0x4  system_SKEAZ1284.o [1]
+    .data            inited   0x1ffff014     0x4  system_SKEAZ1284.o [1]
+    .data            inited   0x1ffff018     0x4  system_SKEAZ1284.o [1]
+    .bss             inited   0x1ffff01c     0x4  KEA128_KBI.o [1]
+    .bss             inited   0x1ffff020     0x4  KEA128_PIT.o [1]
+    .bss             inited   0x1ffff024     0x4  KEA128_UART.o [1]
+    .bss             inited   0x1ffff028     0x4  main.o [1]
+    .bss             inited   0x1ffff02c     0x2  main.o [1]
+    .bss             inited   0x1ffff02e     0x2  main.o [1]
+                            - 0x1ffff030    0x30
 
-"P3", part 2 of 2:                        0x400
-  CSTACK                      0x1ffff028  0x400  <Block>
-    CSTACK           uninit   0x1ffff028  0x400  <Block tail>
-                            - 0x1ffff428  0x400
+"P3", part 2 of 2:                         0x400
+  CSTACK                      0x1ffff030   0x400  <Block>
+    CSTACK           uninit   0x1ffff030   0x400  <Block tail>
+                            - 0x1ffff430   0x400
 
 
 *******************************************************************************
@@ -173,10 +184,10 @@ No sections matched the following patterns:
           Address     Size
           -------     ----
 Copy (__iar_copy_init3)
-    1 source range, total size 0x28:
-          0x000000c0  0x28
-    1 destination range, total size 0x28:
-          0x1ffff000  0x28
+    1 source range, total size 0x30:
+          0x000000c0  0x30
+    1 destination range, total size 0x30:
+          0x1ffff000  0x30
 
 
 
@@ -186,8 +197,8 @@ Copy (__iar_copy_init3)
 
     Module               ro code  ro data  rw data
     ------               -------  -------  -------
-E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Obj: [1]
-    KEA128_ADC.o              64
+C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Obj: [1]
+    KEA128_ADC.o             120
     KEA128_FTM.o           1 316       20        8
     KEA128_GPIO.o            396       12
     KEA128_KBI.o             172        4        4
@@ -197,10 +208,10 @@ E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Obj: [
     cstartup_M_KEA128.o      194
     delay.o                   78
     low_level_init.o          64
-    main.o                   224
+    main.o                   352        8        8
     system_SKEAZ1284.o       364       44       20
     ----------------------------------------------
-    Total:                 3 320      100       40
+    Total:                 3 504      108       48
 
 command line: [2]
     ----------------------------------------------
@@ -212,8 +223,16 @@ dl6M_tln.a: [3]
     Total:                     8
 
 m6M_tl.a: [4]
+    DblMul.o                 388
+    DblToI32.o                82
+    FltAddSub.o              288
+    FltDiv.o                 170
+    FltMul.o                 176
+    FltToU32.o                38
+    IxxToDbl.o                32
+    IxxToFlt.o                54
     ----------------------------------------------
-    Total:
+    Total:                 1 228
 
 rt6M_tl.a: [5]
     ABImemcpy.o               52
@@ -232,10 +251,10 @@ shb_l.a: [6]
     ----------------------------------------------
     Total:                    20
 
-    Gaps                       6
+    Gaps                      10
     Linker created                     20    1 024
 --------------------------------------------------
-    Grand Total:           3 772      120    1 064
+    Grand Total:           5 188      128    1 072
 
 
 *******************************************************************************
@@ -244,81 +263,97 @@ shb_l.a: [6]
 
 Entry                      Address   Size  Type      Object
 -----                      -------   ----  ----      ------
-.iar.init_table$$Base   0x000011b8          --   Gb  - Linker created -
-.iar.init_table$$Limit  0x000011cc          --   Gb  - Linker created -
-?main                   0x000011cd         Code  Gb  cmain.o [5]
-ADC_Init                0x00000fbd   0x30  Code  Gb  KEA128_ADC.o [1]
-CSTACK$$Base            0x1ffff028          --   Gb  - Linker created -
-CSTACK$$Limit           0x1ffff428          --   Gb  - Linker created -
-Clock_Config            0x00000c15   0x38  Code  Gb  system_SKEAZ1284.o [1]
-Disable_Interrupt       0x00000d2b   0x1c  Code  Gb  system_SKEAZ1284.o [1]
-Enable_Interrupt        0x00000cf3   0x38  Code  Gb  system_SKEAZ1284.o [1]
-FTMX                    0x0000122c    0xc  Data  Lc  KEA128_FTM.o [1]
+.iar.init_table$$Base   0x00001740          --   Gb  - Linker created -
+.iar.init_table$$Limit  0x00001754          --   Gb  - Linker created -
+?main                   0x00001755         Code  Gb  cmain.o [5]
+AD1                     0x1ffff02c    0x2  Data  Gb  main.o [1]
+AD2                     0x1ffff02e    0x2  Data  Gb  main.o [1]
+ADC_Init                0x000011c1   0x30  Code  Gb  KEA128_ADC.o [1]
+ADC_Read                0x000011f1   0x2e  Code  Gb  KEA128_ADC.o [1]
+CSTACK$$Base            0x1ffff030          --   Gb  - Linker created -
+CSTACK$$Limit           0x1ffff430          --   Gb  - Linker created -
+Clock_Config            0x00000d99   0x38  Code  Gb  system_SKEAZ1284.o [1]
+Disable_Interrupt       0x00000eaf   0x1c  Code  Gb  system_SKEAZ1284.o [1]
+Enable_Interrupt        0x00000e77   0x38  Code  Gb  system_SKEAZ1284.o [1]
+FTMX                    0x000017b4    0xc  Data  Lc  KEA128_FTM.o [1]
 FTM_PWM_Duty            0x0000084d   0xd6  Code  Gb  KEA128_FTM.o [1]
 FTM_PWM_Init            0x000006b9  0x18e  Code  Gb  KEA128_FTM.o [1]
 FTM_Pinmux              0x00000411  0x290  Code  Gb  KEA128_FTM.o [1]
-GPIOX                   0x00001238    0xc  Data  Lc  KEA128_GPIO.o [1]
+GPIOX                   0x000017c0    0xc  Data  Lc  KEA128_GPIO.o [1]
 GPIO_Dir                0x00000a7b   0xbe  Code  Gb  KEA128_GPIO.o [1]
 GPIO_Init               0x00000a19   0x62  Code  Gb  KEA128_GPIO.o [1]
 GPIO_Set                0x00000b39   0x4a  Code  Gb  KEA128_GPIO.o [1]
 GPIO_Turn               0x00000b83   0x1c  Code  Gb  KEA128_GPIO.o [1]
-Get_Clk                 0x00000c4d   0xa6  Code  Gb  system_SKEAZ1284.o [1]
-KBI0_IRQHandler         0x00000ffd   0x4c  Code  Gb  KEA128_KBI.o [1]
-KBI1_IRQHandler         0x00001049   0x4a  Code  Gb  KEA128_KBI.o [1]
+Get_Clk                 0x00000dd1   0xa6  Code  Gb  system_SKEAZ1284.o [1]
+KBI0_IRQHandler         0x00001585   0x4c  Code  Gb  KEA128_KBI.o [1]
+KBI1_IRQHandler         0x000015d1   0x4a  Code  Gb  KEA128_KBI.o [1]
 KBI_Callback            0x1ffff01c    0x4  Data  Gb  KEA128_KBI.o [1]
-PIT_CH0_IRQHandler      0x00000f7b   0x18  Code  Gb  KEA128_PIT.o [1]
-PIT_CH1_IRQHandler      0x00000f95   0x18  Code  Gb  KEA128_PIT.o [1]
+PIT_CH0_IRQHandler      0x0000117f   0x18  Code  Gb  KEA128_PIT.o [1]
+PIT_CH1_IRQHandler      0x00001199   0x18  Code  Gb  KEA128_PIT.o [1]
 PIT_Callback            0x1ffff020    0x4  Data  Gb  KEA128_PIT.o [1]
-PIT_Init1               0x00000ee5   0x84  Code  Gb  KEA128_PIT.o [1]
-PIT_Interrupt           0x00000db5   0x10  Code  Gb  main.o [1]
-PIT_SetCallback         0x00000f75    0x6  Code  Gb  KEA128_PIT.o [1]
+PIT_Init1               0x000010e9   0x84  Code  Gb  KEA128_PIT.o [1]
+PIT_Interrupt           0x00000f39   0x10  Code  Gb  main.o [1]
+PIT_SetCallback         0x00001179    0x6  Code  Gb  KEA128_PIT.o [1]
 Port_Pue                0x00000ba5   0x6a  Code  Gb  KEA128_Port.o [1]
-Region$$Table$$Base     0x000011b8          --   Gb  - Linker created -
-Region$$Table$$Limit    0x000011cc          --   Gb  - Linker created -
-Soft_Delay_ms           0x00000ec9   0x1a  Code  Gb  delay.o [1]
-Soft_Delay_us           0x00000e95   0x30  Code  Gb  delay.o [1]
-UART0_SCI0_IRQHandler   0x000010a9   0x22  Code  Gb  KEA128_UART.o [1]
-UART1_SCI1_IRQHandler   0x000010cd   0x22  Code  Gb  KEA128_UART.o [1]
-UART2_SCI2_IRQHandler   0x000010ef   0x22  Code  Gb  KEA128_UART.o [1]
+Region$$Table$$Base     0x00001740          --   Gb  - Linker created -
+Region$$Table$$Limit    0x00001754          --   Gb  - Linker created -
+Soft_Delay_ms           0x000010cd   0x1a  Code  Gb  delay.o [1]
+Soft_Delay_us           0x00001099   0x30  Code  Gb  delay.o [1]
+UART0_SCI0_IRQHandler   0x00001631   0x22  Code  Gb  KEA128_UART.o [1]
+UART1_SCI1_IRQHandler   0x00001655   0x22  Code  Gb  KEA128_UART.o [1]
+UART2_SCI2_IRQHandler   0x00001677   0x22  Code  Gb  KEA128_UART.o [1]
 UART_Callback           0x1ffff024    0x4  Data  Gb  KEA128_UART.o [1]
+__aeabi_d2iz            0x00001259         Code  Gb  DblToI32.o [4]
+__aeabi_d2uiz           0x0000127d         Code  Gb  DblToI32.o [4]
+__aeabi_dmul            0x00000c15         Code  Gb  DblMul.o [4]
+__aeabi_f2uiz           0x0000155d         Code  Gb  FltToU32.o [4]
+__aeabi_fadd            0x0000143d         Code  Gb  FltAddSub.o [4]
+__aeabi_fdiv            0x00001393         Code  Gb  FltDiv.o [4]
+__aeabi_fmul            0x000012e3         Code  Gb  FltMul.o [4]
+__aeabi_fsub            0x000014ad         Code  Gb  FltAddSub.o [4]
+__aeabi_i2f             0x000012cd         Code  Gb  IxxToFlt.o [4]
 __aeabi_idiv            0x00000961         Code  Gb  I32DivModFast.o [5]
 __aeabi_idiv0           0x00000a15         Code  Gb  IntDivZer.o [5]
 __aeabi_idivmod         0x00000961         Code  Gb  I32DivModFast.o [5]
-__aeabi_memcpy4         0x00000d81         Code  Wk  ABImemcpy.o [5]
+__aeabi_memcpy4         0x00000f05         Code  Wk  ABImemcpy.o [5]
+__aeabi_ui2d            0x00001239         Code  Gb  IxxToDbl.o [4]
+__aeabi_ui2f            0x000012ad         Code  Gb  IxxToFlt.o [4]
 __aeabi_uidiv           0x00000967         Code  Gb  I32DivModFast.o [5]
 __aeabi_uidivmod        0x00000967         Code  Gb  I32DivModFast.o [5]
-__cmain                 0x000011cd         Code  Gb  cmain.o [5]
-__exit                  0x00001201   0x14  Code  Gb  exit.o [6]
-__iar_copy_init3        0x00001161   0x30  Code  Gb  copy_init3.o [5]
-__iar_data_init3        0x00001191   0x28  Code  Gb  data_init.o [5]
-__iar_program_start     0x00001251         Code  Gb  cstartup_M.o [5]
+__cmain                 0x00001755         Code  Gb  cmain.o [5]
+__exit                  0x00001789   0x14  Code  Gb  exit.o [6]
+__iar_copy_init3        0x000016e9   0x30  Code  Gb  copy_init3.o [5]
+__iar_d2uiz             0x00001281         Code  Gb  DblToI32.o [4]
+__iar_data_init3        0x00001719   0x28  Code  Gb  data_init.o [5]
+__iar_program_start     0x000017d9         Code  Gb  cstartup_M.o [5]
 __iar_systems$$module {Abs}
                         0x00000001         Data  Gb  command line/config [2]
-__low_level_init        0x00001121   0x40  Code  Gb  low_level_init.o [1]
+__low_level_init        0x000016a9   0x40  Code  Gb  low_level_init.o [1]
 __vector_table          0x00000000         Data  Gb  cstartup_M_KEA128.o [1]
-_call_main              0x000011d9         Code  Gb  cmain.o [5]
-_exit                   0x000011f5         Code  Gb  cexit.o [5]
-_main                   0x000011e7         Code  Gb  cmain.o [5]
+_call_main              0x00001761         Code  Gb  cmain.o [5]
+_exit                   0x0000177d         Code  Gb  cexit.o [5]
+_main                   0x0000176f         Code  Gb  cmain.o [5]
 bus_clk_khz             0x1ffff018    0x4  Data  Gb  system_SKEAZ1284.o [1]
 core_clk_khz            0x1ffff010    0x4  Data  Gb  system_SKEAZ1284.o [1]
 ex_clk_khz              0x1ffff008    0x4  Data  Gb  system_SKEAZ1284.o [1]
-exit                    0x000011eb    0x8  Code  Gb  exit.o [3]
+exit                    0x00001773    0x8  Code  Gb  exit.o [3]
 ics_clk_khz             0x1ffff00c    0x4  Data  Gb  system_SKEAZ1284.o [1]
-main                    0x00000dc5   0xba  Code  Gb  main.o [1]
+main                    0x00000f49  0x11c  Code  Gb  main.o [1]
+offset                  0x1ffff028    0x4  Data  Gb  main.o [1]
 period                  0x1ffff000    0x8  Data  Gb  KEA128_FTM.o [1]
 timer_clk_khz           0x1ffff014    0x4  Data  Gb  system_SKEAZ1284.o [1]
 
 
-[1] = E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Obj
+[1] = C:\Users\£¬lenovo\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\Flash_Debug\Obj
 [2] = command line
 [3] = dl6M_tln.a
 [4] = m6M_tl.a
 [5] = rt6M_tl.a
 [6] = shb_l.a
 
-  3 772 bytes of readonly  code memory
-    120 bytes of readonly  data memory
-  1 064 bytes of readwrite data memory
+  5 188 bytes of readonly  code memory
+    128 bytes of readonly  data memory
+  1 072 bytes of readwrite data memory
 
 Errors: none
 Warnings: none

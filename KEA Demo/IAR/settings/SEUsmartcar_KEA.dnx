@@ -16,7 +16,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>3141122144</Checksum>
+        <Checksum>2916235406</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -100,15 +100,13 @@
     <Aliases>
         <A0>_ "" ""</A0>
         <A1>_ "C:\Users\admin\Desktop\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A1>
-        <A2>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A2>
-        <A3>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Device\low_level_init.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Device\low_level_init.c"</A3>
-        <A4>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_FTM.c" ""</A4>
-        <A5>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_Port.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Driver\src\KEA128_Port.c"</A5>
-        <A6>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\delay.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Driver\src\delay.c"</A6>
-        <A7>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A7>
-        <A8>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A8>
-        <A9>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A9>
-        <Count>10</Count>
+        <A2>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Device\system_SKEAZ1284.c" "D:\智能车\KEA Demo\IAR\SEUsmartcar_KEA.eww"</A2>
+        <A3>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_FTM.c" ""</A3>
+        <A4>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\delay.c" ""</A4>
+        <A5>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A5>
+        <A6>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A6>
+        <A7>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A7>
+        <Count>8</Count>
         <SuppressDialog>1</SuppressDialog>
     </Aliases>
 </settings>
