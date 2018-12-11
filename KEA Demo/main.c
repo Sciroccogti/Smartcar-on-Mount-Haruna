@@ -54,14 +54,33 @@ int main(void)
   ADC_Init(ADC0_SE9, ADC_12bit);  //C1
   ADC_Init(ADC0_SE10, ADC_12bit); //C2
 
-  while (1)
-  {
-    //Control();
+ //OLED部分书写（不确定） 
+    OLED_Init();
+    OLED_Display_Config(1);
     while(1){
-      AD1 = ADC_Read(ADC0_SE1);
-      AD2 = ADC_Read(ADC0_SE2);
+       OLED_Clear(0x00);
+       AD1 = ADC_Read(ADC0_SE1);
+       AD2 = ADC_Read(ADC0_SE3);
+       OLED_Show_String(8,16,0,20,1,(char*)AD1,0);
+       OLED_Show_String(8,16,80,20,1,(char*)AD2,0);
+       OLED_Refresh_Gram();
+       //在0行0列显示AD1
+       //里面的AD1要求是char,不知道强制转换能不能转化为char
       offset = (float)100*(AD1 - AD2)/(AD1 + AD2);
       FTM_PWM_Duty(ftm0, ftm_ch0, 500+offset);
     }
-  }
+ //电机部分书写（不确定）
+    while(1){
+      AD1 = ADC_Read(ADC0_SE1);
+      AD2 = ADC_Read(ADC0_SE3);
+      if(AD1-AD2>30){
+        offset = (float)1000*(AD1 - AD2)/(AD1 + AD2);
+        FTM_PWM_Duty(ftm0, ftm_ch0, 500+offset);
+        FTM_PWM_Duty(ftm2, ftm_ch1, 80-fabs(offset));
+      }
+      else {
+        FTM_PWM_Duty(ftm0, ftm_ch0, 500);
+        FTM_PWM_Duty(ftm2, ftm_ch1, 100);
+      }
+    }
 }
