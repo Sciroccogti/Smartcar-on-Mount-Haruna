@@ -4,7 +4,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
-const int speed=132;
+const int speed=136;
 const float mid=500.0;
 void Control()
 {
@@ -85,8 +85,8 @@ int main(void)
        }
        else*/ if(fabs(offset)>turn_thres){//转弯的offset阈值
         FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.6));//乘数为转弯系数
-        if(fabs(offset)>turn_thres+20)FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/4.8);//除数为减速系数
-        else FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/2.7);//除数为减速系数
+        if(fabs(offset)>turn_thres+20)FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/5.1);//除数为减速系数
+        else FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/2.8);//除数为减速系数
        }
        else {//直行
         FTM_PWM_Duty(ftm0, ftm_ch0, mid);
