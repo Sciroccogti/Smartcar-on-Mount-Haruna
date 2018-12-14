@@ -4,7 +4,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
-const int speed=120;
+const int speed=132;
 const float mid=500.0;
 void Control()
 {
@@ -72,20 +72,21 @@ int main(void)
        OLED_Clear(0x00);
        AD1 = ADC_Read(ADC0_SE1);
        AD2 = ADC_Read(ADC0_SE3);
-       sprintf(spring_oled, "%d", AD1);
+       //sprintf(spring_oled, "%d", AD1);
        //OLED_Show_String(8,16,0,20,1,spring_oled,0);
-       sprintf(spring_oled, "%d", AD2);
+       //sprintf(spring_oled, "%d", AD2);
        //OLED_Show_String(8,16,80,20,1,spring_oled,0);
-       OLED_Refresh_Gram();
+       //OLED_Refresh_Gram();
        offset = (float)100*(AD1 - AD2)/(AD1 + AD2 + 10);
-       const int straight_adjust_thres = 30, turn_thres = 55;
-       if(fabs(offset)>straight_adjust_thres&&fabs(offset)<=turn_thres){//直道调整
+       const int straight_adjust_thres = 30, turn_thres = 45;
+       /*if(fabs(offset)>straight_adjust_thres&&fabs(offset)<=turn_thres){//直道调整
          FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-(offset>0?1:-1)*(fabs(offset)-straight_adjust_thres)*0.7));//乘数为转弯系数
         FTM_PWM_Duty(ftm2, ftm_ch1, speed);//除数为减速系数
        }
-       else if(fabs(offset)>turn_thres){//转弯的offset阈值
-        FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.5));//乘数为转弯系数
-        FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/3.8);//除数为减速系数
+       else*/ if(fabs(offset)>turn_thres){//转弯的offset阈值
+        FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.6));//乘数为转弯系数
+        if(fabs(offset)>turn_thres+20)FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/4.8);//除数为减速系数
+        else FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/2.7);//除数为减速系数
        }
        else {//直行
         FTM_PWM_Duty(ftm0, ftm_ch0, mid);
