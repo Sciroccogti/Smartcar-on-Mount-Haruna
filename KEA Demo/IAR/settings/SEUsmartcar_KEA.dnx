@@ -16,7 +16,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>2556110044</Checksum>
+        <Checksum>3662413491</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -26,8 +26,8 @@
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <MixedMode>1</MixedMode>
         <InstrCount>0</InstrCount>
+        <MixedMode>1</MixedMode>
     </Disassembly>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -80,13 +80,21 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <Aliases>
         <A0>_ "" ""</A0>
         <A1>_ "C:\Users\admin\Desktop\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A1>
-        <A2>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A2>
-        <A3>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A3>
-        <A4>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A4>
-        <Count>5</Count>
+        <A2>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Device\system_SKEAZ1284.c" "D:\智能车\KEA Demo\IAR\SEUsmartcar_KEA.eww"</A2>
+        <A3>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_FTM.c" ""</A3>
+        <A4>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\KEA128_GPIO.c" "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\Libraries\Driver\src\KEA128_GPIO.c"</A4>
+        <A5>_ "C:\Users\曹博\Desktop\短学期\KEA_最小简洁版本\Libraries\Driver\src\delay.c" ""</A5>
+        <A6>_ "G:\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s" "E:\智能车\华东赛\KEA(1)\KEA\Libraries\Device\IAR-ARM\cstartup_M_KEA128.s"</A6>
+        <A7>_ "G:\KEA\Libraries\Driver\src\gpio.c" ""</A7>
+        <A8>_ "G:\KEA\Libraries\Driver\src\port.c" ""</A8>
+        <Count>9</Count>
         <SuppressDialog>1</SuppressDialog>
     </Aliases>
     <DriverProfiling>
@@ -102,8 +110,8 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
 </settings>
+[JLinkDriver]
+TraceBufferSize=0x00010000
+TraceStallIfFIFOFull=0x00000000
+TracePortSize=0x00000000
