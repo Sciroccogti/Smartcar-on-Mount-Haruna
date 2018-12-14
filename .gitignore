@@ -1,1 +1,5 @@
-\IAR\Flash_Debug\
+KEA Demo/IAR/Flash_Debug
+*.dbgdt
+*.dep
+*.dnx
+*.wsdt
