@@ -81,8 +81,9 @@ int main(void)
     //OLED_Show_String(8,16,80,20,1,spring_oled,0);
     //OLED_Refresh_Gram();
     offset = (float)100*(AD1 - AD2)/(AD1 + AD2 + 10);
-    const int straight_adjust_thres = 30, turn_thres = 55;
-    if(AD1+AD2<=20)
+    float stop_offset=(float)100*(AD1 - AD2)/(AD1 + AD2 + 20);
+    const int straight_adjust_thres = 10, turn_thres = 60;
+    if(AD1+AD2<=30&&stop_offset<30)//停下来
     {
       //FTM_PWM_Duty(ftm2, ftm_ch1, brakespeed);
       //Soft_Delay_ms(600);
@@ -91,7 +92,7 @@ int main(void)
     }
     else{
     if(fabs(offset)>straight_adjust_thres&&fabs(offset)<=turn_thres){//直道调整
-      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-(offset>0?1:-1)*(fabs(offset)-straight_adjust_thres)*0.7));//乘数为转弯系数
+      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-(offset>0?1:-1)*(fabs(offset)-straight_adjust_thres)*1.7));//乘数为转弯系数
       FTM_PWM_Duty(ftm2, ftm_ch1, speed);//除数为减速系数
     }
     else if(fabs(offset)>turn_thres){//转弯的offset阈值
@@ -102,7 +103,7 @@ int main(void)
         Soft_Delay_ms(300);//刹车时间
       }
       else*/ FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/3.5);//除数为减速系数
-      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.66));//乘数为转弯系数
+      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.8));//乘数为转弯系数
     }
     else {//直行
       FTM_PWM_Duty(ftm0, ftm_ch0, mid);
@@ -116,4 +117,5 @@ int main(void)
     OLED_Refresh_Gram();
     
   }
+  FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.8));
 }
