@@ -7,7 +7,7 @@ uint16_t count;
 float pre_offset = 0, offset = 0;
 const int speed=136;
 const int brakespeed=-50;
-const float mid=500.0;
+const float mid=530;//530.0;
 void Control()
 {
   //补充你的控制代码
@@ -55,8 +55,8 @@ int main(void)
   PIT_SetCallback(PIT_Interrupt);
   Disable_Interrupt(INT_PIT_CH0);
   Enable_Interrupt(INT_PIT_CH0);
-  FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, 500);   //舵机
-  FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 110); //电机
+  FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, (uint32)mid);   //舵机
+  FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0); //电机
 
   //ADC
   ADC_Init(ADC0_SE1, ADC_12bit);  //A1,AD1
@@ -64,7 +64,8 @@ int main(void)
   ADC_Init(ADC0_SE3, ADC_12bit);  //A7,AD2
   ADC_Init(ADC0_SE9, ADC_12bit);  //C1,AD4
   ADC_Init(ADC0_SE10, ADC_12bit); //C2,AD5
-
+  AD1 = ADC_Read(ADC0_SE1);
+  AD2 = ADC_Read(ADC0_SE3);
 
  //OLED部分书写（不确定） 
   OLED_Init();
@@ -78,29 +79,41 @@ int main(void)
     //OLED_Show_String(8,16,0,20,1,spring_oled,0);
     sprintf(spring_oled, "%d", AD2);
     //OLED_Show_String(8,16,80,20,1,spring_oled,0);
-    OLED_Refresh_Gram();
+    //OLED_Refresh_Gram();
     offset = (float)100*(AD1 - AD2)/(AD1 + AD2 + 10);
     const int straight_adjust_thres = 30, turn_thres = 55;
+    if(AD1+AD2<=20)
+    {
+      //FTM_PWM_Duty(ftm2, ftm_ch1, brakespeed);
+      //Soft_Delay_ms(600);
+      FTM_PWM_Duty(ftm2, ftm_ch1, 0);
+      //while(1);
+    }
+    else{
     if(fabs(offset)>straight_adjust_thres&&fabs(offset)<=turn_thres){//直道调整
       FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-(offset>0?1:-1)*(fabs(offset)-straight_adjust_thres)*0.7));//乘数为转弯系数
       FTM_PWM_Duty(ftm2, ftm_ch1, speed);//除数为减速系数
     }
     else if(fabs(offset)>turn_thres){//转弯的offset阈值
     
-      if(fabs(offset)>turn_thres+30)
+      /*if(fabs(offset)>turn_thres+30)
       {
         FTM_PWM_Duty(ftm2, ftm_ch1, brakespeed-fabs(offset)*5);
         Soft_Delay_ms(300);//刹车时间
       }
-      else FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/2.8);//除数为减速系数
-      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.6));//乘数为转弯系数
+      else*/ FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/3.5);//除数为减速系数
+      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.66));//乘数为转弯系数
     }
     else {//直行
       FTM_PWM_Duty(ftm0, ftm_ch0, mid);
       FTM_PWM_Duty(ftm2, ftm_ch1, speed);
     }
+    }
     sprintf(spring_oled, "%.2f", offset);
+    OLED_Show_String(8,16,0,0,1,spring_oled,0);
+    sprintf(spring_oled, "%d , %d", AD1, AD2);
     OLED_Show_String(8,16,0,20,1,spring_oled,0);
     OLED_Refresh_Gram();
+    
   }
 }
