@@ -5,7 +5,7 @@ uint16_t AD1 = 0, AD2 = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
 const int speed=132;
-const float mid=500.0;
+const float mid=530.0;
 void Control()
 {
   //补充你的控制代码
