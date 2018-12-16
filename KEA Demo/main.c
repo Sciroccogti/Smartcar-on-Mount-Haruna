@@ -49,7 +49,6 @@ void motorspeed(int sp)//“油”门
 	FTM_PWM_Duty(ftm2, ftm_ch1, sp);
 }
 
-
 void PIT_Interrupt(uint8 ch)
 {
 	GPIO_Turn(G2);
@@ -86,7 +85,6 @@ int main(void)
 	ADC_Init(ADC0_SE3, ADC_12bit);  //A7,AD2
 	ADC_Init(ADC0_SE9, ADC_12bit);  //C1,AD4
 	ADC_Init(ADC0_SE10, ADC_12bit); //C2,AD5
-
 
    //OLED部分书写（不确定） 
 	OLED_Init();
