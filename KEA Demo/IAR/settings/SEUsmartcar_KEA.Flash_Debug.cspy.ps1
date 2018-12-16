@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "E:\IAR\common\bin\cspybat" -f "C:\Users\10128\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --backend -f "C:\Users\10128\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
+& "D:\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --backend -f "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
 }
 else
 {
-& "E:\IAR\common\bin\cspybat" -f "C:\Users\10128\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\10128\Documents\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
+& "D:\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.general.xcl" --debug_file=$debugfile --backend -f "E:\Storage\CODES\GitHub\Smartcar-on-Mount-Haruna\KEA Demo\IAR\settings\SEUsmartcar_KEA.Flash_Debug.driver.xcl" 
 }
