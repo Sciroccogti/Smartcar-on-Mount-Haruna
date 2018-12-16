@@ -1,3 +1,6 @@
+//  2018年12月15日  朱雨齐&张逸帆
+//  校正了舵机
+//  加注释是为了尝试实现PR
 #include "common.h"
 char spring_oled[20];
 uint8 data_getstring[2];
