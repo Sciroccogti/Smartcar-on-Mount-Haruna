@@ -1,5 +1,12 @@
 KEA Demo/IAR/Flash_Debug
+*.cspy.bat
+*.cspy.ps1
+*.driver.xcl
+*.general.xcl
+*.bat
 *.dbgdt
 *.dep
 *.dnx
+*.ps1
 *.wsdt
+*.xcl
