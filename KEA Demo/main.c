@@ -7,7 +7,7 @@ uint16_t count;
 float pre_offset = 0, offset = 0;
 const int speed=136;
 const int brakespeed=-50;
-const float mid=530;//530.0;
+const float mid=520;//530.0;
 void Control()
 {
   //补充你的控制代码
