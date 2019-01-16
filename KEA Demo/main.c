@@ -40,8 +40,8 @@ int main(void)
         // 使用PD设置偏移量
         offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
         const int straight_adjust_thres = 30, turn_thres = 45;
-
-        if (Pin(I0)&& Pin(H1) && Pin(H0)) // 发车模块
+/*
+        if (Pin(I0)&& Pin(H1) && Pin(H0)) // 起跑线检测模块
         {
             isStartLine++;
         }
@@ -58,7 +58,7 @@ int main(void)
             setMotor(0);
             return 0;
         }
-
+*/
         if (AD1 + AD4 <= 20 && nowspeed) // 出赛道自动停车，赛时需要移除
         {
             Soft_Delay_ms(500);
