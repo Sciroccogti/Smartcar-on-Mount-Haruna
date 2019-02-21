@@ -1,20 +1,27 @@
+// 比完赛晚上秋名山见 
+// Last updated: 2-21-2019 By 张逸帆
+// 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
+// const常量请以 k 开头，大小写混合
+// 函数请以大写开头，大小写混合
+
 #include "common.h"
 
-#define setSteer(dir) FTM_PWM_Duty(ftm0, ftm_ch0, dir)
+#define SetSteer(dir) FTM_PWM_Duty(ftm0, ftm_ch0, dir)
 
 char spring_oled[20];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
-const int speed = 132;
-const float mid = 520.0;
+const int kTopSpeed = 132; //  速度上限
+const float kMidSteer = 520.0;
+const int kTotalLap = 1; //  圈数（资格赛）
 
-void setMotor(int s)
+void SetMotor(int s) // 支持直接设置负数
 {
     if (s > 0)
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, s < speed ? s : speed); // 设置了速度上限：speed
+        FTM_PWM_Duty(ftm2, ftm_ch1, s < kTopSpeed ? s : kTopSpeed); // 设置了速度上限：kTopSpeed
     }
     else if (!s)
     {
@@ -23,7 +30,7 @@ void setMotor(int s)
     }
     else
     {
-        FTM_PWM_Duty(ftm2, ftm_ch0, -s < speed ? -s : speed); // 设置了速度下限：-speed
+        FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
 }
 
@@ -32,7 +39,7 @@ void MYInit()
     while ((1280 * ex_clk_khz) != (256 * ics_clk_khz))
         ; //确保时钟配置无误
 
-    FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, mid); //舵机
+    FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, kMidSteer); //舵机
     FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0); //电机
     FTM_PWM_Init(ftm2, ftm_ch0, F0, 14000, 0); //电机倒转
 
