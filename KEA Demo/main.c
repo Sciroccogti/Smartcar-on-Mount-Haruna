@@ -1,121 +1,68 @@
-#include "common.h"
-#include "delay.h"
-char spring_oled[20];
-uint8 data_getstring[2];
-uint16_t AD1 = 0, AD2 = 0;
-uint16_t count;
-float pre_offset = 0, offset = 0;
-const int speed=136;
-const int brakespeed=-50;
-const float mid=520;//530.0;
-void Control()
-{
-  //补充你的控制代码
+// 比完赛晚上秋名山见
+// Last updated: 2-21-2019 By 张逸帆
 
-  //读取AD值
-  AD1 = ADC_Read(ADC0_SE1);
-  AD2 = ADC_Read(ADC0_SE3);
-
-  //舵机控制 建议使用位置式PD控制 请参考相应的手册
-  pre_offset = offset;
-  offset = (float)1000 * (AD1 - AD2) * 1.0 / (AD1 + AD2 + 1);
-
-  count = FTM_Pulse_Get(ftm1); //编码器数值读取
-  FTM_Count_Clean(ftm1);       //编码器数值清零
-
-  //电机控制，建议对电机与舵机的占空比限幅，电机0~100%，舵机根据安装情况设置
-  FTM_PWM_Duty(ftm2,ftm_ch0,400);
-}
-
+#include "main.h"
 void PIT_Interrupt(uint8 ch)
 {
   GPIO_Turn(G2);
   GPIO_Turn(G3);
 }
 
-void OLED_Myshow(void)
-{
-  OLED_Clear(0x00);
-  sprintf(spring_oled, "LL:%d", 1234); //
-  OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-  OLED_Refresh_Gram();
-}
-
 int main(void)
 {
-  while ((1280 * ex_clk_khz) != (256 * ics_clk_khz))
-    ; //确保时钟配置无误
-  GPIO_Init(G1, GPO, LOW);
-  Soft_Delay_ms(1000);
-  GPIO_Turn(G1);
-  GPIO_Init(G2, GPO, LOW);
-  GPIO_Init(G3, GPO, HIGH);
+  MYInit();
 
-  PIT_Init1(pit0, 100000);
-  PIT_SetCallback(PIT_Interrupt);
-  Disable_Interrupt(INT_PIT_CH0);
-  Enable_Interrupt(INT_PIT_CH0);
-  FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, (uint32)mid);   //舵机
-  FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0); //电机
-
-  //ADC
-  ADC_Init(ADC0_SE1, ADC_12bit);  //A1,AD1
-  ADC_Init(ADC0_SE2, ADC_12bit);  //A6,AD3
-  ADC_Init(ADC0_SE3, ADC_12bit);  //A7,AD2
-  ADC_Init(ADC0_SE9, ADC_12bit);  //C1,AD4
-  ADC_Init(ADC0_SE10, ADC_12bit); //C2,AD5
-  AD1 = ADC_Read(ADC0_SE1);
-  AD2 = ADC_Read(ADC0_SE3);
-
- //OLED部分书写（不确定） 
-  OLED_Init();
-  
-  OLED_Display_Config(1);
-  while(1){
+  while (1)
+  {
     OLED_Clear(0x00);
     AD1 = ADC_Read(ADC0_SE1);
-    AD2 = ADC_Read(ADC0_SE3);
+    AD4 = ADC_Read(ADC0_SE9);
     sprintf(spring_oled, "%d", AD1);
     //OLED_Show_String(8,16,0,20,1,spring_oled,0);
-    sprintf(spring_oled, "%d", AD2);
+    sprintf(spring_oled, "%d", AD4);
     //OLED_Show_String(8,16,80,20,1,spring_oled,0);
     //OLED_Refresh_Gram();
-    offset = (float)100*(AD1 - AD2)/(AD1 + AD2 + 10);
-    float stop_offset=(float)100*(AD1 - AD2)/(AD1 + AD2 + 20);
+    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+    float stop_offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 20);
     const int straight_adjust_thres = 10, turn_thres = 60;
-    if(AD1+AD2<=30&&stop_offset<30)//停下来
+
+    if (AD1 + AD4 <= 30 && stop_offset < 30) //停下来
     {
-      //FTM_PWM_Duty(ftm2, ftm_ch1, brakespeed);
+      //SetMotor(kBrakeSpeed);
       //Soft_Delay_ms(600);
-      FTM_PWM_Duty(ftm2, ftm_ch1, 0);
+      SetMotor(0);
       //while(1);
     }
-    else{
-    if(fabs(offset)>straight_adjust_thres&&fabs(offset)<=turn_thres){//直道调整
-      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-(offset>0?1:-1)*(fabs(offset)-straight_adjust_thres)*1.7));//乘数为转弯系数
-      FTM_PWM_Duty(ftm2, ftm_ch1, speed);//除数为减速系数
-    }
-    else if(fabs(offset)>turn_thres){//转弯的offset阈值
-    
-      /*if(fabs(offset)>turn_thres+30)
+    else
+    {
+      if (fabs(offset) > straight_adjust_thres && fabs(offset) <= turn_thres)
+      {                                                                                                    //直道调整
+        SetSteer((int)(kMidSteer - (offset > 0 ? 1 : -1) * (fabs(offset) - straight_adjust_thres) * 1.7)); //乘数为转弯系数
+        SetMotor(kTopSpeed);                                                                               //除数为减速系数
+      }
+      else if (fabs(offset) > turn_thres)
+      { //转弯的offset阈值
+
+        /*if(fabs(offset)>turn_thres+30)
       {
-        FTM_PWM_Duty(ftm2, ftm_ch1, brakespeed-fabs(offset)*5);
+        SetMotor(kBrakeSpeed-fabs(offset)*5);
         Soft_Delay_ms(300);//刹车时间
       }
-      else*/ FTM_PWM_Duty(ftm2, ftm_ch1, speed-fabs(offset)/3.5);//除数为减速系数
-      FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.8));//乘数为转弯系数
-    }
-    else {//直行
-      FTM_PWM_Duty(ftm0, ftm_ch0, mid);
-      FTM_PWM_Duty(ftm2, ftm_ch1, speed);
-    }
+      else*/
+        SetMotor(kTopSpeed - fabs(offset) / 3.5);  //除数为减速系数
+        SetSteer((int)(kMidSteer - offset * 2.8)); //乘数为转弯系数
+      }
+      else
+      { //直行
+        SetSteer(kMidSteer);
+        SetMotor(kTopSpeed);
+      }
     }
     sprintf(spring_oled, "%.2f", offset);
-    OLED_Show_String(8,16,0,0,1,spring_oled,0);
-    sprintf(spring_oled, "%d , %d", AD1, AD2);
-    OLED_Show_String(8,16,0,20,1,spring_oled,0);
+    OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+    sprintf(spring_oled, "%d , %d", AD1, AD4);
+    OLED_Show_String(8, 16, 0, 20, 1, spring_oled, 0);
     OLED_Refresh_Gram();
-    
   }
-  FTM_PWM_Duty(ftm0, ftm_ch0, (int)(mid-offset*2.8));
+  SetSteer((int)(kMidSteer - offset * 2.8));
 }

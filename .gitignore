@@ -10,3 +10,4 @@ KEA Demo/IAR/Flash_Debug
 *.ps1
 *.wsdt
 *.xcl
+.vscode/
