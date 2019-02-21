@@ -4,3 +4,4 @@ KEA Demo/IAR/settings
 *.dep
 *.dnx
 *.wsdt
+.vscode/
