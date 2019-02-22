@@ -1,12 +1,11 @@
-// 比完赛晚上秋名山见 
-// Last updated: 2-21-2019 By 张逸帆
+// 比完赛晚上秋名山见
+// Last updated: 2-22-2019 By 张逸帆
+// What's new: SetSteer限制最大打角，且中值为0
 // 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
 // const常量请以 k 开头，大小写混合
 // 函数请以大写开头，大小写混合
 
 #include "common.h"
-
-#define SetSteer(dir) FTM_PWM_Duty(ftm0, ftm_ch0, dir)
 
 char spring_oled[20];
 uint8 data_getstring[2];
@@ -16,6 +15,19 @@ float pre_offset = 0, offset = 0;
 const int kTopSpeed = 132; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
+
+void SetSteer(int dir) // 0为打直，绝对值最大160
+{
+    if (dir > 160)
+    {
+        dir = 160;
+    }
+    else if (dir < -160)
+    {
+        dir = -160;
+    }
+    FTM_PWM_Duty(ftm0, ftm_ch0, dir + kMidSteer);
+}
 
 void SetMotor(int s) // 支持直接设置负数
 {
@@ -40,8 +52,8 @@ void MYInit()
         ; //确保时钟配置无误
 
     FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, kMidSteer); //舵机
-    FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0); //电机
-    FTM_PWM_Init(ftm2, ftm_ch0, F0, 14000, 0); //电机倒转
+    FTM_PWM_Init(ftm2, ftm_ch1, F1, 14000, 0);       //电机
+    FTM_PWM_Init(ftm2, ftm_ch0, F0, 14000, 0);       //电机倒转
 
     //ADC
     ADC_Init(ADC0_SE1, ADC_12bit);  //A1,AD1
@@ -66,5 +78,7 @@ void MYInit()
     GPIO_Init(I1, GPO, LOW);
 
     //LED
-    GPIO_Init(G1, GPO, LOW);
+    GPIO_Init(G1, GPO, LOW); // B
+    //GPIO_Init(G2, GPO, LOW); // G
+    //GPIO_Init(G3, GPO, LOW); // R
 }
