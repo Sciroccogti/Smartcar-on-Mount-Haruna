@@ -1,6 +1,6 @@
-// 比完赛晚上秋名山见
-// Last updated: 2-22-2019 By 张逸帆
-// What's new: SetSteer限制最大打角，且中值为0
+// 比完赛晚上秋名山见 v1.4
+// Last updated: 2-23-2019 By 张逸帆
+// What's new: 增加定位函数
 // 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
 // const常量请以 k 开头，大小写混合
 // 函数请以大写开头，大小写混合
@@ -44,6 +44,11 @@ void SetMotor(int s) // 支持直接设置负数
     {
         FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
+}
+
+int CarLocation(int AD1, int AD2, int AD3, int AD4)
+{
+    
 }
 
 void MYInit()
