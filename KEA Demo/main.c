@@ -17,7 +17,7 @@ void servoturn(int offset)//转向
 */
 double turnconvert(double x) //offset与舵机转向的转换函数
 {
-    const double a = 1.14828e-4, b = 6, c = 9.77256e-11;//b = 5.15858
+    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
     return exp(a * x * x + c * x + b) - exp(b);
 }
 
@@ -35,12 +35,35 @@ int main(void)
         OLED_Clear(0x00);
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
+        int sumAD = AD1 + AD2 + AD3 + AD4;
         offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
         //servoturn((offset > 0 ? 1 : -1) * turnconvert(fabs(offset)));//乘数为转弯系数
-        SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-        SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset)));        //在offset<24时不减速
-        sprintf(spring_oled, "%.2f", offset);
-        OLED_Show_String(8, 16, 0, 20, 1, spring_oled, 0);
+        if (AD1 + AD4 <= 20) // 出赛道自动停车，赛时需要移除
+        {
+            Soft_Delay_ms(5);
+            if (AD1 + AD4 <= 20)
+            {
+                Soft_Delay_ms(5);
+                if (AD1 + AD4 <= 10)
+                {
+                    SetMotor(0);
+                }
+            }
+        }
+        else
+        {
+            SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+            SetMotor(kTopSpeed - 0.2 * turnconvert(fabs(offset)));        //在offset<24时不减速
+        }
+
+        sprintf(spring_oled, "1:%4d 2:%4d", AD1, AD2);
+        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+        sprintf(spring_oled, "3:%4d 4:%4d", AD3, AD4);
+        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
+        sprintf(spring_oled, "sum:%4d L-R:%3d", sumAD, AD1 + AD2 - AD3 - AD4);
+        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
+        sprintf(spring_oled, "offset:%.2f", offset);
+        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
         OLED_Refresh_Gram();
     }
 }
