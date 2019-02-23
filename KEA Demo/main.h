@@ -9,10 +9,10 @@
 
 char spring_oled[20];
 uint8 data_getstring[2];
-uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0;
+uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 132; //  速度上限
+const int kTopSpeed = 150; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 
