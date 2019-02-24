@@ -7,7 +7,7 @@
 
 #include "common.h"
 
-char spring_oled[20];
+char spring_oled[40];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 uint16_t count;

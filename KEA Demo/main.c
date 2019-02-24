@@ -17,8 +17,10 @@ double turnconvert(double x) //offset与舵机转向的转换函数
 int main(void)
 {
     MYInit();
-    GPIO_Init(C5, GPI, 1); // SW1,控制起跑线检测模块
+    GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
+    GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
     int speed = 0;
+    int steer = 0;
     int isRing = 0;      // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
     int lap = 0;         // 干簧管控制的 圈数计数器
     int isStartLine = 0; // 起跑线检测标识
@@ -26,21 +28,23 @@ int main(void)
     while (1)
     {
         // 读取AD值并打印
-        //OLED_Clear(0x00);
+        if (Pin(H7))
+        {
+            OLED_Clear(0x00);
+        }
+
         AD1 = ADC_Read(ADC0_SE1);
         AD1 = AD1 > 15 ? AD1 - 15 : (AD1 > 7 ? AD1 - 7 : AD1); // 对AD值的偏差做了调整！！
         AD2 = ADC_Read(ADC0_SE3);
         ADV = ADC_Read(ADC0_SE2);
         AD4 = ADC_Read(ADC0_SE9);
         int sumAD = AD1 + AD2 + AD3 + AD4;
-        //sprintf(spring_oled, "1:%4d 2:%4d", AD1, AD2);
-        //OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-        //sprintf(spring_oled, "3:%4d 4:%4d", AD3, AD4);
-        //OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        //sprintf(spring_oled, "sum:%4d L-R:%3d", sumAD, AD1 + AD2 - AD3 - AD4);
-        //OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        //sprintf(spring_oled, "offset:%.2f", offset);
-        //OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
+        if (Pin(H7))
+        {
+          sprintf(spring_oled, "L:%5d R:%5d V:%5d L-R:%3d sp:%d st:%d Ring:%d", AD1, AD4, ADV, AD1 - AD4, speed, steer, isRing);
+            OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+        }
+
         /*
         //编码器部分：请注意，编码器应选用脉冲-方向型，且须接在speed2
         count = FTM_Pulse_Get(ftm1);
@@ -72,10 +76,12 @@ int main(void)
             }
             if (lap > kTotalLap) // 若跑完要求圈数，则停车
             {
-                SetMotor(-100);
+                speed = -100;
+                SetMotor(speed);
                 Soft_Delay_ms(200);
-                SetMotor(0);
-                //OLED_Refresh_Gram();
+                speed = 0;
+                SetMotor(speed);
+                OLED_Refresh_Gram();
                 break;
             }
         }
@@ -88,29 +94,47 @@ int main(void)
                 Soft_Delay_ms(5);
                 if (AD1 + AD4 <= 10)
                 {
-                    SetMotor(0);
+                    speed = 0;
+                    SetMotor(speed);
                 }
             }
-        }/*
-        else if(ADV > 300) // 判环
+        }
+        else if (ADV > 350 && AD1 - AD4 > 150) // 判环
         {
-            if(isRing == 0) // 第一次
+            if (isRing == 0) // 第一次
             {
+                GPIO_Turn(I1);
+                GPIO_Turn(I1);
                 isRing++;
-            }else if(isRing == 1)
+            }
+            else if (isRing == 1)
             {
-                isRing++;
-            }else if(isRing == 2)
-            {
+                GPIO_Set(I1, HIGH);
+                SetSteer(-80);
+                Soft_Delay_ms(10000.0 / speed);
+                while (ADV > 350 || AD1 - AD4 > 150)
+                {
+                    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
+                    SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+                    speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+                    SetMotor(speed); //在offset<24时不减速
+                }
 
+                isRing++;
+            }
+            else if (isRing == 2)
+            {   
+                GPIO_Set(I1, LOW);
+                isRing = 0;
             }
         }
-        */
         else
         {
+            steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
             SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-            SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset)));        //在offset<24时不减速
-        }                                                                 
+            speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+            SetMotor(speed); //在offset<24时不减速
+        }
         /*
         else if (AD1 + AD2 - AD3 - AD4 > sumAD / 4 && !inRing) // 左环岛判定
         {
@@ -147,7 +171,9 @@ int main(void)
             SetMotor(kTopSpeed);
             SetSteer(0);
         }*/
-
-        //OLED_Refresh_Gram();
+        if (Pin(H7))
+        {
+            OLED_Refresh_Gram();
+        }
     }
 }
