@@ -21,6 +21,7 @@ void Control()
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
+    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
     if (Pin(H7))
         OLED_Clear(0x00);
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
@@ -132,8 +133,9 @@ int main(void)
             else if (isRing == 1)
             {
                 GPIO_Set(I1, HIGH);
-                SetSteer(-80);
-                Soft_Delay_ms(1000);
+                SetSteer(-100);
+                //SetMotor()
+                Soft_Delay_ms(500);
                 while (ADV > 150 || AD1 > 500)
                 {
                     Control();
