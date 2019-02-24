@@ -7,7 +7,7 @@
 
 #include "common.h"
 
-char spring_oled[40];
+char spring_oled[20];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 uint16_t count;
@@ -15,8 +15,11 @@ float pre_offset = 0, offset = 0;
 const int kTopSpeed = 150; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
+int speed = 0;
+int steer = 0;
+int isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
 
-void SetSteer(int dir) // 0为打直，绝对值最大160
+void SetSteer(float dir) // 0为打直，绝对值最大160
 {
     if (dir > 160)
     {
@@ -48,7 +51,6 @@ void SetMotor(int s) // 支持直接设置负数
 
 int CarLocation(int AD1, int AD2, int AD3, int AD4)
 {
-    
 }
 
 void MYInit()
