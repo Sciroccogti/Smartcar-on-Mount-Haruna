@@ -77,10 +77,10 @@ int main(void)
             if (lap > kTotalLap) // 若跑完要求圈数，则停车
             {
                 speed = -100;
-                SetMotor(speed);
+                SetMotor(-100);
                 Soft_Delay_ms(200);
                 speed = 0;
-                SetMotor(speed);
+                SetMotor(0);
                 OLED_Refresh_Gram();
                 break;
             }
@@ -95,16 +95,16 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     speed = 0;
-                    SetMotor(speed);
+                    SetMotor(0);
                 }
             }
         }
-        else if (ADV > 350 && AD1 - AD4 > 150) // 判环
+        /*else if (ADV > 350 && AD1 - AD4 > 150) // 判环
         {
             if (isRing == 0) // 第一次
             {
-                GPIO_Turn(I1);
-                GPIO_Turn(I1);
+                //GPIO_Turn(I1);
+                //GPIO_Turn(I1);
                 isRing++;
             }
             else if (isRing == 1)
@@ -117,7 +117,7 @@ int main(void)
                     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
                     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
                     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-                    SetMotor(speed); //在offset<24时不减速
+                    SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
                 }
 
                 isRing++;
@@ -127,13 +127,13 @@ int main(void)
                 GPIO_Set(I1, LOW);
                 isRing = 0;
             }
-        }
+        }*/
         else
         {
             steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
             SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
             speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-            SetMotor(speed); //在offset<24时不减速
+            SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
         }
         /*
         else if (AD1 + AD2 - AD3 - AD4 > sumAD / 4 && !inRing) // 左环岛判定
