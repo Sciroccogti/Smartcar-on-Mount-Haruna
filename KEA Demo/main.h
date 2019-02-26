@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 uint16_t count;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 150; //  速度上限
+const int StraightSpeed = 150; //  直道速度
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -36,7 +36,7 @@ void SetMotor(int s) // 支持直接设置负数
 {
     if (s > 0)
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, s < kTopSpeed ? s : kTopSpeed); // 设置了速度上限：kTopSpeed
+        FTM_PWM_Duty(ftm2, ftm_ch1, s < StraightSpeed ? s : StraightSpeed); // 设置了速度上限：StraightSpeed
     }
     else if (!s)
     {
@@ -45,7 +45,7 @@ void SetMotor(int s) // 支持直接设置负数
     }
     else
     {
-        FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
+        FTM_PWM_Duty(ftm2, ftm_ch0, -s < StraightSpeed ? -s : StraightSpeed); // 设置了速度下限：-StraightSpeed
     }
 }
 
