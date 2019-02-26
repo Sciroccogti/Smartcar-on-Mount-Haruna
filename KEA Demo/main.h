@@ -72,8 +72,8 @@ void MYOledShow()
 void GetCount()
 {
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    if(!Pin(H6))
-        count = - count;
+    if (!Pin(H6))
+        count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
 }
 
@@ -93,9 +93,8 @@ void Control()
 
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(steer); //乘数为转弯系数
-    speed = StraightSpeed - 4 * turnconvert(fabs(offset));
-    SetMotor_d(speed, count); //在offset<24时不减速
-
+    speed = StraightSpeed / (1 + turnconvert(fabs(offset)));
+    SetMotor_d(speed); //在offset<24时不减速
     MYOledShow();
 }
 
