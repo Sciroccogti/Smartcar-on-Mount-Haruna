@@ -16,25 +16,8 @@ double turnconvert(double x) //offset与舵机转向的转换函数
     return exp(a * x * x + c * x + b) - exp(b);
 }
 
-void SetMotor_d(int s,int c);
-{
-    const int maxpower = 800;
-    
-    if (count > s && s >= 0)//正向并且实际速度高于预期，减速
-    {
-        FTM_PWM_Duty(ftm2, ftm_ch0, maxpower); 
-    }
-    else if (count <= s && s >= 0)//正向并且实际速度低于预期，加速
-    {
-        FTM_PWM_Duty(ftm2, ftm_ch1, maxpower);
-    }
-}
-
 void Control()
 {
-    int count = 0;
-    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    FTM_Count_Clean(ftm1);       //编码器数值清零
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
@@ -44,20 +27,15 @@ void Control()
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor_d(kTopSpeed - 0.1 * turnconvert(fabs(offset)),count); //在offset<24时不减速
-    
-
-
+    SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
     if (Pin(H7))
     {
         sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
         sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        sprintf(spring_oled, "S:%3d D:%3d R:%d", speed, steer, isRing);
+        sprintf(spring_oled, "Sp:%3d St:%3d R:%d", speed, steer, isRing);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        sprintf(spring_oled, "Count:%3d", count);
-        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
         OLED_Refresh_Gram();
     }
 }
