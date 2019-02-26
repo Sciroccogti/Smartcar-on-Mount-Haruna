@@ -19,7 +19,7 @@ double turnconvert(double x) //offset与舵机转向的转换函数
 void SetMotor_d(int s, int c)
 {
     const int apower = 170;
-    const int dpower = 700;
+    const int dpower = 500;
     int fade = abs(s - c) < 10 ? abs(s - c) * 0.1 : 1;
     if (c > s && s > 0) //正向并且实际速度高于预期，减速
     {
@@ -55,7 +55,7 @@ void Control()
         OLED_Clear(0x00);
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(steer); //乘数为转弯系数
-    speed = StraightSpeed - 1 * turnconvert(fabs(offset));
+    speed = StraightSpeed - 4 * turnconvert(fabs(offset));
     SetMotor_d(speed, count); //在offset<24时不减速
 
     if (Pin(H7))
