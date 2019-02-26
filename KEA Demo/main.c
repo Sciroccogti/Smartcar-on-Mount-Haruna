@@ -1,5 +1,5 @@
 // 比完赛晚上秋名山见
-// Last updated: 2-22-2019 By 张逸帆
+// Last updated: 2-26-2019 By 朱雨齐
 
 #include "main.h"
 #include <math.h>
@@ -16,27 +16,29 @@ double turnconvert(double x) //offset与舵机转向的转换函数
     return exp(a * x * x + c * x + b) - exp(b);
 }
 
-void SetMotor_d(int s, int c)
+void SetMotor_d(int s)
 {
     const int apower = 170;
     const int dpower = 500;
-    int fade = abs(s - c) < 10 ? abs(s - c) * 0.1 : 1;
-    if (c > s && s > 0) //正向并且实际速度高于预期，减速
+    count = FTM_Pulse_Get(ftm1); //编码器数值读取
+    FTM_Count_Clean(ftm1);       //编码器数值清零
+    int fade = abs(s - count) < 10 ? abs(s - count) * 0.1 : 1;
+    if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
         FTM_PWM_Duty(ftm2, ftm_ch1, 0);
         FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
     }
-    else if (c <= s && s > 0) //正向并且实际速度低于预期，加速
+    else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
         FTM_PWM_Duty(ftm2, ftm_ch0, 0);
         FTM_PWM_Duty(ftm2, ftm_ch1, apower * fade);
     }
-    else if (c > 10 && s == 0) //s==0即停车，反转电机
+    else if (count > 10 && s == 0) //s==0即停车，反转电机
     {
         FTM_PWM_Duty(ftm2, ftm_ch1, 0);
         FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
     }
-    else if (c <= 10 && s == 0) //停得差不多了，不反转电机
+    else if (count <= 10 && s == 0) //停得差不多了，不反转电机
     {
         FTM_PWM_Duty(ftm2, ftm_ch1, 0);
         FTM_PWM_Duty(ftm2, ftm_ch0, 0);
