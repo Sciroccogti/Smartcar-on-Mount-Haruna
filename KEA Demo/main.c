@@ -43,68 +43,16 @@ void SetMotor_d(int s, int c)
     }
 }
 
-void Control()
-{
-    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    FTM_Count_Clean(ftm1);       //编码器数值清零
-    AD1 = ADC_Read(ADC0_SE1);
-    ADV = ADC_Read(ADC0_SE2);
-    AD4 = ADC_Read(ADC0_SE9);
-    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-    if (Pin(H7))
-        OLED_Clear(0x00);
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-    SetSteer(steer); //乘数为转弯系数
-    speed = StraightSpeed - 4 * turnconvert(fabs(offset));
-    SetMotor_d(speed, count); //在offset<24时不减速
-
-    if (Pin(H7))
-    {
-        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
-        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
-        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
-        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        sprintf(spring_oled, "Count:%3d", count);
-        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-        OLED_Refresh_Gram();
-    }
-}
-
 int main(void)
 {
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
-    int speed = 0;
-    int steer = 0;
-    int isRing = 0;      // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
     int lap = 0;         // 干簧管控制的 圈数计数器
     int isStartLine = 0; // 起跑线检测标识
 
     while (1)
-    { /*
-        // 读取AD值并打印
-        if (Pin(H7))
-            OLED_Clear(0x00);
-*/
-        AD1 = ADC_Read(ADC0_SE1);
-        AD2 = ADC_Read(ADC0_SE3);
-        ADV = ADC_Read(ADC0_SE2);
-        AD4 = ADC_Read(ADC0_SE9);
-        int sumAD = AD1 + AD2 + AD3 + AD4;
-
-        /*
-        //编码器部分：请注意，编码器应选用脉冲-方向型，且须接在speed2
-        count = FTM_Pulse_Get(ftm1);
-        FTM_Count_Clean(ftm1);
-        */
-        // 使用PD设置偏移量
-        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-        const int straight_adjust_thres = 30, turn_thres = 45;
-        //GPIO_Set(G1, Pin(C5));
-
+    {
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -131,7 +79,6 @@ int main(void)
                 Soft_Delay_ms(200);
                 speed = 0;
                 SetMotor(0);
-                OLED_Refresh_Gram();
                 break;
             }
         }
@@ -145,28 +92,9 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    /*
-                    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-                    while(count>5)
-                    {*/
                     count = FTM_Pulse_Get(ftm1); //编码器数值读取
                     FTM_Count_Clean(ftm1);       //编码器数值清零
-                    /*SetMotor_d(0,count);
-                    }*/
-
-                    if (Pin(H7))
-                    {
-                        OLED_Clear(0x00);
-                        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
-                        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-                        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
-                        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-                        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
-                        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-                        sprintf(spring_oled, "Count:%3d", count);
-                        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-                        OLED_Refresh_Gram();
-                    }
+                    MYOledShow();
                 }
             }
         }
