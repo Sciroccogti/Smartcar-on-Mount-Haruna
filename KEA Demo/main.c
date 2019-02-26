@@ -16,18 +16,16 @@ double turnconvert(double x) //offset与舵机转向的转换函数
     return exp(a * x * x + c * x + b) - exp(b);
 }
 
-void SetMotor_d(int s, int c)
+void SetMotor_d(int s,int c);
 {
-    const int maxpower = 300;
-
-    if (count > s && s >= 0) //正向并且实际速度高于预期，减速
+    const int maxpower = 800;
+    
+    if (count > s && s >= 0)//正向并且实际速度高于预期，减速
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, 0);
-        FTM_PWM_Duty(ftm2, ftm_ch0, maxpower);
+        FTM_PWM_Duty(ftm2, ftm_ch0, maxpower); 
     }
-    else if (count <= s && s >= 0) //正向并且实际速度低于预期，加速
+    else if (count <= s && s >= 0)//正向并且实际速度低于预期，加速
     {
-        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
         FTM_PWM_Duty(ftm2, ftm_ch1, maxpower);
     }
 }
@@ -45,8 +43,10 @@ void Control()
         OLED_Clear(0x00);
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-    speed = StraightSpeed - 0.2 * turnconvert(fabs(offset));
-    SetMotor_d(StraightSpeed - 0.2 * turnconvert(fabs(offset)), count); //在offset<24时不减速
+    speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+    SetMotor_d(kTopSpeed - 0.1 * turnconvert(fabs(offset)),count); //在offset<24时不减速
+    
+
 
     if (Pin(H7))
     {
@@ -54,7 +54,7 @@ void Control()
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
         sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
+        sprintf(spring_oled, "S:%3d D:%3d R:%d", speed, steer, isRing);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
         sprintf(spring_oled, "Count:%3d", count);
         OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
@@ -74,11 +74,11 @@ int main(void)
     int isStartLine = 0; // 起跑线检测标识
 
     while (1)
-    { /*
+    {
         // 读取AD值并打印
         if (Pin(H7))
             OLED_Clear(0x00);
-*/
+
         AD1 = ADC_Read(ADC0_SE1);
         //AD1 = AD1 > 15 ? AD1 - 15 : (AD1 > 7 ? AD1 - 7 : AD1); // 对AD值的偏差做了调整！！
         AD2 = ADC_Read(ADC0_SE3);
@@ -136,23 +136,6 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    int count = 0;
-                    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-                    FTM_Count_Clean(ftm1);       //编码器数值清零
-                    if (Pin(H7))
-                        OLED_Clear(0x00);
-                    if (Pin(H7))
-                    {
-                        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
-                        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-                        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
-                        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-                        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
-                        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-                        sprintf(spring_oled, "Count:%3d", count);
-                        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-                        OLED_Refresh_Gram();
-                    }
                 }
             }
         }
@@ -190,29 +173,31 @@ int main(void)
         }
         else
         {
-            Control();
+            steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
+            SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+            speed = kTopSpeed - 0.2 * turnconvert(fabs(offset));
+            SetMotor(kTopSpeed - 0.2 * turnconvert(fabs(offset))); //在offset<24时不减速
         }
 
         /*
         else if (fabs(offset) > straight_adjust_thres && fabs(offset) <= turn_thres) //直道调整
         {
             SetSteer((int)( - (offset > 0 ? 1 : -1) * (fabs(offset) - straight_adjust_thres) * 0.7)); //乘数为转弯系数
-            //FTM_PWM_Duty(ftm2, ftm_ch1, StraightSpeed);//除数为减速系数
+            //FTM_PWM_Duty(ftm2, ftm_ch1, kTopSpeed);//除数为减速系数
         }
         else if (fabs(offset) > turn_thres)
         {                                              //转弯的offset阈值
             SetSteer((int)( - offset * 2.6)); //乘数为转弯系数
             if (fabs(offset) > turn_thres + 20)
-                SetMotor(StraightSpeed - fabs(offset) / 4.8); //除数为减速系数
+                SetMotor(kTopSpeed - fabs(offset) / 4.8); //除数为减速系数
             else
-                SetMotor(StraightSpeed - fabs(offset) / 2.7); //除数为减速系数
+                SetMotor(kTopSpeed - fabs(offset) / 2.7); //除数为减速系数
         }
         else
         { //直行
-            SetMotor(StraightSpeed);
+            SetMotor(kTopSpeed);
             SetSteer(0);
         }*/
-        /*
         if (Pin(H7))
         {
             sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
@@ -222,6 +207,6 @@ int main(void)
             sprintf(spring_oled, "Sp:%3d St:%3d R:%d", speed, steer, isRing);
             OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
             OLED_Refresh_Gram();
-        }*/
+        }
     }
 }
