@@ -7,17 +7,21 @@
 
 #include "common.h"
 
-char spring_oled[20];
-uint8 data_getstring[2];
-uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
-int count;
-float pre_offset = 0, offset = 0;
 const int kTopSpeed = 150; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
-int speed = 0;
-int steer = 0;
+const float kPsteer = 60, kDsteer = 100;
+const float kPmotor = 200, kImotor = 50, kDmotor = 100, kMaxMotorError = 200;
+uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
+int count = 0;
+float pre_offset = 0, offset = 0;
+float offset_p = 0, offset_d = 0;
+float pre_speed_error = 0, speed_error = 0, sum_speed_error = 0;
+float motor_p = 0, motor_i = 0, motor_d = 0;
+int speed = 0, steer = 0;
 int isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
+char spring_oled[20];
+uint8 data_getstring[2];
 
 // 舵机打角设定，0为打直，绝对值最大160，左负右正
 void SetSteer(float dir)
@@ -69,27 +73,57 @@ void MYOledShow()
     }
 }
 
-void GetCount()
+void GetSpeed()
 {
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
     if (!Pin(H6))
         count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
+    speed = count / 8.0;
 }
 
-// 通用指数控制
-void Control()
+// 舵机PD控制
+float PDSteer()
 {
-    GetCount();
+    float P, D;
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
 
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-    SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-    speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
+    pre_offset = offset;
+    P = kPsteer * offset;
+    D = kDsteer * (offset - pre_offset);
+    return (P + D);
+}
+
+// 电机PID控制
+float PIDMotor(float speed_target)
+{
+    float P, I, D;
+    speed_error = speed_target - speed; 
+    pre_speed_error = speed_error;
+    sum_speed_error += speed_error;
+    if (sum_speed_error > kMaxMotorError)
+        sum_speed_error = kMaxMotorError;
+    else if (sum_speed_error < - kMaxMotorError)
+        sum_speed_error = - kMaxMotorError;
+    P = kPmotor * speed_error;
+    I = kImotor * sum_speed_error;
+    D = kDmotor * (speed_error - pre_speed_error);
+    return (P + I + D);
+}
+
+// PID控制
+void Control()
+{
+    GetSpeed();
+
+    // steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
+    SetSteer(PDSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset)))); //乘数为转弯系数
+    // speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+    SetMotor(PIDMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset)))); //在offset<24时不减速
+
     MYOledShow();
 }
 
