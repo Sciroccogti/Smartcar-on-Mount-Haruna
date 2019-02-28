@@ -19,7 +19,7 @@ int speed = 0;
 int steer = 0;
 int isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
 
-// 舵机打角设定，0为打直，绝对值最大160
+// 舵机打角设定，0为打直，绝对值最大160，左负右正
 void SetSteer(float dir)
 {
     if (dir > 160)
@@ -75,10 +75,6 @@ void GetCount()
     if (!Pin(H6))
         count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
-}
-
-int CarLocation(int AD1, int AD2, int AD3, int AD4)
-{
 }
 
 // 通用指数控制
