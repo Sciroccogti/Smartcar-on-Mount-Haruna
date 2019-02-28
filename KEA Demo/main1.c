@@ -55,8 +55,8 @@ int main(void)
   GPIO_Init(G3, GPO, HIGH);
   GPIO_Init(I1, GPO, LOW); //蜂鸣器
   //FTM_PWM_Init(ftm0, ftm_ch0, A0, 50, 0); //舵机
-  FTM_PWM_Init(ftm0,ftm_ch0,A0,300,500);
-  
+  FTM_PWM_Init(ftm0, ftm_ch0, A0, 300, 500);
+
   FTM_Pulse_Init(ftm0, FTM_PS_1, TCLK1); //编码器  此处注意，使用DEF车模，初始化两个编码器，删除舵机初始化与控制，使用AB车模，删除此句编码器初始化，否则无法正常工作。
   FTM_Pulse_Init(ftm1, FTM_PS_1, TCLK2);
 
@@ -79,8 +79,87 @@ int main(void)
   Enable_Interrupt(INT_PIT_CH0);
   while (1)
   {
-  //GPIO_Turn(I1);
+    //GPIO_Turn(I1);
     //Control();
-    FTM_PWM_Duty(ftm0,ftm_ch0,700);
+    FTM_PWM_Duty(ftm0, ftm_ch0, 700);
+  }
+}
+
+ // 搬来代码做做笔记
+void PID()
+{
+  ppre_motor_error = pre_motor_error;
+  pre_motor_error = motor_error;
+  motor_error = motor_target - real_speed;
+  //  if(motor_error>10)//加速p控制量 /// 限制加速度的，没用
+  //  {
+  //    motor_error = 10;
+  //  }
+
+  //增量式
+  //  motor_ep = motor_error - pre_motor_error;
+  //  motor_ei = motor_error;
+  //  motor_ed = motor_error - 2*pre_motor_error + ppre_motor_error;
+  //位置式
+  motor_ep = motor_error;
+  motor_ei += motor_error;
+  if (motor_ei > 50)
+    motor_ei = 50;
+  else if (motor_ei < -50)
+    motor_ei = -50;
+  motor_ed = motor_error - pre_motor_error;
+  //  分段积分I
+  //  if((motor_error<(motor_target/2))&&(motor_error<-(motor_target/2)))
+  //  motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //  else  motor_out += motor_kp * motor_ep  + motor_kd * motor_ed;
+
+  //  if(motor_error<=0) motor_ei=0;
+
+  //分段比例P
+  //  if((motor_error<(motor_set_speed/2))&&(motor_error>-(motor_set_speed/2)))
+  //  motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //  else  motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //
+  //  if((flag_stop==0))
+  //    motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //  else
+  //    motor_out += motor_kp * motor_ep + motor_kd * motor_ed;
+
+  //棒棒控制
+  //  if(motor_error>80) motor_out = 800;
+
+  //  if(motor_error<0)
+
+  //  motor_out += 60 * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //  else  motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  //  motor_out += motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  
+  if (state == STATE_ROUND)
+  {
+    offset_kd = 0;
+  }
+  else
+    offset_kd = 15.12;
+
+  if ((flag_stop == 0) && (offset_and_speed < 20) && (offset_and_speed > -20))
+    motor_out = motor_kp * motor_ep + motor_ki * motor_ei + motor_kd * motor_ed;
+  else if (state == STATE_ROUND && (round_size[round_count] == 0))
+    motor_out = motor_kp * motor_ep + motor_ki * motor_ei;
+  else
+    motor_out = motor_kp * motor_ep; //*3
+
+  if (max_ad > outrange_admax)
+    lastactive_area = area; //有效区域
+  pre_area = area;
+
+  //    if(flag_stop==0)
+  //    {
+  if (offset_out > 0)
+  {
+    SetMotor((int)(motor_out + motor_target * 5.4));
+  }
+  else
+  {
+    SetMotor((int)(motor_out + motor_target * 5.4));
   }
 }

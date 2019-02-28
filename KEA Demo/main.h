@@ -1,6 +1,6 @@
-// 比完赛晚上秋名山见
-// Last updated: 2-22-2019 By 张逸帆
-// What's new: SetSteer限制最大打角，且中值为0
+// 比完赛晚上秋名山见 v1.6
+// Last updated: 2-26-2019 By 张逸帆
+// What's new: 增加自定义显示，编码器读值，count变为int型
 // 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
 // const常量请以 k 开头，大小写混合
 // 函数请以大写开头，大小写混合
@@ -10,13 +10,17 @@
 char spring_oled[20];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
-uint16_t count;
+int count;
 float pre_offset = 0, offset = 0;
 const int kTopSpeed = 150; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
+int speed = 0;
+int steer = 0;
+int isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
 
-void SetSteer(int dir) // 0为打直，绝对值最大160
+// 舵机打角设定，0为打直，绝对值最大160，左负右正
+void SetSteer(float dir)
 {
     if (dir > 160)
     {
@@ -29,7 +33,8 @@ void SetSteer(int dir) // 0为打直，绝对值最大160
     FTM_PWM_Duty(ftm0, ftm_ch0, dir + kMidSteer);
 }
 
-void SetMotor(int s) // 支持直接设置负数
+// 电机电压设定，支持直接设置负数
+void SetMotor(int s)
 {
     if (s > 0)
     {
@@ -44,6 +49,48 @@ void SetMotor(int s) // 支持直接设置负数
     {
         FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
+}
+
+// 自定义显示函数，输出AD，speed，steer，isRing，count
+void MYOledShow()
+{
+    if (Pin(H7))
+    {
+        OLED_Clear(0x00);
+        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
+        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
+        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
+        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
+        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
+        sprintf(spring_oled, "Count:%3d", count);
+        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
+        OLED_Refresh_Gram();
+    }
+}
+
+void GetCount()
+{
+    count = FTM_Pulse_Get(ftm1); //编码器数值读取
+    if (!Pin(H6))
+        count = -count;
+    FTM_Count_Clean(ftm1); //编码器数值清零
+}
+
+// 通用指数控制
+void Control()
+{
+    GetCount();
+    AD1 = ADC_Read(ADC0_SE1);
+    ADV = ADC_Read(ADC0_SE2);
+    AD4 = ADC_Read(ADC0_SE9);
+    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+
+    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
+    SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+    speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+    SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
+    MYOledShow();
 }
 
 void MYInit()
@@ -64,6 +111,7 @@ void MYInit()
 
     //编码器
     FTM_Pulse_Init(ftm1, FTM_PS_1, TCLK2);
+    GPIO_Init(H6, GPI, HIGH);
 
     //OLED
     OLED_Init();

@@ -2504,4 +2504,7 @@
     <file>
         <name>$PROJ_DIR$\..\main.c</name>
     </file>
+    <file>
+        <name>$PROJ_DIR$\..\main.h</name>
+    </file>
 </project>
