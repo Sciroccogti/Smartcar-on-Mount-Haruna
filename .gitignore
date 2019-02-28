@@ -4,9 +4,11 @@ KEA Demo/IAR/Flash_Debug
 *.driver.xcl
 *.general.xcl
 *.bat
+KEA Demo/IAR/settings
 *.dbgdt
 *.dep
 *.dnx
 *.ps1
 *.wsdt
 *.xcl
+.vscode/
