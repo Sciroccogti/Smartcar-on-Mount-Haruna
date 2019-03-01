@@ -65,7 +65,7 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    GetCount();
+                    GetSpeed();
                     MYOledShow();
                 }
             }

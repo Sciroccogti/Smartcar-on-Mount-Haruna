@@ -7,7 +7,7 @@
 
 #include "common.h"
 
-const int kTopSpeed = 150; //  速度上限
+const int kTopSpeed = 50; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 const float kPsteer = 60, kDsteer = 100;
