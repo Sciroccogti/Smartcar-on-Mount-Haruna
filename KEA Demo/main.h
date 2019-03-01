@@ -72,9 +72,15 @@ void MYOledShow()
 void GetCount()
 {
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    if (!Pin(H6))
+    if (Pin(H6))
         count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
+}
+
+double turnconvert(double x) //offset与舵机转向的转换函数
+{
+    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
+    return exp(a * x * x + c * x + b) - exp(b);
 }
 
 // 通用指数控制

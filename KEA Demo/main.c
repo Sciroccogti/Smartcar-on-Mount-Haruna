@@ -10,19 +10,13 @@ void PIT_Interrupt(uint8 ch)
     GPIO_Turn(G3);
 }
 
-double turnconvert(double x) //offset与舵机转向的转换函数
-{
-    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
-    return exp(a * x * x + c * x + b) - exp(b);
-}
-
 int main(void)
 {
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
-    int lap = 0;         // 干簧管控制的 圈数计数器
-    int isStartLine = 0; // 起跑线检测标识
+    int lap = 0;           // 干簧管控制的 圈数计数器
+    int isStartLine = 0;   // 起跑线检测标识
 
     while (1)
     {
@@ -65,12 +59,15 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
+                    AD1 = ADC_Read(ADC0_SE1);
+                    ADV = ADC_Read(ADC0_SE2);
+                    AD4 = ADC_Read(ADC0_SE9);
                     GetCount();
                     MYOledShow();
                 }
             }
         }
-
+/*
         else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
         {
             if (isRing == 0) // 第一次
@@ -88,7 +85,7 @@ int main(void)
                 Soft_Delay_ms(500);
                 while (ADV > 150 || AD1 > 500)
                 {
-                    AD1 = ADC_Read(ADC0_SE1);
+                    AD1 = ADC_Read(ADC0_SE1) + 100;
                     ADV = ADC_Read(ADC0_SE2);
                     AD4 = ADC_Read(ADC0_SE9);
                     MYOledShow();
@@ -111,6 +108,7 @@ int main(void)
                 isRing = 0;
             }
         }
+*/
         else
         {
             Control();
