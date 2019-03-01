@@ -22,8 +22,8 @@ int main(void)
         AD1 = ADC_Read(ADC0_SE1);
         ADV = ADC_Read(ADC0_SE2);
         AD4 = ADC_Read(ADC0_SE9);
-        GetCount();
-        MYOledShow();
+        //GetCount();
+        //MYOledShow();
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块

@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 500; //  速度上限
+const int kTopSpeed = 3000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -123,7 +123,7 @@ void UART_Interrupt(uint8 ch)
 void SetMotor_d(float s)
 {
     const float apower = 1000;
-    const float dpower = 1000;
+    const float dpower = 3000;
     GetCount();
     //OLED_Clear(0x00);
     //sprintf(spring_oled, "%3d", count);
@@ -133,7 +133,7 @@ void SetMotor_d(float s)
     //Soft_Delay_ms(6);
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
-        SetMotor(-dpower*fade);
+        SetMotor(-0.1 * dpower*fade);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
@@ -152,17 +152,37 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-    //GetCount();
+  const int StraightSpeed = 10;
+        static int i = 0;
+    static float diff = 0, prev_offset = 0;
+    const float c = 3;
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
 
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-    SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-    speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor_d(12.0- 0.005 * turnconvert(fabs(offset))); //在offset<24时不减速
-    MYOledShow();
+    //当offset导数小于某个正值的时候，转向幅度变小
+
+    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset)) + (diff < 0 ? diff * c : 0))*0.8; //乘数为转弯系数
+    SetSteer(steer);
+    speed = StraightSpeed / (1.0 + 0.0007 * turnconvert(fabs(offset)));
+    SetMotor_d(speed);
+
+    if (i % 20 == 0)
+    {
+        diff = fabs(offset) - prev_offset;
+        prev_offset = fabs(offset);
+        i = 0;
+    }
+    else
+        i++;
+    if (Pin(H7))
+    {
+      OLED_Clear(0x00);
+      sprintf(spring_oled, "Diff:%5d", (int)diff);
+      OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+      OLED_Refresh_Gram();
+    }
 }
 
 void MYInit()
