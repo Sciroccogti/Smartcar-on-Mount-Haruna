@@ -20,6 +20,11 @@ int main(void)
 
     while (1)
     {
+        AD1 = ADC_Read(ADC0_SE1);
+        ADV = ADC_Read(ADC0_SE2);
+        AD4 = ADC_Read(ADC0_SE9);
+        GetCount();
+        MYOledShow();
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -59,15 +64,10 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    AD1 = ADC_Read(ADC0_SE1);
-                    ADV = ADC_Read(ADC0_SE2);
-                    AD4 = ADC_Read(ADC0_SE9);
-                    GetCount();
-                    MYOledShow();
                 }
             }
         }
-/*
+        /*
         else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
         {
             if (isRing == 0) // 第一次
