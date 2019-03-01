@@ -10,7 +10,7 @@
 const int kTopSpeed = 50; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
-const float kPsteer = 60, kDsteer = 100;
+const float kPsteer = 6, kDsteer = 1;
 const float kPmotor = 200, kImotor = 50, kDmotor = 100, kMaxMotorError = 200;
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
@@ -86,14 +86,24 @@ void GetSpeed()
 float PDSteer()
 {
     float P, D;
-    AD1 = ADC_Read(ADC0_SE1);
-    ADV = ADC_Read(ADC0_SE2);
-    AD4 = ADC_Read(ADC0_SE9);
-    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-
+    // AD1 = ADC_Read(ADC0_SE1);
+    // ADV = ADC_Read(ADC0_SE2);
+    // AD4 = ADC_Read(ADC0_SE9);
+    
     pre_offset = offset;
+    offset = AD1 - AD4;
     P = kPsteer * offset;
     D = kDsteer * (offset - pre_offset);
+    OLED_Clear(0x00);
+    sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
+    OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+    sprintf(spring_oled, "p:%5d o:%3d", pre_offset, offset);
+    OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
+    sprintf(spring_oled, "P %d D %d s %d", P, D, steer);
+    OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
+    OLED_Refresh_Gram();
+    // sprintf(spring_oled, "Count:%3d", count);
+    // OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
     return (P + D);
 }
 
@@ -101,13 +111,13 @@ float PDSteer()
 float PIDMotor(float speed_target)
 {
     float P, I, D;
-    speed_error = speed_target - speed; 
+    speed_error = speed_target - speed;
     pre_speed_error = speed_error;
     sum_speed_error += speed_error;
     if (sum_speed_error > kMaxMotorError)
         sum_speed_error = kMaxMotorError;
-    else if (sum_speed_error < - kMaxMotorError)
-        sum_speed_error = - kMaxMotorError;
+    else if (sum_speed_error < -kMaxMotorError)
+        sum_speed_error = -kMaxMotorError;
     P = kPmotor * speed_error;
     I = kImotor * sum_speed_error;
     D = kDmotor * (speed_error - pre_speed_error);

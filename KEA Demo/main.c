@@ -21,11 +21,16 @@ int main(void)
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
-    int lap = 0;         // 干簧管控制的 圈数计数器
-    int isStartLine = 0; // 起跑线检测标识
+    int lap = 0;           // 干簧管控制的 圈数计数器
+    int isStartLine = 0;   // 起跑线检测标识
 
     while (1)
     {
+        AD1 = ADC_Read(ADC0_SE1);
+        ADV = ADC_Read(ADC0_SE2);
+        AD4 = ADC_Read(ADC0_SE9);
+        GetSpeed();
+        MYOledShow();
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -55,7 +60,7 @@ int main(void)
                 break;
             }
         }
-
+/*
         if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
         {
             Soft_Delay_ms(5);
@@ -71,6 +76,7 @@ int main(void)
             }
         }
 
+        
         else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
         {
             if (isRing == 0) // 第一次
@@ -111,6 +117,7 @@ int main(void)
                 isRing = 0;
             }
         }
+*/
         else
         {
             Control();
