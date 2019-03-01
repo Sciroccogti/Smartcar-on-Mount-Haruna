@@ -10,7 +10,7 @@
 char spring_oled[20];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
-int count;
+int count = 0;
 float pre_offset = 0, offset = 0;
 const int kTopSpeed = 150; //  速度上限
 const float kMidSteer = 520.0;
