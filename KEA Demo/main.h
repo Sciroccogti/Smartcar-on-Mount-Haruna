@@ -190,5 +190,5 @@ void MYInit()
     UART_Init(uart2, 9600, RXTX_B0B1);
     UART_SetCallback(UART_Interrupt);
     NVIC_SetPriority(UART2_IRQn, 0x02); //如果我们不对优先级进行配置的话，则默认相应中断源的向量号越低其优先级越高
-    UART_RX_IRQ_Disable(uart0);
+    UART_RX_IRQ_Disable(uart2);
 }
