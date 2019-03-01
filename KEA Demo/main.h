@@ -121,7 +121,7 @@ void Control()
 
     steer = PDSteer();
     SetSteer(steer); //乘数为转弯系数
-    // speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
+    speed = kTopSpeed - 0.1 * steer;
     SetMotor(PIDMotor(kTopSpeed - 0.1 * steer)); //在offset<24时不减速
 
     MYOledShow();
