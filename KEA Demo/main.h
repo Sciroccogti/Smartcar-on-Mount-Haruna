@@ -139,7 +139,7 @@ void SetMotor_d(float s)
     {
         SetMotor(apower*fade);
     }
-    else if (count > 10 && s == 0) //s==0即停车，反转电机
+    else if (count > 2 && s == 0) //s==0即停车，反转电机
     {
         SetMotor(-dpower);
     }
@@ -161,7 +161,7 @@ void Control()
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor_d(12.0- 0.02 * turnconvert(fabs(offset))); //在offset<24时不减速
+    SetMotor_d(12.0- 0.005 * turnconvert(fabs(offset))); //在offset<24时不减速
     MYOledShow();
 }
 
