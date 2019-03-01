@@ -12,30 +12,26 @@ void PIT_Interrupt(uint8 ch)
 
 void SetMotor_d(int s)
 {
-    const int apower = 200;
-    const int dpower = 500;
+    const float apower = 100;
+    const float dpower = 500;
     GetCount();
-    int fade = abs(s - count) < 10 ? abs(s - count) * 0.1 : 1;
+    float fade = abs(s - count) < 10 ? abs(s - count) * 0.1 : 1.0;
+    //Soft_Delay_ms(6);
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, 0);
-        //FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
-        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
+        SetMotor(0);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
-        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
-        FTM_PWM_Duty(ftm2, ftm_ch1, apower * fade);
+        SetMotor(170);
     }
     else if (count > 10 && s == 0) //s==0即停车，反转电机
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, 0);
-        FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
+        SetMotor(-500);
     }
     else if (count <= 10 && s == 0) //停得差不多了，不反转电机
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, 0);
-        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
+        SetMotor(0);
     }
 }
 
@@ -51,14 +47,14 @@ void Control()
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset)) ; //乘数为转弯系数
+    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset)) + diff * c)*0.8; //乘数为转弯系数
     SetSteer(steer);
     speed = StraightSpeed / (1 + 0.05 * turnconvert(fabs(offset)));
-    SetMotor_d(50);
+    SetMotor_d(1000);
 
     MYOledShow();
 
-    if (i % 20 == 0)
+    if (i % 200 == 0)
     {
         diff = offset - prev_offset;
         prev_offset = offset;
@@ -68,20 +64,23 @@ void Control()
         i++;
 }
 
-int main(void)
+ int main(void)
 {
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
     int lap = 0;           // 干簧管控制的 圈数计数器
     int isStartLine = 0;   // 起跑线检测标识
-
     while (1)
     { /*
         // 读取AD值并打印
         if (Pin(H7))
             OLED_Clear(0x00);
 */
+      int s=200;
+      FTM_PWM_Duty(ftm2, ftm_ch1, s < StraightSpeed ? s : StraightSpeed);
+      while(1);
+      return 0;
         AD1 = ADC_Read(ADC0_SE1);
         AD2 = ADC_Read(ADC0_SE3);
         ADV = ADC_Read(ADC0_SE2);
@@ -128,7 +127,7 @@ int main(void)
             }
         }
 
-        if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
+        /*if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
         {
             Soft_Delay_ms(5);
             if (AD1 + AD4 <= 10)
@@ -141,7 +140,7 @@ int main(void)
                     MYOledShow();
                 }
             }
-        }
+        }*/
 
         /*else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
         {
@@ -174,7 +173,7 @@ int main(void)
                 isRing = 0;
             }
         }*/
-        else
+        //else
         {
             Control();
         }
