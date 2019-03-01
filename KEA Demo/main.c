@@ -54,7 +54,7 @@ int main(void)
             }
         }
 
-        if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
+        if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除  15
         {
             Soft_Delay_ms(5);
             if (AD1 + AD4 <= 10)
@@ -62,12 +62,12 @@ int main(void)
                 Soft_Delay_ms(5);
                 if (AD1 + AD4 <= 10)
                 {
-                    SetMotor(0);
+                    SetMotor_d(0);
                 }
             }
         }
         
-        else if (ADV > 150 && AD1 > 400 && AD4 > 400) // 判环
+        /*else if (ADV > 150 && AD1 > 400 && AD4 > 400) // 判环
         {
             static int dir = 0, iter = 0;
             if (isRing == 0) // 第一次
@@ -90,7 +90,7 @@ int main(void)
                     ADV = ADC_Read(ADC0_SE2);
                     AD4 = ADC_Read(ADC0_SE9);
                     MYOledShow();
-                    Systick();
+                    //Systick();
                     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
                     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
                     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
@@ -108,7 +108,7 @@ int main(void)
                 dir = 0;
                 iter = 0;
             }
-        }
+        }*/
 
         else
         {

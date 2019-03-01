@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 150; //  速度上限
+const int kTopSpeed = 500; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -33,6 +33,15 @@ void SetSteer(float dir)
     FTM_PWM_Duty(ftm0, ftm_ch0, dir + kMidSteer);
 }
 
+void GetCount()
+{
+    count = FTM_Pulse_Get(ftm1); //编码器数值读取
+    if (Pin(H6))
+        count = -count;
+    FTM_Count_Clean(ftm1); //编码器数值清零
+}
+
+
 // 电机电压设定，支持直接设置负数
 void SetMotor(int s)
 {
@@ -50,6 +59,9 @@ void SetMotor(int s)
         FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
 }
+
+
+
 
 // 自定义显示函数，输出AD，speed，steer，isRing，count
 void MYOledShow()
@@ -69,13 +81,6 @@ void MYOledShow()
     }
 }
 
-void GetCount()
-{
-    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    if (Pin(H6))
-        count = -count;
-    FTM_Count_Clean(ftm1); //编码器数值清零
-}
 
 double turnconvert(double x) //offset与舵机转向的转换函数
 {
@@ -114,10 +119,40 @@ void UART_Interrupt(uint8 ch)
   }
 }
 */
+
+void SetMotor_d(float s)
+{
+    const float apower = 1000;
+    const float dpower = 1000;
+    GetCount();
+    //OLED_Clear(0x00);
+    //sprintf(spring_oled, "%3d", count);
+    //    OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
+    //OLED_Refresh_Gram();
+    float fade = fabs(s - count) < 10 ? fabs(s - count) * 0.1 : 1.0;
+    //Soft_Delay_ms(6);
+    if (count > s && s > 0) //正向并且实际速度高于预期，减速
+    {
+        SetMotor(-dpower*fade);
+    }
+    else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
+    {
+        SetMotor(apower*fade);
+    }
+    else if (count > 10 && s == 0) //s==0即停车，反转电机
+    {
+        SetMotor(-dpower);
+    }
+    else if (count <= 1 && s == 0) //停得差不多了，不反转电机
+    {
+        SetMotor(0);
+    }
+}
+
 // 通用指数控制
 void Control()
 {
-    GetCount();
+    //GetCount();
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
@@ -126,7 +161,7 @@ void Control()
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
+    SetMotor_d(12.0- 0.02 * turnconvert(fabs(offset))); //在offset<24时不减速
     MYOledShow();
 }
 
