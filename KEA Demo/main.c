@@ -47,17 +47,21 @@ void SetMotor_d(int s)
 
 void Control()
 {
-    
+    static int i=0,diff=0;
+    const int 
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
     if (Pin(H7))
         OLED_Clear(0x00);
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-    SetSteer(steer); //乘数为转弯系数
+
+    //当offset导数小于某个正值的时候，转向幅度变小
+
+    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset)) * diff * c;//乘数为转弯系数
+    SetSteer(steer); 
     speed = StraightSpeed / (1 + turnconvert(fabs(offset));
-    SetMotor_d(speed); //在offset<24时不减速
+    SetMotor_d(speed); 
 
     if (Pin(H7))
     {
@@ -71,6 +75,16 @@ void Control()
         OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
         OLED_Refresh_Gram();
     }
+
+    
+    if(i%5==0)
+    {
+        diff = offset - prev_offset;
+        prev_offset = offset;
+        i=0;
+    }
+    else
+        i++;
 }
 
 int main(void)
@@ -102,8 +116,8 @@ int main(void)
         FTM_Count_Clean(ftm1);
         */
         // 使用PD设置偏移量
-        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-        const int straight_adjust_thres = 30, turn_thres = 45;
+        offset = (float)95 * (AD1 - AD4) / (AD1 + AD4 + 10);
+        //const int straight_adjust_thres = 30, turn_thres = 45;
         //GPIO_Set(G1, Pin(C5));
 
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
