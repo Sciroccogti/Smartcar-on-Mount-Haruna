@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count;
 float pre_offset = 0, offset = 0;
-const int StraightSpeed = 500; //  直道速度
+const int StraightSpeed = 50; //  直道速度
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -72,15 +72,17 @@ void MYOledShow()
 void GetCount()
 {
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    if (!Pin(H6))
+    if (Pin(H6))
         count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
 }
 
-int CarLocation(int AD1, int AD2, int AD3, int AD4)
+double turnconvert(double x) //offset与舵机转向的转换函数
 {
+    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
+    return exp(a * x * x + c * x + b) - exp(b);
 }
-
+/*
 // 通用指数控制
 void Control()
 {
@@ -97,7 +99,7 @@ void Control()
     SetMotor_d(speed); //在offset<24时不减速
     MYOledShow();
 }
-
+*/
 void MYInit()
 {
     while ((1280 * ex_clk_khz) != (256 * ics_clk_khz))

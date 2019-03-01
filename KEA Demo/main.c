@@ -10,23 +10,17 @@ void PIT_Interrupt(uint8 ch)
     GPIO_Turn(G3);
 }
 
-double turnconvert(double x) //offset与舵机转向的转换函数
-{
-    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
-    return exp(a * x * x + c * x + b) - exp(b);
-}
-
 void SetMotor_d(int s)
 {
-    const int apower = 170;
+    const int apower = 200;
     const int dpower = 500;
-    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    FTM_Count_Clean(ftm1);       //编码器数值清零
+    GetCount();
     int fade = abs(s - count) < 10 ? abs(s - count) * 0.1 : 1;
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
         FTM_PWM_Duty(ftm2, ftm_ch1, 0);
-        FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
+        //FTM_PWM_Duty(ftm2, ftm_ch0, dpower * fade);
+        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
@@ -47,8 +41,9 @@ void SetMotor_d(int s)
 
 void Control()
 {
-    static int i=0,diff=0;
-    const int 
+    static int i = 0;
+    static float diff = 0, prev_offset = 0;
+    const float c = 0.001;
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
@@ -58,10 +53,10 @@ void Control()
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
-    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset)) * diff * c;//乘数为转弯系数
-    SetSteer(steer); 
-    speed = StraightSpeed / (1 + turnconvert(fabs(offset));
-    SetMotor_d(speed); 
+    steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset)) ; //乘数为转弯系数
+    SetSteer(steer);
+    speed = StraightSpeed / (1 + 0.05 * turnconvert(fabs(offset)));
+    SetMotor_d(50);
 
     if (Pin(H7))
     {
@@ -76,12 +71,11 @@ void Control()
         OLED_Refresh_Gram();
     }
 
-    
-    if(i%5==0)
+    if (i % 20 == 0)
     {
         diff = offset - prev_offset;
         prev_offset = offset;
-        i=0;
+        i = 0;
     }
     else
         i++;
@@ -92,8 +86,8 @@ int main(void)
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
-    int lap = 0;         // 干簧管控制的 圈数计数器
-    int isStartLine = 0; // 起跑线检测标识
+    int lap = 0;           // 干簧管控制的 圈数计数器
+    int isStartLine = 0;   // 起跑线检测标识
 
     while (1)
     { /*
