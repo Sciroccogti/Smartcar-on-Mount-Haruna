@@ -48,8 +48,6 @@ void Control()
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-    if (Pin(H7))
-        OLED_Clear(0x00);
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
@@ -58,18 +56,7 @@ void Control()
     speed = StraightSpeed / (1 + 0.05 * turnconvert(fabs(offset)));
     SetMotor_d(50);
 
-    if (Pin(H7))
-    {
-        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
-        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
-        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
-        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        sprintf(spring_oled, "Count:%3d", count);
-        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-        OLED_Refresh_Gram();
-    }
+    MYOledShow();
 
     if (i % 20 == 0)
     {
@@ -150,8 +137,7 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-                    FTM_Count_Clean(ftm1);       //编码器数值清零
+                    GetCount();
                     MYOledShow();
                 }
             }
