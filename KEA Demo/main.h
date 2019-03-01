@@ -41,7 +41,6 @@ void GetCount()
     FTM_Count_Clean(ftm1); //编码器数值清零
 }
 
-
 // 电机电压设定，支持直接设置负数
 void SetMotor(int s)
 {
@@ -59,9 +58,6 @@ void SetMotor(int s)
         FTM_PWM_Duty(ftm2, ftm_ch0, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
 }
-
-
-
 
 // 自定义显示函数，输出AD，speed，steer，isRing，count
 void MYOledShow()
@@ -81,7 +77,6 @@ void MYOledShow()
     }
 }
 
-
 double turnconvert(double x) //offset与舵机转向的转换函数
 {
     const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
@@ -96,29 +91,18 @@ double turnconvert(double x) //offset与舵机转向的转换函数
 *
 ************************************************************************************************/
 
-/*
-void UART_Interrupt(uint8 ch)
+void UART_Interrupt()
 {
-  uint8 data_get;
-  switch(ch)
-  {
-    case 0:
-      UART_Getchar(uart0, &data_get);
-      data_getstring[0] = data_get;
-      if(data_getstring[0]=='s')//蓝牙发送s人工停止车模运行
-      {
+    uint8 data_get;
+    UART_Getchar(uart2, &data_get);
+    data_getstring[0] = data_get;
+    if (data_getstring[0] == 's') //蓝牙发送s人工停止车模运行
+    {
         flag_stop = 1;
         flag_run = 0;
-      }
-      //UART_Putstr(uart0, data_getstring);
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
-  }
+    }
+    UART_Putstr(uart2, data_getstring);
 }
-*/
 
 void SetMotor_d(float s)
 {
@@ -133,11 +117,11 @@ void SetMotor_d(float s)
     //Soft_Delay_ms(6);
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
-        SetMotor(-dpower*fade);
+        SetMotor(-dpower * fade);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
-        SetMotor(apower*fade);
+        SetMotor(apower * fade);
     }
     else if (count > 10 && s == 0) //s==0即停车，反转电机
     {
@@ -161,7 +145,7 @@ void Control()
     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
-    SetMotor_d(12.0- 0.02 * turnconvert(fabs(offset))); //在offset<24时不减速
+    SetMotor_d(12.0 - 0.02 * turnconvert(fabs(offset))); //在offset<24时不减速
     MYOledShow();
 }
 
@@ -199,6 +183,12 @@ void MYInit()
 
     //LED
     GPIO_Init(G1, GPO, LOW); // B
-    //GPIO_Init(G2, GPO, LOW); // G
-    //GPIO_Init(G3, GPO, LOW); // R
+    GPIO_Init(G2, GPO, LOW); // G
+    GPIO_Init(G3, GPO, LOW); // R
+
+    //UART串口(蓝牙)
+    UART_Init(uart2, 9600, RXTX_B0B1);
+    UART_SetCallback(UART_Interrupt);
+    NVIC_SetPriority(UART2_IRQn, 0x02); //如果我们不对优先级进行配置的话，则默认相应中断源的向量号越低其优先级越高
+    UART_RX_IRQ_Disable(uart0);
 }
