@@ -83,6 +83,37 @@ double turnconvert(double x) //offset与舵机转向的转换函数
     return exp(a * x * x + c * x + b) - exp(b);
 }
 
+/***********************************************************************************************
+*
+* @brief    UART_Interrupt(UINT8 ch). Callback function called by the UART module on each interrupt
+* @param    UART channel
+* @return   none
+*
+************************************************************************************************/
+
+/*
+void UART_Interrupt(uint8 ch)
+{
+  uint8 data_get;
+  switch(ch)
+  {
+    case 0:
+      UART_Getchar(uart0, &data_get);
+      data_getstring[0] = data_get;
+      if(data_getstring[0]=='s')//蓝牙发送s人工停止车模运行
+      {
+        flag_stop = 1;
+        flag_run = 0;
+      }
+      //UART_Putstr(uart0, data_getstring);
+      break;
+    case 1:
+      break;
+    case 2:
+      break;
+  }
+}
+*/
 // 通用指数控制
 void Control()
 {
