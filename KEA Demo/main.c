@@ -6,8 +6,7 @@
 
 void PIT_Interrupt(uint8 ch)
 {
-    GPIO_Turn(G2);
-    GPIO_Turn(G3);
+    AD1 += 100;
 }
 
 int main(void)
@@ -67,12 +66,13 @@ int main(void)
                 }
             }
         }
-        /*
-        else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
+        
+        else if (ADV > 150 && AD1 > 400 && AD4 > 400) // 判环
         {
+            static int dir = 0, iter = 0;
             if (isRing == 0) // 第一次
             {
-                while (ADV > 150 && AD1 > 500 && AD4 > 400)
+                while (ADV > 150 && AD1 > 400 && AD4 > 400)
                 {
                     Control();
                 }
@@ -83,21 +83,20 @@ int main(void)
                 GPIO_Set(I1, HIGH);
                 SetSteer(-100);
                 Soft_Delay_ms(500);
-                while (ADV > 150 || AD1 > 500)
+                dir = AD1 > AD4 ? 1 : -1;
+                while (ADV > 150 || AD1 > 500 || AD4 > 500)
                 {
                     AD1 = ADC_Read(ADC0_SE1) + 100;
                     ADV = ADC_Read(ADC0_SE2);
                     AD4 = ADC_Read(ADC0_SE9);
                     MYOledShow();
-                    PIT_Init1(pit0, 5000); //单位us,0.1ms
-                    PIT_SetCallback(PIT_Interrupt);
-                    Enable_Interrupt(INT_PIT_CH0);
-                    Disable_Interrupt(INT_PIT_CH0);
+                    Systick();
                     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
                     steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
                     SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
                     speed = kTopSpeed - 0.1 * turnconvert(fabs(offset));
                     SetMotor(kTopSpeed - 0.1 * turnconvert(fabs(offset))); //在offset<24时不减速
+                    iter ++;
                 }
 
                 isRing++;
@@ -106,9 +105,11 @@ int main(void)
             {
                 GPIO_Set(I1, LOW);
                 isRing = 0;
+                dir = 0;
+                iter = 0;
             }
         }
-*/
+
         else
         {
             Control();
