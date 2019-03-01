@@ -92,9 +92,6 @@ int main(void)
     MYInit();
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
-    int speed = 0;
-    int steer = 0;
-    int isRing = 0;      // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
     int lap = 0;         // 干簧管控制的 圈数计数器
     int isStartLine = 0; // 起跑线检测标识
 
@@ -146,7 +143,6 @@ int main(void)
                 Soft_Delay_ms(200);
                 speed = 0;
                 SetMotor(0);
-                OLED_Refresh_Gram();
                 break;
             }
         }
@@ -160,28 +156,9 @@ int main(void)
                 if (AD1 + AD4 <= 10)
                 {
                     SetMotor(0);
-                    /*
-                    count = FTM_Pulse_Get(ftm1); //编码器数值读取
-                    while(count>5)
-                    {*/
                     count = FTM_Pulse_Get(ftm1); //编码器数值读取
                     FTM_Count_Clean(ftm1);       //编码器数值清零
-                    /*SetMotor_d(0,count);
-                    }*/
-
-                    if (Pin(H7))
-                    {
-                        OLED_Clear(0x00);
-                        sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
-                        OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-                        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
-                        OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-                        sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
-                        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-                        sprintf(spring_oled, "Count:%3d", count);
-                        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-                        OLED_Refresh_Gram();
-                    }
+                    MYOledShow();
                 }
             }
         }
