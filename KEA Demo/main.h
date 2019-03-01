@@ -76,7 +76,7 @@ void MYOledShow()
 void GetSpeed()
 {
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
-    if (!Pin(H6))
+    if (Pin(H6))
         count = -count;
     FTM_Count_Clean(ftm1); //编码器数值清零
     speed = count / 8.0;
