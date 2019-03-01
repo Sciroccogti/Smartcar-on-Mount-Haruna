@@ -152,7 +152,7 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-  const int StraightSpeed = 10;
+  const float StraightSpeed = 11;
         static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 3;
@@ -163,15 +163,15 @@ void Control()
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
-    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset)) + (diff < 0 ? diff * c : 0))*0.8; //乘数为转弯系数
+    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset)))*0.63; //乘数为转弯系数(diff < 0 ? diff * c : 0)
     SetSteer(steer);
-    speed = StraightSpeed / (1.0 + 0.0007 * turnconvert(fabs(offset)));
+    speed = StraightSpeed / (1.0 + 0.0018 * turnconvert(fabs(offset)));
     SetMotor_d(speed);
 
     if (i % 20 == 0)
     {
-        diff = fabs(offset) - prev_offset;
-        prev_offset = fabs(offset);
+        diff = offset - prev_offset;
+        prev_offset = offset;
         i = 0;
     }
     else
