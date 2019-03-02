@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 3000; //  速度上限
+const int kTopSpeed = 10000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -75,8 +75,8 @@ void MYOledShow()
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        sprintf(spring_oled, "Count:%3d", count);
-        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
+        /*sprintf(spring_oled, "Count:%3d", count);
+        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);*/
         OLED_Refresh_Gram();
     }
 }
@@ -122,7 +122,7 @@ void UART_Interrupt(uint8 ch)
 
 void SetMotor_d(float s)
 {
-    const float apower = 1000;
+    const float apower = 1200;
     const float dpower = 3000;
     GetCount();
     //OLED_Clear(0x00);
@@ -133,15 +133,22 @@ void SetMotor_d(float s)
     //Soft_Delay_ms(6);
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
-        SetMotor(-0.1 * dpower*fade);
+        SetMotor(-0.2 * dpower * fade);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
-        SetMotor(apower*fade);
+        SetMotor(apower * fade);
     }
     else if (count > 2 && s == 0) //s==0即停车，反转电机
     {
+      //while(count > 2)
+      {
+        //Soft_Delay_ms(2);
         SetMotor(-dpower);
+        //GetCount();
+      }
+      Soft_Delay_ms(2);
+      //SetMotor(0);
     }
     else if (count <= 1 && s == 0) //停得差不多了，不反转电机
     {
@@ -152,10 +159,10 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-  const float StraightSpeed = 11;
+  const float StraightSpeed = 12;
         static int i = 0;
     static float diff = 0, prev_offset = 0;
-    const float c = 3;
+    const float c = 15;
     AD1 = ADC_Read(ADC0_SE1);
     ADV = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
@@ -163,9 +170,15 @@ void Control()
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
-    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset)))*0.63; //乘数为转弯系数(diff < 0 ? diff * c : 0)
+    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset))) * 0.6; //乘数为转弯系数(diff < 0 ? diff * c : 0)
+    speed = StraightSpeed / (1.0 + 0.004 * turnconvert(fabs(offset)));
+    if(offset <= 20 && fabs(diff) >= 2)
+    {
+      steer -= diff * c;
+      speed = speed / 1.5;
+    }
     SetSteer(steer);
-    speed = StraightSpeed / (1.0 + 0.0018 * turnconvert(fabs(offset)));
+    
     SetMotor_d(speed);
 
     if (i % 20 == 0)
@@ -176,7 +189,7 @@ void Control()
     }
     else
         i++;
-    if (Pin(H7))
+    if (0)
     {
       OLED_Clear(0x00);
       sprintf(spring_oled, "Diff:%5d", (int)diff);

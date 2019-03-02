@@ -23,7 +23,7 @@ int main(void)
         ADV = ADC_Read(ADC0_SE2);
         AD4 = ADC_Read(ADC0_SE9);
         //GetCount();
-        //MYOledShow();
+        MYOledShow();
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -54,7 +54,7 @@ int main(void)
             }
         }
 
-        if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除  15
+        if (AD1 + AD4 <= 12) // 出赛道自动停车，赛时需要移除  15
         {
             Soft_Delay_ms(5);
             if (AD1 + AD4 <= 10)
