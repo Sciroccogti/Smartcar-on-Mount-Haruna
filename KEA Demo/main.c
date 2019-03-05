@@ -68,16 +68,17 @@ int main(void)
             }
         }
 
-        else if (AD2 > 1000 && AD3 > 1000) // 判环
+        else if (AD2 > 500 && AD3 > 500) // 判环
         {
-            if (AD2 > AD3 + 100)
+            static dir = 0;
+            SetMotor_d(5);
+            if (AD2 > AD3 + 300)
             {
-                if (isRing == 0) // 进右环
+                if (isRing == 0) // 判右环
                 {
                     isRing = 1;
-                    while (AD2 > AD3 && AD3 > 900)
+                    while (AD2 > AD3 && AD3 > 400)
                     {
-                        SetMotor_d(5);
                         AD1 = ADC_Read(ADC0_SE1);
                         AD2 = ADC_Read(ADC0_SE3);
                         AD3 = ADC_Read(ADC0_SE2);
@@ -92,7 +93,7 @@ int main(void)
                 if (isRing == -2) // 出左环
                 {
                     isRing = 0;
-                    while (AD2 > 900 && AD3 > 900)
+                    while (AD2 > 500 && AD3 > 500)
                     {
                         Control();
                         MYOledShow();
@@ -100,21 +101,21 @@ int main(void)
                 }
             }
 
-            else if (AD3 > AD2 + 100)
+            else if (AD3 > AD2 + 300)
             {
                 if (isRing == 2) // 出右环
                 {
                     isRing = 0;
-                    while (AD2 > 900 && AD3 > 900)
+                    while (AD2 > 500 && AD3 > 500)
                     {
                         Control();
                         MYOledShow();
                     }
                 }
-                else if (isRing == 0) // 进左环
+                else if (isRing == 0) // 判左环
                 {
                     isRing = -1;
-                    while (AD2 > AD3 && AD3 > 900)
+                    while (AD2 > AD3 && AD3 > 400)
                     {
                         SetMotor_d(5);
                         AD1 = ADC_Read(ADC0_SE1);
@@ -122,8 +123,9 @@ int main(void)
                         AD3 = ADC_Read(ADC0_SE2);
                         AD4 = ADC_Read(ADC0_SE9);
                         offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+                        offset += 50;
                         steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+                        SetSteer(steer); //乘数为转弯系数
                         MYOledShow();
                     }
                 }
@@ -140,9 +142,10 @@ int main(void)
                         AD2 = ADC_Read(ADC0_SE3);
                         AD3 = ADC_Read(ADC0_SE2);
                         AD4 = ADC_Read(ADC0_SE9);
-                        offset = (float)100 * (AD3 - AD2) / (AD2 + AD3 + 10);
+                        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+                        offset += 50;
                         steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+                        SetSteer(steer); //乘数为转弯系数
                         GetCount();
                         MYOledShow();
                     }
@@ -157,8 +160,9 @@ int main(void)
                         AD3 = ADC_Read(ADC0_SE2);
                         AD4 = ADC_Read(ADC0_SE9);
                         offset = (float)100 * (AD3 - AD2) / (AD2 + AD3 + 10);
+                        offset -= 50;
                         steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
+                        SetSteer(steer); //乘数为转弯系数
                         GetCount();
                         MYOledShow();
                     }

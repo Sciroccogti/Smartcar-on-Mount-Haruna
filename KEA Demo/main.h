@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
-const int kTopSpeed = 10000; //  速度上限
+const int kTopSpeed = 5000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
 int speed = 0;
@@ -159,7 +159,7 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-  const float StraightSpeed = 12;
+  const float StraightSpeed = 10;
         static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -171,7 +171,7 @@ void Control()
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
-    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset))) * 0.6; //乘数为转弯系数(diff < 0 ? diff * c : 0)
+    steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset))) * 0.7; //乘数为转弯系数(diff < 0 ? diff * c : 0)
     speed = StraightSpeed / (1.0 + 0.004 * turnconvert(fabs(offset)));
     if(offset <= 20 && fabs(diff) >= 2)
     {
