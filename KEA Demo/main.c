@@ -9,6 +9,40 @@ void PIT_Interrupt(uint8 ch)
     AD1 += 100;
 }
 
+void select_speed()
+{
+  int pu = 0, pd = 0, u = 0, d = 0;
+  while(!Pin(F4))   //按下中键表示确定
+  {
+      
+      u = Pin(H4), d = Pin(F5);
+      if(u||d)
+        Pout(I1, HIGH);
+      else
+        Pout(I1, LOW);
+      if(u && !pu)               //上
+      {
+        StraightSpeed++;
+        Pout(I1, HIGH);
+      }
+      else if(d && !pd)          //下
+      {
+        StraightSpeed--;
+        Pout(I1, HIGH);
+      }
+      else
+        Pout(I1, LOW);
+      OLED_Clear(0x00);
+      OLED_Show_String(8, 16, 0, 0, 1, "Select Speed:", 0);
+      sprintf(spring_oled, "%1f", StraightSpeed);
+      OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
+      OLED_Refresh_Gram();
+      pu = u, pd = d;
+  }
+  
+  
+}
+
 int main(void)
 {
     MYInit();
@@ -16,7 +50,7 @@ int main(void)
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
     int lap = 0;           // 干簧管控制的 圈数计数器
     int isStartLine = 0;   // 起跑线检测标识
-
+    select_speed();
     while (1)
     {
         AD1 = ADC_Read(ADC0_SE1);

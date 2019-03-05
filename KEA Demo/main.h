@@ -12,6 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
+float StraightSpeed = 12.0;
 const int kTopSpeed = 10000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
@@ -159,7 +160,7 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-  const float StraightSpeed = 12;
+  
         static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -235,4 +236,11 @@ void MYInit()
     GPIO_Init(G1, GPO, LOW); // B
     //GPIO_Init(G2, GPO, LOW); // G
     //GPIO_Init(G3, GPO, LOW); // R
+    
+    //四向开关
+    GPIO_Init(H4, GPI, LOW); //上
+    GPIO_Init(F5, GPI, LOW); //下
+    GPIO_Init(H3, GPI, LOW); //左
+    GPIO_Init(F7, GPI, LOW); //右
+    GPIO_Init(F4, GPI, LOW); //中
 }
