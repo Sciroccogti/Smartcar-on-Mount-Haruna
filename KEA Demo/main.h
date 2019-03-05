@@ -71,7 +71,7 @@ void MYOledShow()
         OLED_Clear(0x00);
         sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-        sprintf(spring_oled, "V:%5d L-R:%3d", ADV, AD1 - AD4);
+        sprintf(spring_oled, "2:%5d 3:%5d", AD2, AD3);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         sprintf(spring_oled, "S%3d D%3d R%d", speed, steer, isRing);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
@@ -164,7 +164,8 @@ void Control()
     static float diff = 0, prev_offset = 0;
     const float c = 15;
     AD1 = ADC_Read(ADC0_SE1);
-    ADV = ADC_Read(ADC0_SE2);
+    AD2 = ADC_Read(ADC0_SE3);
+    AD3 = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
 
