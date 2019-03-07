@@ -8,7 +8,6 @@ void PIT_Interrupt(uint8 ch)
 {
     AD1 += 100;
 }
-
 int main(void)
 {
     MYInit();
@@ -163,16 +162,17 @@ int main(void)
             }
         }
 */
-        else if (ADV > 150 && AD1 > 600 && AD4 > 600) // 判环
+        else if (ADV > 150 && AD1 > 500 && AD4 > 500) // 判环
         {
             if (isRing == 0) // 第一次
             {
                 GPIO_Turn(G1);
-                while (ADV > 150 && AD1 > 600 && AD4 > 600)
+                while (ADV > 150 && AD1 > 500 && AD4 > 500)
                 {
                     Refresh();
                     MYOledShow();
                     Control();
+                    checkstop();
                 }
                 if (AD2 > AD3) // 判右环
                 {
@@ -187,16 +187,27 @@ int main(void)
             else if (isRing == 1 || isRing == -1)
             {
                 GPIO_Turn(G2);
-                SetSteer(isRing * 100);
-                SetMotor_d(8);
-                Soft_Delay_ms(500);
+                for(int i = 0;i < 60000;i++)
+                {
+                  Refresh();
+                  Control();
+                }
+
+                  SetSteer(isRing * 110);
+                
+                for(int i = 0;i < 100000;i++)
+                {
+                  Refresh();
+                  SetMotor_d(6);
+                }
                 while (ADV > 150 || AD2 > 800 || AD3 > 800)
                 {
                     Refresh();
                     AD1 = AD2;
                     AD4 = AD3;
-                    Control();
+                    Control(1);
                     MYOledShow();
+                    checkstop();
                 }
 
                 isRing *= 2;
@@ -210,6 +221,7 @@ int main(void)
                     Refresh();
                     Control();
                     MYOledShow();
+                    checkstop();
                 }
                 isRing = 0;
             }

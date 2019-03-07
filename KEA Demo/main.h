@@ -124,7 +124,7 @@ void UART_Interrupt(uint8 ch)
 void SetMotor_d(float s)
 {
     const float apower = 1200;
-    const float dpower = 3000;
+    const float dpower = 5000;
     //OLED_Clear(0x00);
     //sprintf(spring_oled, "%3d", count);
     //    OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
@@ -159,7 +159,7 @@ void SetMotor_d(float s)
 // 通用指数控制
 void Control()
 {
-    const float StraightSpeed = 9.5;
+    const float StraightSpeed = 12, cornerspeed = 8;
     static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -248,4 +248,20 @@ void MYInit()
     {
         kTopSpeed = 5000;
     }
+}
+
+void checkstop()
+{
+  if (AD1 + AD4 <= 12) // 出赛道自动停车，赛时需要移除  15
+        {
+            Soft_Delay_ms(5);
+            if (AD1 + AD4 <= 10)
+            {
+                Soft_Delay_ms(5);
+                if (AD1 + AD4 <= 10)
+                {
+                    SetMotor_d(0);
+                }
+            }
+        }
 }
