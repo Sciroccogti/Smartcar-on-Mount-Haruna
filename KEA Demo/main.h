@@ -15,9 +15,8 @@ float pre_offset = 0, offset = 0;
 int kTopSpeed = 5000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1; //  圈数（资格赛）
-int speed = 0;
-int steer = 0;
-int isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
+int speed = 0, steer = 0, isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
+int flag = 1; // 为0时阻止中断中的Control
 
 // 舵机打角设定，0为打直，绝对值最大160，左负右正
 void SetSteer(float dir)
@@ -46,6 +45,8 @@ void Refresh()
     AD4 = ADC_Read(ADC0_SE9);
     ADV = ADC_Read(ADC0_SE10);
 }
+
+void PIT_Interrupt(uint8 ch);
 
 // 电机电压设定，支持直接设置负数
 void SetMotor(int s)
@@ -97,15 +98,14 @@ double turnconvert(double x) //offset与舵机转向的转换函数
 *
 ************************************************************************************************/
 
-void UART_Interrupt()
+void UART_Interrupt(uint8 ch)
 {
     uint8 data_get;
     UART_Getchar(uart2, &data_get);
     data_getstring[0] = data_get;
     if (data_getstring[0] == 's') //蓝牙发送s人工停止车模运行
     {
-        flag_stop = 1;
-        flag_run = 0;
+        GPIO_Turn(G1);
     }
     UART_Putstr(uart2, data_getstring);
 }
@@ -210,39 +210,41 @@ void MYInit()
     GPIO_Init(I1, GPO, LOW);
 
     //LED
-    GPIO_Init(G1, GPO, LOW); // B
-    GPIO_Init(G2, GPO, LOW); // G
-    GPIO_Init(G3, GPO, LOW); // R
+    GPIO_Init(G1, GPO, HIGH); // B
+    GPIO_Init(G2, GPO, HIGH); // G
+    GPIO_Init(G3, GPO, HIGH); // R
 
-    GPIO_Turn(G1);
-    GPIO_Turn(G2);
-    GPIO_Turn(G3);
-    
     //SW
     GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
     GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
     GPIO_Init(H5, GPI, 1); // SW3，控制低速
     GPIO_Init(H2, GPI, 1); // SW4，控制全速
-    
+
     //UART串口(蓝牙)
-    UART_Init(uart2, 9600, RXTX_B0B1);
-    UART_SetCallback(UART_Interrupt);
-    NVIC_SetPriority(UART2_IRQn, 0x02); //如果我们不对优先级进行配置的话，则默认相应中断源的向量号越低其优先级越高
-    UART_RX_IRQ_Disable(uart2);
+    // UART_Init(uart2, 9600, RXTX_B0B1);
+    // UART_SetCallback(UART_Interrupt);
+    // NVIC_SetPriority(UART2_IRQn, 0x02); //如果我们不对优先级进行配置的话，则默认相应中断源的向量号越低其优先级越高
+    // UART_RX_IRQ_Disable(uart2);
+
+    //PIT定时器
+    PIT_Init1(pit0, 5000); //单位us,0.1ms
+    PIT_SetCallback(PIT_Interrupt);
+    Disable_Interrupt(INT_PIT_CH0);
+    Enable_Interrupt(INT_PIT_CH0);
 }
 
-void checkstop()
+void ChecktoStop()
 {
-  if (AD1 + AD4 <= 12) // 出赛道自动停车，赛时需要移除  15
+    if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除  
+    {
+        Refresh();
+        if (AD1 + AD4 <= 10)
         {
-            Soft_Delay_ms(5);
+            Refresh();
             if (AD1 + AD4 <= 10)
             {
-                Soft_Delay_ms(5);
-                if (AD1 + AD4 <= 10)
-                {
-                    SetMotor_d(0);
-                }
+                SetMotor_d(0);
             }
         }
+    }
 }

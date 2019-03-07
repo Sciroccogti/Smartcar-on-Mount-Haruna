@@ -84,7 +84,7 @@ int main(void)
     FTM_PWM_Duty(ftm0, ftm_ch0, 700);
   }
 }
-
+/*
  // 搬来代码做做笔记
 void PID()
 {
@@ -163,3 +163,4 @@ void PID()
     SetMotor((int)(motor_out + motor_target * 5.4));
   }
 }
+*/
