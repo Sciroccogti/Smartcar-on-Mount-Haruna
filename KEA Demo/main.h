@@ -97,29 +97,18 @@ double turnconvert(double x) //offset与舵机转向的转换函数
 *
 ************************************************************************************************/
 
-/*
-void UART_Interrupt(uint8 ch)
+void UART_Interrupt()
 {
-  uint8 data_get;
-  switch(ch)
-  {
-    case 0:
-      UART_Getchar(uart0, &data_get);
-      data_getstring[0] = data_get;
-      if(data_getstring[0]=='s')//蓝牙发送s人工停止车模运行
-      {
+    uint8 data_get;
+    UART_Getchar(uart2, &data_get);
+    data_getstring[0] = data_get;
+    if (data_getstring[0] == 's') //蓝牙发送s人工停止车模运行
+    {
         flag_stop = 1;
         flag_run = 0;
-      }
-      //UART_Putstr(uart0, data_getstring);
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
-  }
+    }
+    UART_Putstr(uart2, data_getstring);
 }
-*/
 
 void SetMotor_d(float s)
 {
@@ -186,13 +175,6 @@ void Control()
     }
     else
         i++;
-    // if (0)
-    // {
-    //     OLED_Clear(0x00);
-    //     sprintf(spring_oled, "Diff:%5d", (int)diff);
-    //     OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
-    //     OLED_Refresh_Gram();
-    // }
 }
 
 void MYInit()
@@ -231,6 +213,7 @@ void MYInit()
     GPIO_Init(G1, GPO, LOW); // B
     GPIO_Init(G2, GPO, LOW); // G
     GPIO_Init(G3, GPO, LOW); // R
+
     GPIO_Turn(G1);
     GPIO_Turn(G2);
     GPIO_Turn(G3);
@@ -241,13 +224,11 @@ void MYInit()
     GPIO_Init(H5, GPI, 1); // SW3，控制低速
     GPIO_Init(H2, GPI, 1); // SW4，控制全速
     
-    if(Pin(H5))
-    {
-        kTopSpeed = 2000;
-    }else if(Pin(H2))
-    {
-        kTopSpeed = 5000;
-    }
+    //UART串口(蓝牙)
+    UART_Init(uart2, 9600, RXTX_B0B1);
+    UART_SetCallback(UART_Interrupt);
+    NVIC_SetPriority(UART2_IRQn, 0x02); //如果我们不对优先级进行配置的话，则默认相应中断源的向量号越低其优先级越高
+    UART_RX_IRQ_Disable(uart2);
 }
 
 void checkstop()

@@ -6,17 +6,26 @@
 
 void PIT_Interrupt(uint8 ch)
 {
-    AD1 += 100;
+    GPIO_Turn(G2);
+    GPIO_Turn(G3);
+}
+
+double turnconvert(double x) //offset与舵机转向的转换函数
+{
+    const double a = 1.14828e-4, b = 6, c = 9.77256e-11; //b = 5.15858
+    return exp(a * x * x + c * x + b) - exp(b);
 }
 int main(void)
 {
     MYInit();
     int lap = 0;           // 干簧管控制的 圈数计数器
     int isStartLine = 0;   // 起跑线检测标识
-
+    UART_RX_IRQ_Enable(uart0);// 蓝牙中断
+    
     while (1)
     {
         Refresh();
+
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -46,8 +55,8 @@ int main(void)
                 break;
             }
         }
-
-        if (AD1 + AD4 <= 12) // 出赛道自动停车，赛时需要移除  15
+      
+        if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
         {
             Soft_Delay_ms(5);
             if (AD1 + AD4 <= 10)
@@ -55,119 +64,18 @@ int main(void)
                 Soft_Delay_ms(5);
                 if (AD1 + AD4 <= 10)
                 {
-                    SetMotor_d(0);
+                    SetMotor(0);
+                    GetSpeed();
+                    MYOledShow();
                 }
             }
         }
-        /*
-        else if (AD2 > 500 && AD3 > 500) // 判环
-        {
-            static int dir = 0;
-            SetMotor_d(5);
-            if (AD2 > AD3 + 300)
-            {
-                if (isRing == 0) // 判右环
-                {
-                    isRing = 1;
-                    while (AD2 > AD3 && AD3 > 400)
-                    {
-                        AD1 = ADC_Read(ADC0_SE1);
-                        AD2 = ADC_Read(ADC0_SE3);
-                        AD3 = ADC_Read(ADC0_SE2);
-                        AD4 = ADC_Read(ADC0_SE9);
-                        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-                        steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(-(offset > 0 ? 1 : -1) * turnconvert(fabs(offset))); //乘数为转弯系数
-                        GetCount();
-                        MYOledShow();
-                    }
-                }
-                if (isRing == -2) // 出左环
-                {
-                    isRing = 0;
-                    while (AD2 > 500 && AD3 > 500)
-                    {
-                        Control();
-                        MYOledShow();
-                    }
-                }
-            }
 
-            else if (AD3 > AD2 + 300)
-            {
-                if (isRing == 2) // 出右环
-                {
-                    isRing = 0;
-                    while (AD2 > 500 && AD3 > 500)
-                    {
-                        Control();
-                        MYOledShow();
-                    }
-                }
-                else if (isRing == 0) // 判左环
-                {
-                    isRing = -1;
-                    while (AD2 > AD3 && AD3 > 400)
-                    {
-                        SetMotor_d(5);
-                        AD1 = ADC_Read(ADC0_SE1);
-                        AD2 = ADC_Read(ADC0_SE3);
-                        AD3 = ADC_Read(ADC0_SE2);
-                        AD4 = ADC_Read(ADC0_SE9);
-                        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-                        offset += 50;
-                        steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(steer); //乘数为转弯系数
-                        MYOledShow();
-                    }
-                }
-            }
-
-            else
-            {
-                if (isRing == 1) // 进右环
-                {
-                    isRing = 2;
-                    while (AD1 > AD4 && (AD2 < 1000 || AD3 < 1000))
-                    {
-                        AD1 = ADC_Read(ADC0_SE1);
-                        AD2 = ADC_Read(ADC0_SE3);
-                        AD3 = ADC_Read(ADC0_SE2);
-                        AD4 = ADC_Read(ADC0_SE9);
-                        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
-                        offset += 50;
-                        steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(steer); //乘数为转弯系数
-                        GetCount();
-                        MYOledShow();
-                    }
-                }
-                else if (isRing == -1) // 进左环
-                {
-                    isRing = -2;
-                    while (AD1 < AD4 && (AD2 < 1000 || AD3 < 1000))
-                    {
-                        AD1 = ADC_Read(ADC0_SE1);
-                        AD2 = ADC_Read(ADC0_SE3);
-                        AD3 = ADC_Read(ADC0_SE2);
-                        AD4 = ADC_Read(ADC0_SE9);
-                        offset = (float)100 * (AD3 - AD2) / (AD2 + AD3 + 10);
-                        offset -= 50;
-                        steer = -(offset > 0 ? 1 : -1) * turnconvert(fabs(offset));
-                        SetSteer(steer); //乘数为转弯系数
-                        GetCount();
-                        MYOledShow();
-                    }
-                }
-            }
-        }
-*/
-        else if (ADV > 150 && AD1 > 500 && AD4 > 500) // 判环
+        else if (ADV > 150 && AD1 > 500 && AD4 > 400) // 判环
         {
             if (isRing == 0) // 第一次
             {
-                GPIO_Turn(G1);
-                while (ADV > 150 && AD1 > 500 && AD4 > 500)
+                while (ADV > 150 && AD1 > 500 && AD4 > 400)
                 {
                     Refresh();
                     MYOledShow();
@@ -208,6 +116,7 @@ int main(void)
                     Control(1);
                     MYOledShow();
                     checkstop();
+
                 }
 
                 isRing *= 2;
