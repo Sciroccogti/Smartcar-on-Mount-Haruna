@@ -12,19 +12,12 @@ void PIT_Interrupt(uint8 ch)
 int main(void)
 {
     MYInit();
-    GPIO_Init(C5, GPI, 1); // SW1，控制起跑线检测模块
-    GPIO_Init(H7, GPI, 1); // SW2，控制OLED显示函数
     int lap = 0;           // 干簧管控制的 圈数计数器
     int isStartLine = 0;   // 起跑线检测标识
 
     while (1)
     {
-        AD1 = ADC_Read(ADC0_SE1);
-        AD2 = ADC_Read(ADC0_SE3);
-        AD3 = ADC_Read(ADC0_SE2);
-        AD4 = ADC_Read(ADC0_SE9);
-        //GetCount();
-        MYOledShow();
+        Refresh();
         if (Pin(C5)) // 使用拨码器控制起跑线检测模块，SW1为真时启用
         {
             for (isStartLine = 0; isStartLine < 3; isStartLine++) // 起跑线检测模块
@@ -67,10 +60,10 @@ int main(void)
                 }
             }
         }
-
+        /*
         else if (AD2 > 500 && AD3 > 500) // 判环
         {
-            static dir = 0;
+            static int dir = 0;
             SetMotor_d(5);
             if (AD2 > AD3 + 300)
             {
@@ -169,10 +162,63 @@ int main(void)
                 }
             }
         }
+*/
+        else if (ADV > 150 && AD1 > 600 && AD4 > 600) // 判环
+        {
+            if (isRing == 0) // 第一次
+            {
+                GPIO_Turn(G1);
+                while (ADV > 150 && AD1 > 600 && AD4 > 600)
+                {
+                    Refresh();
+                    MYOledShow();
+                    Control();
+                }
+                if (AD2 > AD3) // 判右环
+                {
+                    isRing = 1;
+                }
+                else // 判左环
+                {
+                    isRing = -1;
+                }
+                GPIO_Turn(G1);
+            }
+            else if (isRing == 1 || isRing == -1)
+            {
+                GPIO_Turn(G2);
+                SetSteer(isRing * 100);
+                SetMotor_d(8);
+                Soft_Delay_ms(500);
+                while (ADV > 150 || AD2 > 800 || AD3 > 800)
+                {
+                    Refresh();
+                    AD1 = AD2;
+                    AD4 = AD3;
+                    Control();
+                    MYOledShow();
+                }
+
+                isRing *= 2;
+                GPIO_Turn(G2);
+            }
+            else if (isRing == 2 || isRing == -2)
+            {
+                GPIO_Turn(G3);
+                while (ADV > 150 && AD1 > 500 && AD4 > 500)
+                {
+                    Refresh();
+                    Control();
+                    MYOledShow();
+                }
+                isRing = 0;
+            }
+        }
 
         else
         {
             Control();
         }
+        MYOledShow();
     }
 }
