@@ -12,7 +12,7 @@ uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 float pre_offset = 0, offset = 0;
-int kTopSpeed = 5000; //  速度上限
+int kTopSpeed = 500; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1;              //  圈数（资格赛）
 int speed = 0, steer = 0, isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
@@ -38,6 +38,7 @@ void Refresh()
     count = FTM_Pulse_Get(ftm1); //编码器数值读取
     if (Pin(H6))
         count = -count;
+    //count *= 3;
     FTM_Count_Clean(ftm1); //编码器数值清零
     AD1 = ADC_Read(ADC0_SE1);
     AD2 = ADC_Read(ADC0_SE3);
@@ -76,7 +77,7 @@ void MYOledShow()
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
         sprintf(spring_oled, "2:%5d 3:%5d", AD2, AD3);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
-        sprintf(spring_oled, "V:%5d R%d", ADV, isRing);
+        sprintf(spring_oled, "V:%5d R%d F%d", ADV, isRing, flag);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
         sprintf(spring_oled, "Count:%3d", count);
         OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
@@ -120,6 +121,7 @@ void SetMotor_d(float s)
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
         SetMotor(-0.2 * dpower * fade);
+        //SetMotor(0);
     }
     else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
     {
@@ -145,7 +147,15 @@ void Control()
     static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
-    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+
+    if (flag == -2)
+    {
+        offset = (float)100 * (AD2 - AD3) / (AD2 + AD3 + 10);
+    }
+    else
+    {
+        offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+    }
 
     //当offset导数小于某个正值的时候，转向幅度变小
 
@@ -160,6 +170,11 @@ void Control()
     if (flag == -1)
     {
         SetMotor_d(speed);
+        //SetMotor_d(6);
+    }
+    else if (flag == -2)
+    {
+        SetMotor_d(2);
     }
     else
     {
@@ -226,7 +241,7 @@ void MYInit()
     // UART_RX_IRQ_Disable(uart2);
 
     //PIT定时器
-    PIT_Init1(pit0, 2000); //单位us,0.1ms
+    PIT_Init1(pit0, 700); //单位us,0.1ms
     PIT_SetCallback(PIT_Interrupt);
     Disable_Interrupt(INT_PIT_CH0);
     Enable_Interrupt(INT_PIT_CH0);
@@ -247,5 +262,10 @@ void ChecktoStop()
                 flag = 0;
             }
         }
+    }
+    else
+    {
+        if (!flag)
+            flag = -1;
     }
 }
