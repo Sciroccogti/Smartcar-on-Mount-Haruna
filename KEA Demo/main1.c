@@ -37,6 +37,8 @@ void OLED_Myshow(void)
   OLED_Clear(0x00);
   sprintf(spring_oled, "LL:%d", 1234); //
   OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
+          sprintf(spring_oled, "Count:%3d", count);
+        OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
   OLED_Refresh_Gram();
 }
 
@@ -82,6 +84,7 @@ int main(void)
     //GPIO_Turn(I1);
     //Control();
     FTM_PWM_Duty(ftm0, ftm_ch0, 700);
+    OLED_Myshow();
   }
 }
 /*

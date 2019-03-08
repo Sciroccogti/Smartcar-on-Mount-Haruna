@@ -14,9 +14,9 @@ int count = 0;
 float pre_offset = 0, offset = 0;
 int kTopSpeed = 5000; //  速度上限
 const float kMidSteer = 520.0;
-const int kTotalLap = 1; //  圈数（资格赛）
+const int kTotalLap = 1;              //  圈数（资格赛）
 int speed = 0, steer = 0, isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
-int flag = 1; // 为0时阻止中断中的Control
+int flag = -1;                        // 速度控制标志，-1为自动速度
 
 // 舵机打角设定，0为打直，绝对值最大160，左负右正
 void SetSteer(float dir)
@@ -114,12 +114,9 @@ void SetMotor_d(float s)
 {
     const float apower = 1200;
     const float dpower = 5000;
-    //OLED_Clear(0x00);
-    //sprintf(spring_oled, "%3d", count);
-    //    OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
-    //OLED_Refresh_Gram();
+
     float fade = fabs(s - count) < 10 ? fabs(s - count) * 0.1 : 1.0;
-    //Soft_Delay_ms(6);
+
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
         SetMotor(-0.2 * dpower * fade);
@@ -130,14 +127,10 @@ void SetMotor_d(float s)
     }
     else if (count > 2 && s == 0) //s==0即停车，反转电机
     {
-        //while(count > 2)
         {
-            //Soft_Delay_ms(2);
             SetMotor(-dpower);
-            //GetCount();
         }
-        Soft_Delay_ms(2);
-        //SetMotor(0);
+        //Soft_Delay_ms(2);
     }
     else if (count <= 1 && s == 0) //停得差不多了，不反转电机
     {
@@ -145,7 +138,7 @@ void SetMotor_d(float s)
     }
 }
 
-// 通用指数控制
+// 通用指数控制，flag控制速度，-1为默认，-2为关闭
 void Control()
 {
     const float StraightSpeed = 12, cornerspeed = 8;
@@ -164,8 +157,14 @@ void Control()
         speed = speed / 1.5;
     }
     SetSteer(steer);
-
-    SetMotor_d(speed);
+    if (flag == -1)
+    {
+        SetMotor_d(speed);
+    }
+    else
+    {
+        SetMotor_d(flag);
+    }
 
     if (i % 20 == 0)
     {
@@ -227,7 +226,7 @@ void MYInit()
     // UART_RX_IRQ_Disable(uart2);
 
     //PIT定时器
-    PIT_Init1(pit0, 5000); //单位us,0.1ms
+    PIT_Init1(pit0, 2000); //单位us,0.1ms
     PIT_SetCallback(PIT_Interrupt);
     Disable_Interrupt(INT_PIT_CH0);
     Enable_Interrupt(INT_PIT_CH0);
@@ -235,15 +234,17 @@ void MYInit()
 
 void ChecktoStop()
 {
-    if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除  
+    if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
     {
-        Refresh();
+        AD1 = ADC_Read(ADC0_SE1);
+        AD4 = ADC_Read(ADC0_SE9);
         if (AD1 + AD4 <= 10)
         {
-            Refresh();
+            AD1 = ADC_Read(ADC0_SE1);
+            AD4 = ADC_Read(ADC0_SE9);
             if (AD1 + AD4 <= 10)
             {
-                SetMotor_d(0);
+                flag = 0;
             }
         }
     }
