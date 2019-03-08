@@ -143,7 +143,7 @@ void SetMotor_d(float s)
 // 通用指数控制，flag控制速度，-1为默认，-2为关闭
 void Control()
 {
-    const float StraightSpeed = 10, cornerspeed = 8;
+    const float StraightSpeed = 9, cornerspeed = 8;
     static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -249,7 +249,7 @@ void MYInit()
 
 void ChecktoStop()
 {
-    if (AD1 + AD4 <= 20) // 出赛道自动停车，赛时需要移除
+    if (AD1 + AD4 <= 20 || AD1 + AD4 >=4000) // 出赛道自动停车，赛时需要移除
     {
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
