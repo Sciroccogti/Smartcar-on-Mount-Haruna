@@ -79,7 +79,7 @@ void MYOledShow()
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         sprintf(spring_oled, "V:%5d R%d F%d", ADV, isRing, flag);
         OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
-        sprintf(spring_oled, "Count:%3d", count);
+        sprintf(spring_oled, "C:%3d S:%d isR=%d", count, speed, Pin(H2));
         OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);
         OLED_Refresh_Gram();
     }
@@ -143,7 +143,7 @@ void SetMotor_d(float s)
 // 通用指数控制，flag控制速度，-1为默认，-2为关闭
 void Control()
 {
-    const float StraightSpeed = 12, cornerspeed = 8;
+    const float StraightSpeed = 10, cornerspeed = 8;
     static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -174,7 +174,7 @@ void Control()
     }
     else if (flag == -2)
     {
-        SetMotor_d(2);
+        SetMotor_d(5);
     }
     else
     {
@@ -249,15 +249,15 @@ void MYInit()
 
 void ChecktoStop()
 {
-    if (AD1 + AD4 <= 15) // 出赛道自动停车，赛时需要移除
+    if (AD1 + AD4 <= 20) // 出赛道自动停车，赛时需要移除
     {
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
-        if (AD1 + AD4 <= 10)
+        if (AD1 + AD4 <= 20)
         {
             AD1 = ADC_Read(ADC0_SE1);
             AD4 = ADC_Read(ADC0_SE9);
-            if (AD1 + AD4 <= 10)
+            if (AD1 + AD4 <= 20)
             {
                 flag = 0;
             }

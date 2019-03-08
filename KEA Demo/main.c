@@ -20,9 +20,9 @@ int main(void)
     //UART_RX_IRQ_Enable(uart0);// 蓝牙中断
     while (1)
     {
-        if (AD1 > 600 && AD4 > 600 && (AD2 > 500 || AD3 > 500) && ADV > 50 && ADV < 800)
-        {       
-            flag = 2;
+        if (AD1 > 800 && AD4 > 800 && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+        {
+            flag = 5;
             if (isRing == 0)
             {
                 Pout(G1, 0);
@@ -39,19 +39,20 @@ int main(void)
                 // }
                 // flag = 4;
                 isRing = 1;
-                //while (AD1 > 600 && AD4 > 600 && (AD2 > 500 || AD3 > 500) && ADV > 100 && ADV < 800)
-                while(AD2-AD3>200 || AD3-AD2>200)
+                while (AD1 > 800 && AD4 > 800 && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+                //while(AD2-AD3>200 || AD3-AD2>200)
                 {
                     MYOledShow();
                 }
             }
-            else if (isRing == 1 ) // 进环
+            else if (isRing == 1) // 进环
             {
                 Pout(G1, 1);
                 Pout(G2, 0);
                 Pout(G3, 1);
                 
-                if (AD2 + AD1 < AD3 + AD4) // 判右环
+                if(Pin(H2))
+                //if (AD2 + AD1 < AD3 + AD4) // 判右环
                 {
                     isRing = 1;
                 }
@@ -60,15 +61,15 @@ int main(void)
                     isRing = -1;
                 }
                 Disable_Interrupt(INT_PIT_CH0);
-                SetSteer(isRing * 100);
-                Soft_Delay_ms(500);
+                SetSteer(isRing * 90);
+                Soft_Delay_ms(1000);
                 Enable_Interrupt(INT_PIT_CH0);
                 flag = -2;
                 while (AD2 < 600 || AD3 < 600)
                 {
                     MYOledShow();
                 }
-                flag = 2;
+                flag = 5;
                 isRing *= 2;
             }
             else
@@ -76,8 +77,8 @@ int main(void)
                 Pout(G1, 1);
                 Pout(G2, 1);
                 Pout(G3, 0);
-                //while (AD1 > 600 && AD4 > 600 && (AD2 > 500 || AD3 > 500) && ADV > 100 && ADV < 800)
-                while(AD2-AD3>200 || AD3-AD2>200)
+                while (AD1 > 800 && AD4 > 800 && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+                //while(AD2-AD3>200 || AD3-AD2>200)
                 {
                     MYOledShow();
                 }
