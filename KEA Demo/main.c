@@ -52,7 +52,10 @@ int main(void)
                 distance = 0;
                 for(int i = 0;distance < 10000;i++)
                 {
-                  SetSteer(isRing * 140);
+                  if(Pin(H2))
+                    SetSteer(isRing * 130);
+                  else
+                    SetSteer(isRing * 140);
                   Refresh();
                   SetMotor_d(8);
                   Soft_Delay_us(700);
@@ -68,11 +71,11 @@ int main(void)
             }
             else
             {
-                Pout(G1, 1);
+                Pout(G1, 0);
                 Pout(G2, 1);
                 Pout(G3, 0);
                 flag = -1;
-                while (ADV <= 800)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+                while (ADV <= 600)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
                 //while(AD2-AD3>200 || AD3-AD2>200)
                 {
                     //MYOledShow();
@@ -84,7 +87,7 @@ int main(void)
                 isRing = 0;
                 distance = 0;
                 
-                while(distance <= 7000);
+                while(distance <= 8000);
                 
                 distance = 0;
                 Pout(G1, 1);
