@@ -20,36 +20,14 @@ int main(void)
     //UART_RX_IRQ_Enable(uart0);// 蓝牙中断
     while (1)
     {
-        if (AD1 + AD4 >= 1200&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+        if (AD1 + AD4 >= 1195&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
         {
             flag = 5;
-            if (isRing == 0)
+            
+            if (isRing == 0) // 进环
             {
                 Pout(G1, 0);
                 Pout(G2, 1);
-                Pout(G3, 1);
-                // Disable_Interrupt(INT_PIT_CH0);
-                // SetSteer(isRing * 110);
-                // Soft_Delay_ms(500);
-                // Enable_Interrupt(INT_PIT_CH0);
-                // flag = -2;
-                // while (AD2 < 600 || AD3 < 600)
-                // {
-                //     MYOledShow();
-                // }
-                // flag = 4;
-                isRing = 1;
-                //while(AD1 + AD4 >= 2000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
-                //while(AD2-AD3>200 || AD3-AD2>200)
-                {
-                    //MYOledShow();
-                  
-                }
-            }
-            else if (isRing == 1) // 进环
-            {
-                Pout(G1, 1);
-                Pout(G2, 0);
                 Pout(G3, 1);
                 
                 if(Pin(H2))
@@ -61,14 +39,23 @@ int main(void)
                 {
                     isRing = -1;
                 }
+                
+                //Soft_Delay_ms(500);
+                distance = 0;
+                
+                while(distance <= 4300);
+                
+                Pout(G1, 1);
+                Pout(G2, 0);
+                Pout(G3, 1);
                 Disable_Interrupt(INT_PIT_CH0);
-                Soft_Delay_ms(450);
-                for(int i = 0;i < 1500;i++)
+                distance = 0;
+                for(int i = 0;distance < 10000;i++)
                 {
                   SetSteer(isRing * 140);
                   Refresh();
                   SetMotor_d(8);
-                  Soft_Delay_ms(1);
+                  Soft_Delay_us(700);
                   //MYOledShow();
                 }
                 Enable_Interrupt(INT_PIT_CH0);
@@ -88,14 +75,21 @@ int main(void)
                 while (ADV <= 800)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
                 //while(AD2-AD3>200 || AD3-AD2>200)
                 {
-                    MYOledShow();
+                    //MYOledShow();
                 }
                 Pout(G1, 1);
                 Pout(G2, 0);
                 Pout(G3, 0);
                 flag = -1;
                 isRing = 0;
-                Soft_Delay_ms(800);
+                distance = 0;
+                
+                while(distance <= 7000);
+                
+                distance = 0;
+                Pout(G1, 1);
+                Pout(G2, 1);
+                Pout(G3, 1);
             }
         }
         else

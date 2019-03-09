@@ -11,6 +11,7 @@ char spring_oled[20];
 uint8 data_getstring[2];
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
+int distance = 0;
 float pre_offset = 0, offset = 0;
 int kTopSpeed = 500; //  速度上限
 const float kMidSteer = 520.0;
@@ -39,6 +40,8 @@ void Refresh()
     if (Pin(H6))
         count = -count;
     //count *= 3;
+    if(distance<=32767)
+      distance += count;
     FTM_Count_Clean(ftm1); //编码器数值清零
     AD1 = ADC_Read(ADC0_SE1);
     AD2 = ADC_Read(ADC0_SE3);
@@ -113,7 +116,7 @@ void UART_Interrupt(uint8 ch)
 
 void SetMotor_d(float s)
 {
-    const float apower = 1200;
+    const float apower = 1500;
     const float dpower = 5000;
 
     float fade = fabs(s - count) < 10 ? fabs(s - count) * 0.1 : 1.0;
@@ -160,7 +163,7 @@ void Control()
     //当offset导数小于某个正值的时候，转向幅度变小
 
     steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset))) * 0.7; //乘数为转弯系数(diff < 0 ? diff * c : 0)
-    speed = StraightSpeed / (1.0 + 0.004 * turnconvert(fabs(offset)));
+    speed = StraightSpeed / (1.0 + 0.003 * turnconvert(fabs(offset)));
     if (offset <= 20 && fabs(diff) >= 2)
     {
         steer -= diff * c;
@@ -174,7 +177,7 @@ void Control()
     }
     else if (flag == -2)
     {
-        SetMotor_d(5);
+        SetMotor_d(6);
     }
     else
     {
