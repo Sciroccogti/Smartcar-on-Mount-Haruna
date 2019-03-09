@@ -20,7 +20,7 @@ int main(void)
     //UART_RX_IRQ_Enable(uart0);// 蓝牙中断
     while (1)
     {
-        if (AD1 + AD4 >= 2000&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+        if (AD1 + AD4 >= 1200&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
         {
             flag = 5;
             if (isRing == 0)
@@ -62,13 +62,14 @@ int main(void)
                     isRing = -1;
                 }
                 Disable_Interrupt(INT_PIT_CH0);
-                Soft_Delay_ms(550);
-                for(int i = 0;i < 1900;i++)
+                Soft_Delay_ms(450);
+                for(int i = 0;i < 1500;i++)
                 {
-                  SetSteer(isRing * 150);
+                  SetSteer(isRing * 140);
                   Refresh();
                   SetMotor_d(8);
                   Soft_Delay_ms(1);
+                  //MYOledShow();
                 }
                 Enable_Interrupt(INT_PIT_CH0);
                 //flag = -2;
@@ -76,7 +77,6 @@ int main(void)
                 //{
                   //  MYOledShow();
                 //}
-                flag = 5;
                 isRing *= 2;
             }
             else
@@ -84,15 +84,18 @@ int main(void)
                 Pout(G1, 1);
                 Pout(G2, 1);
                 Pout(G3, 0);
-                flag = 5;
-                while (AD1 + AD4 <= 2000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+                flag = -1;
+                while (ADV <= 800)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
                 //while(AD2-AD3>200 || AD3-AD2>200)
                 {
                     MYOledShow();
                 }
-                flag = 5;
+                Pout(G1, 1);
+                Pout(G2, 0);
+                Pout(G3, 0);
+                flag = -1;
                 isRing = 0;
-                Soft_Delay_ms(2000);
+                Soft_Delay_ms(800);
             }
         }
         else
@@ -101,6 +104,7 @@ int main(void)
             Pout(G2, 1);
             Pout(G3, 1);
             flag = -1;
+            //isRing = 0;
         }
 
         /*
