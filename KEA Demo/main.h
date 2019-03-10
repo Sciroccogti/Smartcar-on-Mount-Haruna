@@ -13,7 +13,7 @@ uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0;
 int count = 0;
 int distance = 0;
 float pre_offset = 0, offset = 0;
-int kTopSpeed = 500; //  速度上限
+int kTopSpeed = 3000; //  速度上限
 const float kMidSteer = 520.0;
 const int kTotalLap = 1;              //  圈数（资格赛）
 int speed = 0, steer = 0, isRing = 0; // 1：第一次垂直电感到达阈值，2：第二次，3：第三次
@@ -116,7 +116,7 @@ void UART_Interrupt(uint8 ch)
 
 void SetMotor_d(float s)
 {
-    const float apower = 1500;
+    const float apower = 1000;
     const float dpower = 5000;
 
     float fade = fabs(s - count) < 10 ? fabs(s - count) * 0.1 : 1.0;
@@ -146,7 +146,7 @@ void SetMotor_d(float s)
 // 通用指数控制，flag控制速度，-1为默认，-2为关闭
 void Control()
 {
-    const float StraightSpeed = 9, cornerspeed = 8;
+    const float StraightSpeed = 12, cornerspeed = 8;
     static int i = 0;
     static float diff = 0, prev_offset = 0;
     const float c = 15;
@@ -163,7 +163,7 @@ void Control()
     //当offset导数小于某个正值的时候，转向幅度变小
 
     steer = -(offset > 0 ? 1.0 : -1.0) * (turnconvert(fabs(offset))) * 0.7; //乘数为转弯系数(diff < 0 ? diff * c : 0)
-    speed = StraightSpeed / (1.0 + 0.003 * turnconvert(fabs(offset)));
+    speed = StraightSpeed / (1.0 + 0.0038 * turnconvert(fabs(offset)));
     if (offset <= 20 && fabs(diff) >= 2)
     {
         steer -= diff * c;

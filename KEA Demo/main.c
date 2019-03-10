@@ -8,7 +8,7 @@ void PIT_Interrupt(uint8 ch)
 {
     //GPIO_Turn(G1);
     Refresh();
-    ChecktoStop();
+    //ChecktoStop();
     Control();
 }
 
@@ -20,7 +20,7 @@ int main(void)
     //UART_RX_IRQ_Enable(uart0);// 蓝牙中断
     while (1)
     {
-        if (AD1 + AD4 >= 1195&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+      if (AD1 + AD4 >= 2000&&AD1+AD4<=4000)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
         {
             flag = 5;
             
@@ -43,7 +43,7 @@ int main(void)
                 //Soft_Delay_ms(500);
                 distance = 0;
                 
-                while(distance <= 4300);
+                while(distance <= 3300);
                 
                 Pout(G1, 1);
                 Pout(G2, 0);
@@ -57,7 +57,7 @@ int main(void)
                   else
                     SetSteer(isRing * 140);
                   Refresh();
-                  SetMotor_d(8);
+                  SetMotor_d(7);
                   Soft_Delay_us(700);
                   //MYOledShow();
                 }
@@ -75,7 +75,7 @@ int main(void)
                 Pout(G2, 1);
                 Pout(G3, 0);
                 flag = -1;
-                while (ADV <= 600)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
+                while (ADV <= 800)  // && (AD2 > 500 || AD3 > 500) && ADV > 400 && ADV < 800)
                 //while(AD2-AD3>200 || AD3-AD2>200)
                 {
                     //MYOledShow();
