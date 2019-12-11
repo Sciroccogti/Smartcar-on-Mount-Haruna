@@ -15,25 +15,25 @@
 
 extern uint16_t AD1, AD2, AD3, AD4, ADV;
 extern int speed_mode, count;
-extern float speed, steer;
+extern float steer, expected_steer, speed;
 extern const float kStraightSpeed, kCornerSpeed;
 
 // 速度控制环
-float speed_loop(float expected_speed)
+float speed_loop(float target_speed)
 {
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
     float P = 15;
     float I = 3.0;
     float D = 0.5;
-    if (speed > 120)
+    if (count > 6)
     {
-        expected_speed = 110; //暂时人为限速
+        target_speed = 6; //暂时人为限速
     }
     llspeed_error = lspeed_error;
     lspeed_error = speed_error;
-    speed_error = expected_speed - speed;
-    return expected_speed + P * speed_error + D * DSPEED + I * ISPEED;
+    speed_error = target_speed - count;
+    return target_speed + P * speed_error + D * DSPEED + I * ISPEED;
 }
 
 // 转向控制环
@@ -43,36 +43,42 @@ float steer_loop(float P, float D, float I)
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
-    offset = (float)100 * (AD1 - AD4) / (AD1 + AD4 + 10);
+    offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 1);
     return P * offset + D * DSTEER + I * ISTEER;
 }
 
 // 通用指数控制，speedmode控制速度，-1为默认，-2为关闭
 void Control()
 {
-    float Poffset = 0, Ioffset = 0, Doffset = 0, expected_steer = 0, expected_speed = 0;
+    float Poffset = 0, Ioffset = 0, Doffset = 0;
     if (FALSE) // TODO:丢线
     {
     }
-    else if (offset > 10) // 弯道 TODO: 动态判定条件
+    else if (abs((int)offset) > 25) // 弯道 TODO: 动态判定条件
     {
-        Poffset = 0.175;
-        Ioffset = 0;
-        Doffset = 1.95;
-        expected_speed = kStraightSpeed;
+        Poffset = 3;
+        Ioffset = 0.7;
+        Doffset = 0.3;
+        speed = kCornerSpeed;
     }
     else // 直道
     {
-        Poffset = 0.08;
+        Poffset = 0.2;
         Ioffset = 0;
-        Doffset = 1.4;
-        expected_speed = kCornerSpeed;
+        Doffset = 0.1;
+        speed = kStraightSpeed;
     }
     expected_steer = steer_loop(Poffset, Ioffset, Doffset);
-    expected_speed -= offset;
-    expected_speed = expected_speed > 5 ? expected_speed : 5;
+    // speed -= offset / 20;
+    // speed = speed > 5 ? speed : 5;
     SetSteer(expected_steer);
-    SetMotor(speed_loop(expected_speed));
+    if (speed_mode)
+        SetMotor(speed_loop(speed));
+    else
+    {
+        speed = 0;
+        SetMotor(0);
+    }
 }
 
 // 异常自动停车，赛时需要移除

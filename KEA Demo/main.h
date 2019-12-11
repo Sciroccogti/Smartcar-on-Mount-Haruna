@@ -14,14 +14,14 @@
 #include "control.h"
 
 // 调参常改常量
-const int kTopSpeed = 3000;    //  速度上限
+const int kTopSpeed = 200;    //  速度上限
 const int kMidSteer = 520; // 舵机物理中值
-const float kStraightSpeed = 60, kCornerSpeed = 10;
+const float kStraightSpeed = 10, kCornerSpeed = 8;
 // const int kTotalLap = 1;       //  圈数（资格赛）
 
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0; // electromagnet sensor cache
-int count = 0, distance = 0, speed_mode = -1; // 速度控制标志，-1为自动速度
-float speed = 0, steer = 0, offset = 0;
+int distance = 0, speed_mode = -1, count = 0; // 速度控制标志，-1为自动速度
+float steer = 0, offset = 0, speed = 0, expected_steer = 0;
 
 const FTMn encoder_port = ftm1; // 编码器接口
 
@@ -33,7 +33,6 @@ void Refresh()
     count = FTM_Pulse_Get(encoder_port); //编码器数值读取
     if (Pin(H6)) // 电机倒转
         count = -count;
-    //count *= 3;
     if (distance <= 32767)
         distance += count;
     FTM_Count_Clean(ftm1); //编码器数值清零
