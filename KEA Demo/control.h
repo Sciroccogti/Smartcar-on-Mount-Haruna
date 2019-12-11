@@ -26,9 +26,9 @@ float speed_loop(float target_speed)
     float P = 15;
     float I = 3.0;
     float D = 0.5;
-    if (count > 6)
+    if (count > kStraightSpeed)
     {
-        target_speed = 6; //暂时人为限速
+        target_speed = kStraightSpeed; //暂时人为限速
     }
     llspeed_error = lspeed_error;
     lspeed_error = speed_error;
@@ -54,18 +54,18 @@ void Control()
     if (FALSE) // TODO:丢线
     {
     }
-    else if (abs((int)offset) > 25) // 弯道 TODO: 动态判定条件
+    else if (abs((int)offset) > 40) // 弯道 TODO: 动态判定条件
     {
         Poffset = 3;
-        Ioffset = 0.7;
-        Doffset = 0.3;
+        Ioffset = 0;
+        Doffset = 0;
         speed = kCornerSpeed;
     }
     else // 直道
     {
         Poffset = 0.2;
         Ioffset = 0;
-        Doffset = 0.1;
+        Doffset = 0;
         speed = kStraightSpeed;
     }
     expected_steer = steer_loop(Poffset, Ioffset, Doffset);
@@ -84,17 +84,25 @@ void Control()
 // 异常自动停车，赛时需要移除
 void ChecktoStop()
 {
-    if (AD1 + AD4 <= 20 || AD1 + AD4 >= 4000)
+    static int alarm_count = 0;
+    if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
     {
-        GPIO_Set(I1, HIGH); // 蜂鸣器
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
-        if (AD1 + AD4 <= 20)
+        if (AD1 + AD4 <= 10)
         {
             AD1 = ADC_Read(ADC0_SE1);
             AD4 = ADC_Read(ADC0_SE9);
-            if (AD1 + AD4 <= 20)
+            if (AD1 + AD4 <= 10)
             {
+                alarm_count++;
+                if(alarm_count > 2)
+                {
+                    GPIO_Set(I1, HIGH); // 蜂鸣器
+                    alarm_count = 0;
+                } else {
+                    GPIO_Set(I1, LOW);
+                }
                 speed_mode = 0;
             }
         }
@@ -102,8 +110,8 @@ void ChecktoStop()
     else
     {
         GPIO_Set(I1, LOW); // 蜂鸣器
-        if (!speed_mode)
-            speed_mode = -1;
+        // if (!speed_mode)
+        speed_mode = -1;
     }
 }
 

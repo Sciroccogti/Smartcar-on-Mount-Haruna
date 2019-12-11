@@ -8,7 +8,7 @@ void PIT_Interrupt(uint8 ch)
 {
     //GPIO_Turn(G1);
     Refresh();
-    //ChecktoStop();
+    ChecktoStop();
     Control();
 }
 

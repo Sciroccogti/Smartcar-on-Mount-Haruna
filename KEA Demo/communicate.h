@@ -9,7 +9,7 @@
 
 extern uint16_t AD1, AD2, AD3, AD4, ADV;
 extern float offset, speed;
-extern int count;
+extern int count, speed_mode;
 
 // uint8 data_getstring[2]; // bluetooth cache
 char spring_oled[20]; // a line on OLED
@@ -23,7 +23,7 @@ void MYOledShow()
         sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 0);
-        sprintf(spring_oled, "offset:%.2f", offset);
+        sprintf(spring_oled, "offset:%.2f m:%d", offset, speed_mode);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 16);
         // sprintf(spring_oled, "V:%5d R%d F%d", ADV, isRing, speedmode);
