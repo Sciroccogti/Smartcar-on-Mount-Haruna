@@ -43,26 +43,38 @@ float steer_loop(float P, float D, float I)
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
-    offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 1);
+    offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 10);
     return P * offset + D * DSTEER + I * ISTEER;
 }
 
 // 通用指数控制，speedmode控制速度，-1为默认，-2为关闭
 void Control()
 {
+    static int alarm_count = 0;
     float Poffset = 0, Ioffset = 0, Doffset = 0;
     if (FALSE) // TODO:丢线
     {
     }
-    else if (abs((int)offset) > 40) // 弯道 TODO: 动态判定条件
+    else if (abs((int)offset) > 60) // 弯道 TODO: 动态判定条件
     {
+        alarm_count++;
+        if (alarm_count > 2)
+        {
+            GPIO_Set(I1, HIGH); // 蜂鸣器
+            alarm_count = 0;
+        }
+        else
+        {
+            GPIO_Set(I1, LOW);
+        }
         Poffset = 3;
         Ioffset = 0;
-        Doffset = 0;
+        Doffset = 0.05;
         speed = kCornerSpeed;
     }
     else // 直道
     {
+        GPIO_Set(I1, LOW);
         Poffset = 0.2;
         Ioffset = 0;
         Doffset = 0;
@@ -84,7 +96,7 @@ void Control()
 // 异常自动停车，赛时需要移除
 void ChecktoStop()
 {
-    static int alarm_count = 0;
+    // static int alarm_count = 0;
     if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
     {
         AD1 = ADC_Read(ADC0_SE1);
@@ -95,14 +107,6 @@ void ChecktoStop()
             AD4 = ADC_Read(ADC0_SE9);
             if (AD1 + AD4 <= 10)
             {
-                alarm_count++;
-                if(alarm_count > 2)
-                {
-                    GPIO_Set(I1, HIGH); // 蜂鸣器
-                    alarm_count = 0;
-                } else {
-                    GPIO_Set(I1, LOW);
-                }
                 speed_mode = 0;
             }
         }
