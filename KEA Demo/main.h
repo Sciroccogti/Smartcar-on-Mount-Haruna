@@ -1,4 +1,4 @@
-// 比完赛晚上秋名山见 v2.0
+// 比完赛晚上秋名山见 v3.0
 // Last updated: 12-4-2019 By 张逸帆
 // refactor: 改变整体文件结构，将大多数常量移至本文件
 // 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
