@@ -75,7 +75,7 @@ void Control()
     else // 直道
     {
         GPIO_Set(I1, LOW);
-        Poffset = 0.2;
+        Poffset = 1;
         Ioffset = 0;
         Doffset = 0;
         speed = kStraightSpeed;
