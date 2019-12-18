@@ -101,11 +101,11 @@ void ChecktoStop()
     {
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
-        if (AD1 + AD4 <= 10)
+        if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
         {
             AD1 = ADC_Read(ADC0_SE1);
             AD4 = ADC_Read(ADC0_SE9);
-            if (AD1 + AD4 <= 10)
+            if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
             {
                 speed_mode = 0;
             }
@@ -114,7 +114,6 @@ void ChecktoStop()
     else
     {
         GPIO_Set(I1, LOW); // 蜂鸣器
-        // if (!speed_mode)
         speed_mode = -1;
     }
 }

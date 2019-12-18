@@ -1,6 +1,6 @@
 // 比完赛晚上秋名山见 v3.0
-// Last updated: 12-4-2019 By 张逸帆
-// refactor: 改变整体文件结构，将大多数常量移至本文件
+// Last updated: 12-18-2019 By 张逸帆
+// feat: 接收到's'则停车
 // 命名规范参见https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/#
 // const常量请以 k 开头，大小写混合
 // 函数请以大写开头，大小写混合
@@ -14,13 +14,13 @@
 #include "control.h"
 
 // 调参常改常量
-const int kTopSpeed = 200;    //  速度上限
+const int kTopSpeed = 200; //  速度上限
 const int kMidSteer = 520; // 舵机物理中值
 const float kStraightSpeed = 12, kCornerSpeed = 6.2;
 // const int kTotalLap = 1;       //  圈数（资格赛）
 
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0; // electromagnet sensor cache
-int distance = 0, speed_mode = -1, count = 0; // 速度控制标志，-1为自动速度
+int distance = 0, speed_mode = -1, count = 0;         // 速度控制标志，-1为自动速度
 float steer = 0, offset = 0, speed = 0, expected_steer = 0;
 
 const FTMn encoder_port = ftm1; // 编码器接口
@@ -31,16 +31,22 @@ void PIT_Interrupt(uint8 ch); // 中断函数
 void Refresh()
 {
     count = FTM_Pulse_Get(encoder_port); //编码器数值读取
-    if (Pin(H6)) // 电机倒转
+    if (Pin(H6))                         // 电机倒转
         count = -count;
     if (distance <= 32767)
         distance += count;
     FTM_Count_Clean(ftm1); //编码器数值清零
+
     AD1 = ADC_Read(ADC0_SE1);
     AD2 = ADC_Read(ADC0_SE3);
     AD3 = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
     ADV = ADC_Read(ADC0_SE10);
+
+    if (GetBluetooth() == 's')
+    {
+        speed_mode = 0;
+    }
 }
 
 void Init()

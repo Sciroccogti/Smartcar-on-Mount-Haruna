@@ -1,6 +1,6 @@
 // 比完赛晚上秋名山见 v3.0
-// Last updated: 12-4-2019 By 张逸帆
-// feat: 增加蓝牙，OLED使用局刷
+// Last updated: 12-18-2019 By 张逸帆
+// feat: 开启蓝牙，OLED放弃局刷
 
 #ifndef COMMUNICATE_H
 #define COMMUNICATE_H
@@ -58,11 +58,14 @@ void Send_Wave(uint8 *waveaddr, uint32 wavesize)
     UART_Putbuff(uart2, cmdr, sizeof(cmdr)); /* 发送帧尾 */
 }
 
-// 封装蓝牙接收
-uint8 GetBluetooth()
+// 封装蓝牙接收（uint就是char）
+uint8 GetBluetooth(void)
 {
     uint8 data;
     UART_Getchar(uart2, &data);
+    Send_Wave('>', sizeof('<'));
+    Send_Wave(&data, sizeof(data));
+    Send_Wave('<', sizeof('<'));
     return data;
 }
 
