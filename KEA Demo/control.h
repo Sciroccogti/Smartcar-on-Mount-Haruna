@@ -23,9 +23,9 @@ float speed_loop(float target_speed)
 {
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
-    float P = 23;
-    float I = 3.0;
-    float D = 0.5;
+    float P = 15;
+    float I = 0.5;
+    float D = 3;
     if (count > kStraightSpeed)
     {
         target_speed = kStraightSpeed; //暂时人为限速
@@ -40,14 +40,11 @@ float speed_loop(float target_speed)
 float steer_loop(float P, float I, float D)
 {
     // "l" stands for "last"
-    const float convert = 52;
-    float steerconv = 0;
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
     offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 10);
-    steerconv = offset / fabs(offset) * convert * exp(0.35 * (fabs(offset) - convert));
-    return steerconv + D * DSTEER + I * ISTEER;
+    return P * offset + D * DSTEER + I * ISTEER;
 }
 
 // 通用指数控制，speedmode控制速度，-1为默认，-2为关闭
@@ -58,7 +55,7 @@ void Control()
     if (FALSE) // TODO:丢线 50
     {
     }
-    else if (abs((int)offset) > 45) // 弯道 TODO: 动态判定条件
+    else if (abs((int)offset) > 60) // 弯道 TODO: 动态判定条件
     {
         alarm_count++;
         if (alarm_count > 2)
@@ -72,14 +69,14 @@ void Control()
         }
         Poffset = 3;
         Ioffset = 0;
-        Doffset = 0;
+        Doffset = 0.05;
         speed = kCornerSpeed;
     }
     else // 直道
     {
         GPIO_Set(I1, LOW);
-        Poffset = 1.5;
-        Ioffset = 0.2;
+        Poffset = 1;
+        Ioffset = 0;
         Doffset = 0;
         speed = kStraightSpeed;
     }
