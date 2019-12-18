@@ -17,6 +17,13 @@ char spring_oled[20]; // a line on OLED
 // 自定义显示函数，输出AD，speed，steer，isRing，count
 void MYOledShow()
 {
+
+    static int distance = 0;
+    if (distance + count <= 32767)
+        distance += count;
+    else
+        distance = 0;
+        
     if (Pin(H7))
     {
         OLED_Clear(0x00);
@@ -26,8 +33,8 @@ void MYOledShow()
         sprintf(spring_oled, "off:%.2f m:%d", offset, speed_mode);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 16);
-        // sprintf(spring_oled, "V:%5d R%d F%d", ADV, isRing, speedmode);
-        // OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
+        sprintf(spring_oled, "dis:%d", distance);
+        OLED_Show_String(8, 16, 0, 32, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 32);
         sprintf(spring_oled, "C:%d S:%2.2f", count, speed);
         OLED_Show_String(8, 16, 0, 48, 1, spring_oled, 0);

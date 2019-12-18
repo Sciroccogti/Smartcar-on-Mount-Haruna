@@ -20,7 +20,7 @@ const float kStraightSpeed = 12, kCornerSpeed = 6.2;
 // const int kTotalLap = 1;       //  圈数（资格赛）
 
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0; // electromagnet sensor cache
-int distance = 0, speed_mode = -1, count = 0;         // 速度控制标志，-1为自动速度
+int speed_mode = -1, count = 0;         // 速度控制标志，-1为自动速度
 float steer = 0, offset = 0, speed = 0, expected_steer = 0;
 
 const FTMn encoder_port = ftm1; // 编码器接口
@@ -33,8 +33,6 @@ void Refresh()
     count = FTM_Pulse_Get(encoder_port); //编码器数值读取
     if (Pin(H6))                         // 电机倒转
         count = -count;
-    if (distance <= 32767)
-        distance += count;
     FTM_Count_Clean(ftm1); //编码器数值清零
 
     AD1 = ADC_Read(ADC0_SE1);
