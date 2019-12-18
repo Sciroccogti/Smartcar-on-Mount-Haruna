@@ -68,11 +68,11 @@ void Send_Wave(uint8 *waveaddr, uint32 wavesize)
 // 封装蓝牙接收（uint就是char）
 uint8 GetBluetooth(void)
 {
-    uint8 data;
+    uint8 data, head = '>', tail = '<';
     UART_Getchar(uart2, &data);
-    Send_Wave('>', sizeof('<'));
+    Send_Wave(&head, sizeof(head));
     Send_Wave(&data, sizeof(data));
-    Send_Wave('<', sizeof('<'));
+    Send_Wave(&tail, sizeof(tail));
     return data;
 }
 
