@@ -1,4 +1,4 @@
-// 比完赛晚上秋名山见 v3.0
+// 比完赛晚上秋名山见 v3.1
 // Last updated: 12-18-2019 By 张逸帆
 // feat: 开启蓝牙，OLED放弃局刷
 
@@ -9,7 +9,7 @@
 
 extern uint16_t AD1, AD2, AD3, AD4, ADV;
 extern float offset, speed;
-extern int count, speed_mode;
+extern int count, mode;
 
 // uint8 data_getstring[2]; // bluetooth cache
 char spring_oled[20]; // a line on OLED
@@ -30,7 +30,7 @@ void MYOledShow()
         sprintf(spring_oled, "L:%5d R:%5d", AD1, AD4);
         OLED_Show_String(8, 16, 0, 0, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 0);
-        sprintf(spring_oled, "off:%.2f m:%d", offset, speed_mode);
+        sprintf(spring_oled, "off:%.2f m:%d", offset, mode);
         OLED_Show_String(8, 16, 0, 16, 1, spring_oled, 0);
         // OLED_Refresh_Gram_Page(0, 16);
         sprintf(spring_oled, "dis:%d", distance);
