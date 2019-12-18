@@ -2502,6 +2502,15 @@
         </file>
     </group>
     <file>
+        <name>$PROJ_DIR$\..\communicate.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\..\control.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\..\driver.h</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\..\main.c</name>
     </file>
     <file>

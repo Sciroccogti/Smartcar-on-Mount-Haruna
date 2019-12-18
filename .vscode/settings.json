@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "main.h": "c"
+        "main.h": "c",
+        "common.h": "c",
+        "communicate.h": "c",
+        "limits": "c"
     }
 }
