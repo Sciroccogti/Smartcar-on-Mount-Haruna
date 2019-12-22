@@ -131,10 +131,6 @@ void ChecktoStop()
             }
         }
     }
-    else if (GetBluetooth() == 's')
-    {
-        mode = 0;
-    }
     else
     {
         GPIO_Set(I1, LOW); // 蜂鸣器
