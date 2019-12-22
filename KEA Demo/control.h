@@ -20,8 +20,8 @@ extern const float kStraightSpeed, kCornerSpeed;
 
 float target_spd()
 {
-    const float dec_offset = 40;
-    const float dec_rate = 0.5;
+    const float dec_offset = 43;
+    const float dec_rate = 0.7;
     return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (offset - dec_offset))) + kCornerSpeed;
 }
 
@@ -31,7 +31,7 @@ float speed_loop(float target_speed)
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
     float Pacc = 50;
-    float Pdec = 500;
+    float Pdec = 200;
     float I = 3.0;
     float D = 0.5;
     if (count > kStraightSpeed)
@@ -94,7 +94,7 @@ void Control()
     // speed = speed > 5 ? speed : 5;
     SetSteer(expected_steer);
     if (speed_mode)
-        SetMotor(speed_loop(target_spd()));
+        SetMotor(speed_loop(speed = target_spd()));
     else
     {
         speed = 0;
@@ -110,11 +110,11 @@ void ChecktoStop()
     {
         AD1 = ADC_Read(ADC0_SE1);
         AD4 = ADC_Read(ADC0_SE9);
-        if (AD1 + AD4 <= 10)
+        if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
         {
             AD1 = ADC_Read(ADC0_SE1);
             AD4 = ADC_Read(ADC0_SE9);
-            if (AD1 + AD4 <= 10)
+            if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
             {
                 speed_mode = 0;
             }
