@@ -14,14 +14,15 @@
 #define ISTEER (offset + loffset + lloffset)
 
 extern uint16_t AD1, AD2, AD3, AD4, ADV;
-extern int speed_mode, count;
+extern int mode, count;
 extern float steer, expected_steer, speed, offset;
 extern const float kStraightSpeed, kCornerSpeed;
+extern const int kOutMin, kOutMax;
 
 float target_spd()
 {
-    const float dec_offset = 40.9;
-    const float dec_rate = 0.7;
+    const float dec_offset = 35.9;
+    const float dec_rate = 0.5;
     return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (fabs(offset) - dec_offset))) + kCornerSpeed;
 }
 
@@ -41,21 +42,21 @@ float speed_loop(float target_speed)
     llspeed_error = lspeed_error;
     lspeed_error = speed_error;
     speed_error = target_speed - count;
-    return (speed_error > 0 ? Pacc : Pdec) * speed_error;// + D * DSPEED + I * ISPEED;
+    return (speed_error > 0 ? Pacc : Pdec) * speed_error; // + D * DSPEED + I * ISPEED;
 }
 
 // 转向控制环
 float steer_loop(float P, float I, float D)
 {
     // "l" stands for "last"
-    const float convert = 50;
+    const float convert = 48;
     float steerconv = 0;
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
     offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 10);
-    steerconv = offset / fabs(offset) * convert * exp(0.32 * (fabs(offset) - convert));
-    return steerconv + D * DSTEER + I * ISTEER;
+    steerconv = offset / fabs(offset) * convert * exp(0.25 * (fabs(offset) - convert));
+    return P * steerconv + D * DSTEER + I * ISTEER;
 }
 
 // 通用指数控制，speedmode控制速度，-1为默认，-2为关闭
@@ -63,8 +64,28 @@ void Control()
 {
     static int alarm_count = 0;
     float Poffset = 0, Ioffset = 0, Doffset = 0;
-    if (FALSE) // TODO:丢线 50
+    if (FALSE && (AD1 < 50 || AD4 < 50) && AD1 + AD4 > kOutMin && AD1 + AD4 < kOutMax) // 丢线
     {
+        alarm_count++;
+        if (alarm_count > 2)
+        {
+            GPIO_Set(I1, HIGH); // 蜂鸣器
+            alarm_count = 0;
+        }
+        else
+        {
+            GPIO_Set(I1, LOW);
+        }
+
+        if (AD1 > AD4) // 向右偏出
+        {
+            mode = 3;
+        }
+        else // 向左偏出
+        {
+            mode = -3;
+        }
+        speed = kCornerSpeed;
     }
     else if (abs((int)offset) > 45) // 弯道 TODO: 动态判定条件
     {
@@ -78,23 +99,27 @@ void Control()
         {
             GPIO_Set(I1, LOW);
         }
-        Poffset = 3;
-        Ioffset = 0;
-        Doffset = 0;
+        // Poffset = 0.9;
+        // Ioffset = 0;
+        // Doffset = 3;
     }
     else // 直道
     {
         GPIO_Set(I1, LOW);
-        Poffset = 1.5;
-        Ioffset = 0.2;
-        Doffset = 0;
+        // Poffset = 1;
+        // Ioffset = 0.6;
+        // Doffset = 0;
     }
+
+    Poffset = 0.9;
+    Ioffset = 0;
+    Doffset = 2;
     expected_steer = steer_loop(Poffset, Ioffset, Doffset);
     // speed -= offset / 20;
     // speed = speed > 5 ? speed : 5;
     SetSteer(expected_steer);
     speed = target_spd();
-    if (speed_mode)
+    if (mode)
         //SetMotor(speed_loop(speed));
         SetMotor_d(speed);
     else
@@ -118,15 +143,15 @@ void ChecktoStop()
             AD4 = ADC_Read(ADC0_SE9);
             if (AD1 + AD4 <= 10 || AD1 + AD4 >= 4000)
             {
-                speed_mode = 0;
+                mode = 0;
             }
         }
     }
     else
     {
         GPIO_Set(I1, LOW); // 蜂鸣器
-        // if (!speed_mode)
-        speed_mode = -1;
+        // if (!mode)
+        mode = -1;
     }
 }
 

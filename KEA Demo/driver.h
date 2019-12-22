@@ -30,7 +30,8 @@ void SetMotor(float floats)
     int s = (int)floats;
     if (s > 0)
     {
-        FTM_PWM_Duty(ftm2, ftm_ch0, s < kTopSpeed ? s : kTopSpeed); // 设置了速度上限：kTopSpeed
+        FTM_PWM_Duty(ftm2, ftm_ch0, s);
+        //FTM_PWM_Duty(ftm2, ftm_ch0, s < kTopSpeed ? s : kTopSpeed); // 设置了速度上限：kTopSpeed
     }
     else if (!s)
     {
@@ -39,16 +40,17 @@ void SetMotor(float floats)
     }
     else
     {
-        FTM_PWM_Duty(ftm2, ftm_ch1, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
+        FTM_PWM_Duty(ftm2, ftm_ch1, -s);
+        //FTM_PWM_Duty(ftm2, ftm_ch1, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
     }
 }
 
 void SetMotor_d(float s)
 {
-    const float apower = 1000;
-    const float dpower = 5000;
+    const float apower = 400;
+    const float dpower = 2000;
 
-    float fade = fabs(s - count) < 4 ? fabs(s - count) * 0.25 : 1.0;
+    float fade = fabs(s - count) < 8 ? fabs(s - count) * 0.125 : 1.0;
 
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {
