@@ -48,7 +48,7 @@ void SetMotor_d(float s)
     const float apower = 1000;
     const float dpower = 5000;
 
-    float fade = fabs(s - count) < 10 ? fabs(s - count) * 0.1 : 1.0;
+    float fade = fabs(s - count) < 4 ? fabs(s - count) * 0.25 : 1.0;
 
     if (count > s && s > 0) //正向并且实际速度高于预期，减速
     {

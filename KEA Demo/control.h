@@ -15,14 +15,14 @@
 
 extern uint16_t AD1, AD2, AD3, AD4, ADV;
 extern int speed_mode, count;
-extern float steer, expected_steer, speed;
+extern float steer, expected_steer, speed, offset;
 extern const float kStraightSpeed, kCornerSpeed;
 
 float target_spd()
 {
-    const float dec_offset = 30;
-    const float dec_rate = 0.5;
-    return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (offset - dec_offset))) + kCornerSpeed;
+    const float dec_offset = 40.9;
+    const float dec_rate = 0.7;
+    return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (fabs(offset) - dec_offset))) + kCornerSpeed;
 }
 
 // 速度控制环
@@ -30,10 +30,10 @@ float speed_loop(float target_speed)
 {
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
-    float Pacc = 50;
-    float Pdec = 200;
-    float I = 3.0;
-    float D = 0.5;
+    float Pacc = 100;
+    float Pdec = 500;
+    float I = 0.1;
+    float D = 0.1;
     if (count > kStraightSpeed)
     {
         target_speed = kStraightSpeed; //暂时人为限速
@@ -41,20 +41,20 @@ float speed_loop(float target_speed)
     llspeed_error = lspeed_error;
     lspeed_error = speed_error;
     speed_error = target_speed - count;
-    return target_speed + (speed_error > 0 ? Pacc : Pdec) * speed_error + D * DSPEED + I * ISPEED;
+    return (speed_error > 0 ? Pacc : Pdec) * speed_error;// + D * DSPEED + I * ISPEED;
 }
 
 // 转向控制环
 float steer_loop(float P, float I, float D)
 {
     // "l" stands for "last"
-    const float convert = 52;
+    const float convert = 50;
     float steerconv = 0;
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
     offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 10);
-    steerconv = offset / fabs(offset) * convert * exp(0.35 * (fabs(offset) - convert));
+    steerconv = offset / fabs(offset) * convert * exp(0.32 * (fabs(offset) - convert));
     return steerconv + D * DSTEER + I * ISTEER;
 }
 
@@ -93,8 +93,10 @@ void Control()
     // speed -= offset / 20;
     // speed = speed > 5 ? speed : 5;
     SetSteer(expected_steer);
+    speed = target_spd();
     if (speed_mode)
-        SetMotor(speed_loop(speed = target_spd()));
+        //SetMotor(speed_loop(speed));
+        SetMotor_d(speed);
     else
     {
         speed = 0;

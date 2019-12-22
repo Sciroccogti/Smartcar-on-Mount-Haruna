@@ -16,7 +16,7 @@
 // 调参常改常量
 const int kTopSpeed = 200;    //  速度上限
 const int kMidSteer = 520; // 舵机物理中值
-const float kStraightSpeed = 12, kCornerSpeed = 6.2;
+const float kStraightSpeed = 13, kCornerSpeed = 7.2;
 // const int kTotalLap = 1;       //  圈数（资格赛）
 
 uint16_t AD1 = 0, AD2 = 0, AD3 = 0, AD4 = 0, ADV = 0; // electromagnet sensor cache
