@@ -21,8 +21,8 @@ extern const int kOutMin, kOutMax;
 
 float target_spd()
 {
-    const float dec_offset = 35.9;
-    const float dec_rate = 0.5;
+    const float dec_offset = 32;
+    const float dec_rate = 0.8;
     return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (fabs(offset) - dec_offset))) + kCornerSpeed;
 }
 
@@ -31,8 +31,8 @@ float speed_loop(float target_speed)
 {
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
-    float Pacc = 100;
-    float Pdec = 500;
+    float Pacc = 90;
+    float Pdec = 1500;
     float I = 0.1;
     float D = 0.1;
     if (count > kStraightSpeed)
@@ -49,13 +49,13 @@ float speed_loop(float target_speed)
 float steer_loop(float P, float I, float D)
 {
     // "l" stands for "last"
-    const float convert = 48;
+    const float convert = 52;
     float steerconv = 0;
     static float loffset = 0, lloffset = 0;
     lloffset = loffset;
     loffset = offset;
     offset = (float)100 * (AD4 - AD1) / (AD1 + AD4 + 10);
-    steerconv = offset / fabs(offset) * convert * exp(0.25 * (fabs(offset) - convert));
+    steerconv = offset / fabs(offset) * convert * exp((fabs(offset) <= steerconv ? 0.21 : 0.4) * (fabs(offset) - convert));
     return P * steerconv + D * DSTEER + I * ISTEER;
 }
 
@@ -87,7 +87,7 @@ void Control()
         }
         speed = kCornerSpeed;
     }
-    else if (abs((int)offset) > 45) // 弯道 TODO: 动态判定条件
+    else if (abs((int)offset) > 55) // 弯道 TODO: 动态判定条件
     {
         alarm_count++;
         if (alarm_count > 2)
@@ -99,21 +99,22 @@ void Control()
         {
             GPIO_Set(I1, LOW);
         }
-        // Poffset = 0.9;
-        // Ioffset = 0;
-        // Doffset = 3;
+        Poffset = 1;
+        Ioffset = 0;
+        Doffset = 3;
     }
     else // 直道
     {
         GPIO_Set(I1, LOW);
-        // Poffset = 1;
-        // Ioffset = 0.6;
-        // Doffset = 0;
+        Poffset = 1;
+        Ioffset = 0.6;
+        Doffset = 0;
     }
 
-    Poffset = 0.9;
-    Ioffset = 0;
-    Doffset = 2;
+    // Poffset = 1;
+    // Ioffset = 0.8 - offset /100;
+    // Ioffset = Ioffset > 0.3 ? Ioffset : 0;
+    // Doffset = 2;
     expected_steer = steer_loop(Poffset, Ioffset, Doffset);
     // speed -= offset / 20;
     // speed = speed > 5 ? speed : 5;
