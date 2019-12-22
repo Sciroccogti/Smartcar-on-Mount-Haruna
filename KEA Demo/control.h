@@ -18,12 +18,20 @@ extern int speed_mode, count;
 extern float steer, expected_steer, speed;
 extern const float kStraightSpeed, kCornerSpeed;
 
+float target_spd()
+{
+    const float dec_offset = 40;
+    const float dec_rate = 0.5;
+    return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (offset - dec_offset))) + kCornerSpeed;
+}
+
 // 速度控制环
 float speed_loop(float target_speed)
 {
     // "l" stands for "last"
     static float speed_error = 0, lspeed_error = 0, llspeed_error = 0;
-    float P = 23;
+    float Pacc = 50;
+    float Pdec = 500;
     float I = 3.0;
     float D = 0.5;
     if (count > kStraightSpeed)
@@ -33,7 +41,7 @@ float speed_loop(float target_speed)
     llspeed_error = lspeed_error;
     lspeed_error = speed_error;
     speed_error = target_speed - count;
-    return target_speed + P * speed_error + D * DSPEED + I * ISPEED;
+    return target_speed + (speed_error > 0 ? Pacc : Pdec) * speed_error + D * DSPEED + I * ISPEED;
 }
 
 // 转向控制环
@@ -73,7 +81,6 @@ void Control()
         Poffset = 3;
         Ioffset = 0;
         Doffset = 0;
-        speed = kCornerSpeed;
     }
     else // 直道
     {
@@ -81,14 +88,13 @@ void Control()
         Poffset = 1.5;
         Ioffset = 0.2;
         Doffset = 0;
-        speed = kStraightSpeed;
     }
     expected_steer = steer_loop(Poffset, Ioffset, Doffset);
     // speed -= offset / 20;
     // speed = speed > 5 ? speed : 5;
     SetSteer(expected_steer);
     if (speed_mode)
-        SetMotor(speed_loop(speed));
+        SetMotor(speed_loop(target_spd()));
     else
     {
         speed = 0;
