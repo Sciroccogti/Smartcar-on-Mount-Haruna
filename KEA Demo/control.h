@@ -1,6 +1,6 @@
 // 比完赛晚上秋名山见 v3.1
 // Last updated: 12-18-2019 By 张逸帆
-// feat: 丢线
+// feat: 弯道直道采用相同的P
 
 #ifndef CONTROL_H
 #define CONTROL_H
@@ -78,7 +78,7 @@ void Control()
     else if (abs((int)offset) > 60) // 弯道 TODO: 动态判定条件
     {
         GPIO_Set(I1, LOW);
-        Poffset = 3;
+        Poffset = 2;
         Ioffset = 0;
         Doffset = 0.05;
         speed = kCornerSpeed;
@@ -86,7 +86,7 @@ void Control()
     else // 直道
     {
         GPIO_Set(I1, LOW);
-        Poffset = 1;
+        Poffset = 2;
         Ioffset = 0;
         Doffset = 0;
         speed = kStraightSpeed;
