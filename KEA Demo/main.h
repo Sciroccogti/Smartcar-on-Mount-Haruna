@@ -39,12 +39,7 @@ void Refresh()
     AD2 = ADC_Read(ADC0_SE3);
     AD3 = ADC_Read(ADC0_SE2);
     AD4 = ADC_Read(ADC0_SE9);
-    ADV = ADC_Read(ADC0_SE10);
-
-    if (GetBluetooth() == 's')
-    {
-        speed_mode = 0;
-    }
+    ADV = ADC_Read(ADC0_SE10);    
 }
 
 void Init()

@@ -15,8 +15,16 @@ void PIT_Interrupt(uint8 ch)
 int main(void)
 {
     Init();
-    while(1)
+    while (1)
     {
         MYOledShow();
+        if (GetBluetooth() == 's')
+        {
+            speed_mode = 0;
+        }
+        else
+        {
+            speed_mode = -1;
+        }
     }
 }
