@@ -20,8 +20,8 @@ extern const float kStraightSpeed, kCornerSpeed;
 
 float target_spd()
 {
-    const float dec_offset = 43;
-    const float dec_rate = 0.7;
+    const float dec_offset = 30;
+    const float dec_rate = 0.5;
     return (kStraightSpeed - kCornerSpeed) / (1 + exp(dec_rate * (offset - dec_offset))) + kCornerSpeed;
 }
 
