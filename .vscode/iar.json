@@ -1,0 +1,6 @@
+{
+    "version": 1,
+    "path": "D:\\IAR Systems\\Embedded Workbench 8.0\\",
+    "project": "${workspaceFolder}\\KEA Demo\\IAR\\SEUsmartcar_KEA.ewp",
+    "config": "Flash_Debug"
+}

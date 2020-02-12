@@ -6,10 +6,13 @@
 	],
 	"settings": {
 		"files.associations": {
+			"*.mcfunction": "mcfunction",
 			"main.h": "c",
 			"common.h": "c",
 			"communicate.h": "c",
-			"limits": "c"
-		}
+			"limits": "c",
+			"driver.h": "c"
+		},
+		"iar.enabled": true
 	}
 }
