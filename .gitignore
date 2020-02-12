@@ -11,3 +11,4 @@ KEA Demo/IAR/settings
 *.ps1
 *.wsdt
 *.xcl
+.vscode/
