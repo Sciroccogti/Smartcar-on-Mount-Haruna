@@ -1,0 +1,84 @@
+#include "driver.h"
+
+const int kTopSpeed = 200;    //  速度上限
+const int kMidSteer = 520; // 舵机物理中值
+
+const FTMn encoder_port = ftm1; // 编码器接口
+
+// 舵机打角设定，0为打直，绝对值最大160，左负右正
+void SetSteer(float dir)
+{
+    if (dir > 170)
+    {
+        dir = 170;
+    }
+    else if (dir < -170)
+    {
+        dir = -170;
+    }
+    FTM_PWM_Duty(ftm0, ftm_ch0, (int)(dir + kMidSteer));
+}
+
+// 电机电压设定，支持直接设置负数
+void SetMotor(float floats)
+{
+    int s = (int)floats;
+    if (s > 0)
+    {
+        FTM_PWM_Duty(ftm2, ftm_ch0, s < kTopSpeed ? s : kTopSpeed); // 设置了速度上限：kTopSpeed
+    }
+    else if (!s)
+    {
+        FTM_PWM_Duty(ftm2, ftm_ch1, 0);
+        FTM_PWM_Duty(ftm2, ftm_ch0, 0);
+    }
+    else
+    {
+        FTM_PWM_Duty(ftm2, ftm_ch1, -s < kTopSpeed ? -s : kTopSpeed); // 设置了速度下限：-kTopSpeed
+    }
+}
+
+void SetMotor_d(float s)
+{
+    const float apower = 400;
+    const float dpower = 2000;
+
+    float fade = fabs(s - count) < 8 ? fabs(s - count) * 0.125 : 1.0;
+
+    if (count > s && s > 0) //正向并且实际速度高于预期，减速
+    {
+        SetMotor(-0.2 * dpower * fade);
+        //SetMotor(0);
+    }
+    else if (count <= s && s > 0) //正向并且实际速度低于预期，加速
+    {
+        SetMotor(apower * fade);
+    }
+    else if (count > 2 && s == 0) //s==0即停车，反转电机
+    {
+        {
+            SetMotor(-dpower);
+        }
+        //Soft_Delay_ms(2);
+    }
+    else if (count <= 1 && s == 0) //停得差不多了，不反转电机
+    {
+        SetMotor(0);
+    }
+}
+
+// 刷新数据
+void Update()
+{
+    count = FTM_Pulse_Get(encoder_port); //编码器数值读取
+    if (Pin(H6))                         // 电机倒转
+        count = -count;
+    if (distance <= 32767)
+        distance += count;
+    FTM_Count_Clean(ftm1); //编码器数值清零
+    AD1 = ADC_Read(ADC0_SE1);
+    AD2 = ADC_Read(ADC0_SE3);
+    AD3 = ADC_Read(ADC0_SE2);
+    AD4 = ADC_Read(ADC0_SE9);
+    ADV = ADC_Read(ADC0_SE10);
+}
