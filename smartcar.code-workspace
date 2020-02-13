@@ -11,7 +11,8 @@
 			"common.h": "c",
 			"communicate.h": "c",
 			"limits": "c",
-			"driver.h": "c"
+			"driver.h": "c",
+			"control.h": "c"
 		},
 		"iar.enabled": true
 	}

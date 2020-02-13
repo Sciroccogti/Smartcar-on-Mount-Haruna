@@ -1,6 +1,6 @@
 #include "driver.h"
 
-const int kTopSpeed = 200;    //  速度上限
+const int kTopSpeed = 200; //  速度上限
 const int kMidSteer = 520; // 舵机物理中值
 
 const FTMn encoder_port = ftm1; // 编码器接口
@@ -76,9 +76,66 @@ void Update()
     if (distance <= 32767)
         distance += count;
     FTM_Count_Clean(ftm1); //编码器数值清零
-    AD1 = ADC_Read(ADC0_SE1);
-    AD2 = ADC_Read(ADC0_SE3);
-    AD3 = ADC_Read(ADC0_SE2);
-    AD4 = ADC_Read(ADC0_SE9);
-    ADV = ADC_Read(ADC0_SE10);
+
+    uint16 result[5];
+    ADC_Get(result);
+
+    AD1 = result[0];
+    AD2 = result[1];
+    AD3 = result[2];
+    AD4 = result[3];
+    ADV = result[4];
+}
+
+void ADC_Get(uint16 result[5])
+{
+    uint16 list[5][5], temp;
+    const ADCn_Chn ADC0[5] = {ADC0_SE1, ADC0_SE3, ADC0_SE2, ADC0_SE9, ADC0_SE10};
+    int i, j, k;
+
+    for (i = 0; i < 5; i++)
+    {
+        for (j = 0; j < 5; j++)
+        {
+            list[j][i] = (uint16)ADC_Avg(ADC0[j]);
+        }
+    }
+
+    for (i = 0; i < 5; i++) // 冒泡升序排序
+    {
+        for (j = 0; j < 4; j++)
+        {
+            for (k = 0; k < 4 - j; k++) //五个点感知只需要交换4次
+            {
+                if (list[i][k] > list[i][k + 1]) //前面的比后面的大则进行交换
+                {
+                    temp = list[i][k + 1];
+                    list[i][k + 1] = list[i][k];
+                    list[i][k] = temp;
+                }
+            }
+        }
+    }
+    // 中值滤波
+    for (i = 0; i < 5; i++) // 求中间三项的和
+    {
+        result[i] = list[i][1] + list[i][2] + list[i][3]; // 舍去最大最小取中间三项
+        result[i] = result[i] / 3;                        // 求平均值
+        result[i] = result[i] / 10 * 10;         // 将数值中个位数除掉,降低过高精度
+    }
+}
+
+uint16 ADC_Avg(ADCn_Chn adcn_chn)
+{
+    uint32 ret = 0;
+    uint8 i, j;
+    for (i = 0; i < 5; i++)
+    {
+        ret += ADC_Read(adcn_chn);
+        j = 20;
+        while (j--)
+            ;
+    }
+    ret /= 5;
+    return (uint16)ret;
 }

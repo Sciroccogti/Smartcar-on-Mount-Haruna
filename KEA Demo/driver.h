@@ -20,4 +20,9 @@ void SetMotor_d(float s);
 // 刷新数据
 void Update();
 
+void ADC_Get(uint16 result[]);
+
+// 均值滤波
+uint16 ADC_Avg(ADCn_Chn adcn_chn);
+
 #endif
