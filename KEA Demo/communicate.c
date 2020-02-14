@@ -40,7 +40,7 @@ void MYOledShow()
 //     UART_Putstr(uart2, data_getstring);
 // }
 
-void Send_Wave(uint8 *waveaddr, uint32 wavesize)
+void Send_Wave(void *waveaddr, uint32_t wavesize)
 {
 #define CMD_WARE 3
     uint8_t cmdf[2] = {CMD_WARE, ~CMD_WARE}; /* 帧头 */

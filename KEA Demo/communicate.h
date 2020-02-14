@@ -15,7 +15,7 @@ void MYOledShow();
 
 // void UART_Interrupt(uint8 ch);
 
-void Send_Wave(uint8 *waveaddr, uint32 wavesize);
+void Send_Wave(void *waveaddr, uint32 wavesize);
 
 // 封装蓝牙接收
 uint8 GetBluetooth();

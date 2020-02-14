@@ -11,6 +11,13 @@ int main(void)
     while (1)
     {
         MYOledShow();
+        short scope[8];
+        scope[0] = (int)AD1;
+        scope[1] = (int)AD2;
+        scope[2] = (int)AD3;
+        scope[3] = (int)AD4;
+        scope[4] = (int)ADV;
+        Send_Wave(scope, 8);
     }
 }
 
